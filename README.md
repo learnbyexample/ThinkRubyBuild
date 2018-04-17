@@ -1,13 +1,23 @@
-ThinkPython
-===========
+## Think Ruby Build
 
-LaTeX source, code examples, and exercise solutions for Think Python, 2nd edition, by Allen Downey.
+* LaTeX source, code examples, and exercise solutions
+  * Based on **Think Python, 2nd edition, by Allen Downey** which can be downloaded in PDF from [Green Tea Press](http://greenteapress.com/wp/think-python-2e/) or bought in paper and other formats from [O'Reilly Media](http://shop.oreilly.com/product/0636920045267.do).
 
-You can download this book in PDF from [Green Tea Press](http://greenteapress.com/wp/think-python-2e/) or buy it in paper and other formats from [O'Reilly Media](http://shop.oreilly.com/product/0636920045267.do).
+<br>
 
-To build the book from source you will need a LaTeX installion.  I recommend the TeX Live distribution with the following packages:
+## Motivation
 
-* texlive-latex-base
-* texlive-latex-extra
-* texlive-fonts-recommended
+* An attempt to translate the wonderful Think Python to Think Ruby
+* Help me learn and understand Ruby better
+* Forced to learn LaTeX is a bonus
+
+<br>
+
+## Build instructions
+
+* To build the book from source you will need a LaTeX installation
+* TeX Live distribution is recommended with the following packages:
+  * texlive-latex-base
+  * texlive-latex-extra
+  * texlive-fonts-recommended
 
