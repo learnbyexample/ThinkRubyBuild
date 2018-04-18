@@ -1,3 +1,7 @@
+:warning: :construction: Work in progress - it'll take a long while to translate whole book from Python to Ruby, stay tuned...
+
+<br>
+
 ## Think Ruby Build
 
 * LaTeX source, code examples, and exercise solutions
