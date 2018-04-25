@@ -29,9 +29,9 @@
 \usepackage{appendix}
 \usepackage[bookmarks]{hyperref}
 
-\title{Think Python}
+\title{Think Ruby}
 \author{Allen B. Downey}
-\newcommand{\thetitle}{Think Python: How to Think Like a Computer Scientist}
+\newcommand{\thetitle}{Think Ruby: How to Think Like a Computer Scientist}
 \newcommand{\theversion}{2nd Edition, Version 2.2.23}
 \newcommand{\thedate}{}
 
@@ -96,7 +96,7 @@
 \vspace*{2.0in}
 
 \begin{spacing}{3}
-{\huge Think Python}\\
+{\huge Think Ruby}\\
 {\Large How to Think Like a Computer Scientist}
 \end{spacing}
 
@@ -127,7 +127,7 @@
 \vspace*{2.0in}
 
 \begin{spacing}{3}
-{\huge Think Python}\\
+{\huge Think Ruby}\\
 {\Large How to Think Like a Computer Scientist}
 \end{spacing}
 
@@ -144,6 +144,7 @@
 Allen Downey\\
 }
 
+{\small Sundeep Kumar Agarwal (Ruby translator)}
 
 \vspace{0.5in}
 
@@ -812,72 +813,67 @@ into smaller and smaller subtasks until the subtasks are
 simple enough to be performed with one of these basic instructions.
 
 
-\section{Running Python}
+\section{Running Ruby}
 
-One of the challenges of getting started with Python is that you
-might have to install Python and related software on your computer.
+One of the challenges of getting started with Ruby is that you
+might have to install Ruby and related software on your computer.
 If you are familiar with your operating system, and especially
 if you are comfortable with the command-line interface, you will
-have no trouble installing Python.  But for beginners, it can be
+have no trouble installing Ruby.  See official Ruby website
+\url{https://www.ruby-lang.org/en/documentation/installation/}
+for installation instructions.
+\index{running Ruby}
+\index{Ruby!running}
+
+But for beginners, it can be
 painful to learn about system administration and programming at the
-same time.
-\index{running Python}
-\index{Python!running}
+same time.  To avoid that problem, I recommend that you start out running Ruby
+in a browser.  Later, when you are comfortable with Ruby, install
+Ruby on your computer.  There are a number of web pages you can
+use to run Ruby.  If you already have a favorite, go ahead and use
+it.  Otherwise I recommend \url{https://repl.it/}
+\index{Ruby in a browser}
 
-To avoid that problem, I recommend that you start out running Python
-in a browser.  Later, when you are comfortable with Python, I'll
-make suggestions for installing Python on your computer.
-\index{Python in a browser}
-
-There are a number of web pages you can use to run Python.  If you
-already have a favorite, go ahead and use it.  Otherwise I recommend
-PythonAnywhere.  I provide detailed instructions for getting started
-at \url{http://tinyurl.com/thinkpython2e}.  
-\index{PythonAnywhere}
-
-There are two versions of Python, called Python 2 and Python 3.
-They are very similar, so if you learn one, it is easy to switch
-to the other.  In fact, there are only a few differences you will
-encounter as a beginner.
-This book is written for Python 3, but I include some notes
-about Python 2.
-\index{Python 2}
-
-The Python {\bf interpreter} is a program that reads and executes
-Python code.  Depending on your environment, you might start the
-interpreter by clicking on an icon, or by typing {\tt python} on
-a command line. 
-When it starts, you should see output like this:
+The Ruby {\bf interpreter} is a program that reads and executes
+Ruby code.  You can start the interpreter by typing {\tt irb} on
+a command line.  When it starts, you should see output like this:
 \index{interpreter}
 
 \begin{verbatim}
-Python 3.4.0 (default, Jun 19 2015, 14:20:21) 
-[GCC 4.8.2] on linux
-Type "help", "copyright", "credits" or "license" for more information.
->>> 
+$ irb
+irb(main):001:0> 
 \end{verbatim}
 %
-The first three lines contain information about the interpreter
-and the operating system it's running on, so it might be different for
-you.  But you should check that the version number, which is
-{\tt 3.4.0} in this example, begins with 3, which indicates that
-you are running Python 3.  If it begins with 2, you are running
-(you guessed it) Python 2.
-
-The last line is a {\bf prompt} that indicates that the interpreter is
-ready for you to enter code.
-If you type a line of code and hit Enter, the interpreter displays the
-result: 
+This is a {\bf prompt} that indicates that the interpreter is
+ready for you to enter code.  If you type a line of code and
+hit Enter, the interpreter displays the result: 
 \index{prompt}
 
 \begin{verbatim}
->>> 1 + 1
-2
+irb(main):001:0> puts RUBY_VERSION
+2.5.0
+=> nil
+irb(main):002:0> 1 + 1
+=> 2
+irb(main):003:0> exit
 \end{verbatim}
 %
-Now you're ready to get started.
-From here on, I assume that you know how to start the Python
-interpreter and run code.
+% todo reference to chapter describing return? don't mention at all here?
+The return value of code you entered is distinguished
+by the prefix ``=>''.  Now you're ready to get started.
+From here on, I assume that you know how to start the Ruby
+interpreter and run code.  You may also use {\tt irb --simple-prompt}
+for a simpler prompt.
+
+\begin{verbatim}
+$ irb --simple-prompt
+>> 2 + 2
+=> 4
+>> exit
+\end{verbatim}
+%
+% todo mention other REPLs?
+
 
 
 \section{The first program}
@@ -886,14 +882,15 @@ interpreter and run code.
 
 Traditionally, the first program you write in a new language
 is called ``Hello, World!'' because all it does is display the
-words ``Hello, World!''.  In Python, it looks like this:
+words ``Hello, World!''.  In Ruby, it looks like this:
 
 \begin{verbatim}
->>> print('Hello, World!')
+>> puts 'Hello, World!'
 \end{verbatim}
 %
-This is an example of a {\bf print statement}, although it
-doesn't actually print anything on paper.  It displays a result on the
+% todo
+% explain what is a method or refer to chapter that covers it
+This is an example of {\bf puts method}.  It displays a result on the
 screen.  In this case, the result is the words
 
 \begin{verbatim}
@@ -903,75 +900,58 @@ Hello, World!
 The quotation marks in the program mark the beginning and end
 of the text to be displayed; they don't appear in the result.
 \index{quotation mark}
-\index{print statement}
-\index{statement!print}
+\index{puts method}
+\index{method!puts}
 
-The parentheses indicate that {\tt print} is a function.  We'll get
-to functions in Chapter~\ref{funcchap}.
-\index{function} \index{print function}
-
-In Python 2, the print statement is slightly different; it is not
-a function, so it doesn't use parentheses.
-\index{Python 2}
-
-\begin{verbatim}
->>> print 'Hello, World!'
-\end{verbatim}
-%
-This distinction will make more sense soon, but that's enough to
-get started.
+% todo
+%The parentheses indicate that {\tt print} is a function.  We'll get
+%to functions in Chapter~\ref{funcchap}.
+%\index{function} \index{print function}
 
 
 \section{Arithmetic operators}
 \index{operator!arithmetic}
 \index{arithmetic operator}
 
-After ``Hello, World'', the next step is arithmetic.  Python provides
+After ``Hello, World'', the next step is arithmetic.  Ruby provides
 {\bf operators}, which are special symbols that represent computations
 like addition and multiplication.  
 
-The operators {\tt +}, {\tt -}, and {\tt *} perform addition,
-subtraction, and multiplication, as in the following examples:
+The operators {\tt +}, {\tt -}, {\tt *} and {\tt /} perform addition,
+subtraction, multiplication and division, as in the following examples:
 
 \begin{verbatim}
->>> 40 + 2
-42
->>> 43 - 1
-42
->>> 6 * 7
-42
+>> 40 + 2
+=> 42
+>> 43 - 1
+=> 42
+>> 6 * 7
+=> 42
+>> 84 / 2
+=> 42
 \end{verbatim}
 %
-The operator {\tt /} performs division:
-
-\begin{verbatim}
->>> 84 / 2
-42.0
-\end{verbatim}
-%
-You might wonder why the result is {\tt 42.0} instead of {\tt 42}.
-I'll explain in the next section.
 
 Finally, the operator {\tt **} performs exponentiation; that is,
 it raises a number to a power:
 
 \begin{verbatim}
->>> 6**2 + 6
-42
+>> 6**2 + 6
+=> 42
 \end{verbatim}
 %
 In some other languages, \verb"^" is used for exponentiation, but
-in Python it is a bitwise operator called XOR.  If you are not
+in Ruby it is a bitwise operator called XOR.  If you are not
 familiar with bitwise operators, the result will surprise you:
 
 \begin{verbatim}
->>> 6 ^ 2
-4
+>> 6 ^ 2
+=> 4
 \end{verbatim}
 %
 I won't cover
 bitwise operators in this book, but you can read about
-them at \url{http://wiki.python.org/moin/BitwiseOperators}.
+them at \url{https://en.wikipedia.org/wiki/Bitwise_operation}.
 \index{bitwise operator}
 \index{operator!bitwise}
 
@@ -982,8 +962,8 @@ them at \url{http://wiki.python.org/moin/BitwiseOperators}.
 \index{string}
 
 A {\bf value} is one of the basic things a program works with, like a
-letter or a number.  Some values we have seen so far are {\tt 2},
-{\tt 42.0}, and \verb"'Hello, World!'".
+letter or a number.  Some values we have seen so far are {\tt 2}
+and \verb"'Hello, World!'".
 
 These values belong to different {\bf types}:
 {\tt 2} is an {\bf integer}, {\tt 42.0} is a {\bf floating-point number},
@@ -996,28 +976,30 @@ If you are not sure what type a value has, the interpreter can
 tell you:
 
 \begin{verbatim}
->>> type(2)
-<class 'int'>
->>> type(42.0)
-<class 'float'>
->>> type('Hello, World!')
-<class 'str'>
+>> 2.class
+=> Integer
+>> 42.0.class
+=> Float
+>> 'Hello, World!'.class
+=> String
 \end{verbatim}
 %
 In these results, the word ``class'' is used in the sense of
 a category; a type is a category of values.
 \index{class}
 
-Not surprisingly, integers belong to the type {\tt int},
-strings belong to {\tt str} and floating-point
-numbers belong to {\tt float}.  
+% todo
+% should the term 'object' be introduced here?
+Not surprisingly, integers belong to the type {\tt Integer},
+strings belong to {\tt String} and floating-point
+numbers belong to {\tt Float}.  
 \index{type}
-\index{string type}
-\index{type!str}
-\index{int type}
-\index{type!int}
-\index{float type}
-\index{type!float}
+\index{String type}
+\index{type!String}
+\index{Integer type}
+\index{type!Integer}
+\index{Float type}
+\index{type!Float}
 
 What about values like \verb"'2'" and \verb"'42.0'"?
 They look like numbers, but they are in quotation marks like
@@ -1025,27 +1007,29 @@ strings.
 \index{quotation mark}
 
 \begin{verbatim}
->>> type('2')
-<class 'str'>
->>> type('42.0')
-<class 'str'>
+>> '2'.class
+=> String
+>> '42.0'.class
+=> String
 \end{verbatim}
 %
 They're strings.
 
 When you type a large integer, you might be tempted to use commas
 between groups of digits, as in {\tt 1,000,000}.  This is not a
-legal {\em integer} in Python, but it is legal:
+legal {\em integer} in Ruby. You can use underscores instead:
 
 \begin{verbatim}
->>> 1,000,000
-(1, 0, 0)
+>> 1_000_000
+=> 1000000
+>> 42_456.5
+=> 42456.5
 \end{verbatim}
 %
-That's not what we expected at all!  Python interprets {\tt
-  1,000,000} as a comma-separated sequence of integers.  We'll learn
-more about this kind of sequence later.
-\index{sequence}
+%That's not what we expected at all!  Python interprets {\tt
+%  1,000,000} as a comma-separated sequence of integers.  We'll learn
+%more about this kind of sequence later.
+%\index{sequence}
 
 %This is the first example we have seen of a semantic error: the code
 %runs without producing an error message, but it doesn't do the
@@ -1223,7 +1207,7 @@ with my suggestions for debugging.  I hope they help!
 a solution, and expressing it.
 \index{problem solving}
 
-\item[high-level language:]  A programming language like Python that
+\item[high-level language:]  A programming language like Ruby that
 is designed to be easy for humans to read and write.
 \index{high-level language}
 
@@ -1238,6 +1222,7 @@ than one kind of computer.
 
 \item[interpreter:]  A program that reads another program and executes
 it
+% todo should it be interpret or interpreter?
 \index{interpret}
 
 \item[prompt:] Characters displayed by the interpreter to indicate
@@ -1247,10 +1232,10 @@ that it is ready to take input from the user.
 \item[program:] A set of instructions that specifies a computation.
 \index{program}
 
-\item[print statement:]  An instruction that causes the Python
+\item[puts method:]  An instruction that causes the Ruby
 interpreter to display a value on the screen.
-\index{print statement}
-\index{statement!print}
+\index{puts method}
+\index{method!puts}
 
 \item[operator:]  A special symbol that represents a simple computation like
 addition, multiplication, or string concatenation.
@@ -1261,8 +1246,8 @@ that a program manipulates.
 \index{value}
 
 \item[type:] A category of values.  The types we have seen so far
-are integers (type {\tt int}), floating-point numbers (type {\tt
-float}), and strings (type {\tt str}).
+are integers (type {\tt Integer}), floating-point numbers (type {\tt
+Float}), and strings (type {\tt String}).
 \index{type}
 
 \item[integer:] A type that represents whole numbers.
@@ -1313,7 +1298,7 @@ try out the examples as you go.
 Whenever you are experimenting with a new feature, you should try
 to make mistakes.  For example, in the ``Hello, world!'' program,
 what happens if you leave out one of the quotation marks?  What
-if you leave out both?  What if you spell {\tt print} wrong?
+if you leave out both?  What if you spell {\tt puts} wrong?
 \index{error message}
 
 This kind of experiment helps you remember what you read; it also
@@ -1323,8 +1308,8 @@ later and accidentally.
 
 \begin{enumerate}
 
-\item In a print statement, what happens if you leave out one
-of the parentheses, or both?
+\item What happens if you enclose the value passed to puts method
+in parentheses?
 
 \item If you are trying to print a string, what happens if you
 leave out one of the quotation marks, or both?
@@ -1333,8 +1318,8 @@ leave out one of the quotation marks, or both?
 {\tt -2}.  What happens if you put a plus sign before a number?
 What about {\tt 2++2}?
 
-\item In math notation, leading zeros are ok, as in {\tt 02}.
-What happens if you try this in Python?
+\item In math notation, leading zeros are ok, as in {\tt 08}.
+What happens if you try this in Ruby?
 
 \item What happens if you have two values with no operator
 between them?
@@ -1347,7 +1332,7 @@ between them?
 
 \begin{exercise}
 
-Start the Python interpreter and use it as a calculator.
+Start the Ruby interpreter and use it as a calculator.
 
 \begin{enumerate}
 
