@@ -1372,9 +1372,12 @@ An {\bf assignment statement} creates a new variable and gives
 it a value:
 
 \begin{verbatim}
->>> message = 'And now for something completely different'
->>> n = 17
->>> pi = 3.141592653589793
+>> message = 'And now for something completely different'
+=> "And now for something completely different"
+>> n = 17
+=> 17
+>> pi = 3.141592653589793
+=> 3.141592653589793
 \end{verbatim}
 %
 This example makes three assignments.  The first assigns a string
@@ -1418,36 +1421,27 @@ It is often used in names with multiple words, such as
 If you give a variable an illegal name, you get a syntax error:
 
 \begin{verbatim}
->>> 76trombones = 'big parade'
-SyntaxError: invalid syntax
->>> more@ = 1000000
-SyntaxError: invalid syntax
->>> class = 'Advanced Theoretical Zymurgy'
-SyntaxError: invalid syntax
+>> 76trombones = 'big parade'
+SyntaxError: syntax error, unexpected tIDENTIFIER, expecting end-of-input
+
+>> more:e = 1000000
+SyntaxError: syntax error, unexpected '=', expecting end-of-input
+
+>> class = 'Advanced Theoretical Zymurgy'
+SyntaxError: syntax error, unexpected '='
 \end{verbatim}
 %
 {\tt 76trombones} is illegal because it begins with a number.
-{\tt more@} is illegal because it contains an illegal character, {\tt
-@}.  But what's wrong with {\tt class}?
+{\tt more:e} is illegal because it contains an illegal character, {\tt
+:}.  But what's wrong with {\tt class}?
 
-It turns out that {\tt class} is one of Python's {\bf keywords}.  The
+It turns out that {\tt class} is one of Ruby's {\bf keywords}.  The
 interpreter uses keywords to recognize the structure of the program,
 and they cannot be used as variable names.
 \index{keyword}
 
-Python 3 has these keywords:
-
-\begin{verbatim}
-False      class      finally    is         return
-None       continue   for        lambda     try
-True       def        from       nonlocal   while
-and        del        global     not        with
-as         elif       if         or         yield
-assert     else       import     pass
-break      except     in         raise
-\end{verbatim}
-%
-You don't have to memorize this list.  In most development environments,
+See documentation \url{https://ruby-doc.org/core-2.5.0/doc/keywords_rdoc.html} for list of
+Ruby's keywords.  You don't have to memorize this list.  In most development environments,
 keywords are displayed in a different color; if you try to use one
 as a variable name, you'll know.
 
@@ -1460,12 +1454,12 @@ a variable, so the following are all legal expressions:
 \index{expression}
 
 \begin{verbatim}
->>> 42
-42
->>> n
-17
->>> n + 25
-42
+>> 42
+=> 42
+>> n
+=> 17
+>> n + 25
+=> 42
 \end{verbatim}
 %
 When you type an expression at the prompt, the interpreter
@@ -1480,23 +1474,27 @@ creating a variable or displaying a value.
 \index{statement}
 
 \begin{verbatim}
->>> n = 17
->>> print(n)
+>> n = 17
+=> 17
+>> puts n
+17
+=> nil
 \end{verbatim}
 %
 The first line is an assignment statement that gives a value to
-{\tt n}.  The second line is a print statement that displays the
+{\tt n}.  The third line is a puts statement that displays the
 value of {\tt n}.
 
 When you type a statement, the interpreter {\bf executes} it,
 which means that it does whatever the statement says.  In general,
 statements don't have values.
 \index{execute}
+% todo everything in Ruby is expression :-/ should there be statement definition at all here?
 
 
 \section{Script mode}
 
-So far we have run Python in {\bf interactive mode}, which
+So far we have run Ruby in {\bf interactive mode}, which
 means that you interact directly with the interpreter.
 Interactive mode is a good way to get started,
 but if you are working with more than a few lines of code, it can be
@@ -1505,43 +1503,45 @@ clumsy.
 
 The alternative is to save code in a file called a {\bf script} and
 then run the interpreter in {\bf script mode} to execute the script.  By
-convention, Python scripts have names that end with {\tt .py}.
+convention, Ruby scripts have names that end with {\tt .rb}.
 \index{script}
 \index{script mode}
 
 If you know how to create and run a script on your computer, you
-are ready to go.  Otherwise I recommend using PythonAnywhere again.
-I have posted instructions for running in script mode at
-\url{http://tinyurl.com/thinkpython2e}.
+are ready to go.  On Unix-like systems, it is as simple as running
+{\bf ruby scriptname.rb} from a terminal(or add shebang
+and execute the script directly if you prefer). Otherwise I
+recommend using \url{https://repl.it/} again.
 
-Because Python provides both modes,
+Because Ruby provides both modes,
 you can test bits of code in interactive mode before you put them
 in a script.  But there are differences between interactive mode
 and script mode that can be confusing.
 \index{interactive mode}
 \index{script mode}
 
-For example, if you are using Python as a calculator, you might type
+For example, if you are using Ruby as a calculator, you might type
 
 \begin{verbatim}
->>> miles = 26.2
->>> miles * 1.61
-42.182
+>> miles = 26.2
+=> 26.2
+>> miles * 1.61
+=> 42.182
 \end{verbatim}
 
-The first line assigns a value to {\tt miles}, but it has no visible
-effect.  The second line is an expression, so the
+The first line assigns a value to {\tt miles}.  The
+third line is an expression, so the
 interpreter evaluates it and displays the result.  It turns out that a
 marathon is about 42 kilometers.
 
 But if you type the same code into a script and run it, you get no
 output at all.  In script mode an expression, all by itself, has no
-visible effect.  Python actually evaluates the expression, but it doesn't
+visible effect.  Ruby actually evaluates the expression, but it doesn't
 display the value unless you tell it to:
 
 \begin{verbatim}
 miles = 26.2
-print(miles * 1.61)
+puts miles * 1.61
 \end{verbatim}
 
 This behavior can be confusing at first.
@@ -1553,9 +1553,9 @@ as the statements execute.
 For example, the script
 
 \begin{verbatim}
-print(1)
+puts 1
 x = 2
-print(x)
+puts x
 \end{verbatim}
 %
 produces the output
@@ -1568,7 +1568,7 @@ produces the output
 The assignment statement produces no output.
 
 To check your understanding, type the following statements in the
-Python interpreter and see what they do:
+Ruby interpreter and see what they do:
 
 \begin{verbatim}
 5
@@ -1578,7 +1578,7 @@ x + 1
 
 Now put the same statements in a script and run it.  What
 is the output?  Modify the script by transforming each
-expression into a print statement and then run it again.
+expression into a puts statement and then run it again.
 
 
 
@@ -1588,7 +1588,7 @@ expression into a print statement and then run it again.
 
 When an expression contains more than one operator, the order of
 evaluation depends on the {\bf order of operations}.  For
-mathematical operators, Python follows mathematical convention.
+mathematical operators, Ruby follows mathematical convention.
 The acronym {\bf PEMDAS} is a useful way to
 remember the rules:
 
@@ -1618,7 +1618,8 @@ if it doesn't change the result.
 
 I don't work very hard to remember the precedence of
 operators.  If I can't tell by looking at the expression, I use
-parentheses to make it obvious.
+parentheses to make it obvious. See \url{https://ruby-doc.org/core-2.5.0/doc/syntax/precedence_rdoc.html}
+for documentation on precedence of Ruby operations.
 
 
 \section{String operations}
@@ -1629,7 +1630,9 @@ In general, you can't perform mathematical operations on strings, even
 if the strings look like numbers, so the following are illegal:
 
 \begin{verbatim}
-'2'-'1'    'eggs'/'easy'    'third'*'a charm'
+'2'-'1'
+'eggs'/'easy'
+'third'*'a charm'
 \end{verbatim}
 %
 But there are two exceptions, {\tt +} and {\tt *}.
@@ -1639,10 +1642,12 @@ it joins the strings by linking them end-to-end.  For example:
 \index{concatenation}
 
 \begin{verbatim}
->>> first = 'throat'
->>> second = 'warbler'
->>> first + second
-throatwarbler
+>> first = 'throat'
+=> "throat"
+>> second = 'warbler'
+=> "warbler"
+>> first + second
+=> "throatwarbler"
 \end{verbatim}
 %
 The {\tt *} operator also works on strings; it performs repetition.
@@ -1725,7 +1730,7 @@ to distinguish between them in order to track them down more quickly.
 \index{syntax} 
 
 If there is a syntax error
-anywhere in your program, Python displays an error message and quits,
+anywhere in your program, Ruby displays an error message and quits,
 and you will not be able to run the program.  During the first few
 weeks of your programming career, you might spend a lot of
 time tracking down syntax errors.  As you gain experience, you will
@@ -1772,7 +1777,7 @@ values they refer to.
 \index{state diagram}
 
 \item[keyword:]  A reserved word that is used to parse a
-program; you cannot use keywords like {\tt if}, {\tt  def}, and {\tt while} as
+program; you cannot use keywords like {\tt if}, {\tt  true}, and {\tt while} as
 variable names.
 \index{keyword}
 
@@ -1787,17 +1792,17 @@ represents a single result.
 in order to yield a single value.
 
 \item[statement:]  A section of code that represents a command or action.  So
-far, the statements we have seen are assignments and print statements.
+far, the statements we have seen are assignments and puts statements.
 \index{statement}
 
 \item[execute:]  To run a statement and do what it says.
 \index{execute}
 
-\item[interactive mode:] A way of using the Python interpreter by
+\item[interactive mode:] A way of using the Ruby interpreter by
 typing code at the prompt.
 \index{interactive mode}
 
-\item[script mode:] A way of using the Python interpreter to read
+\item[script mode:] A way of using the Ruby interpreter to read
 code from a script and run it.
 \index{script mode}
 
@@ -1848,12 +1853,12 @@ errors on purpose to see what goes wrong.
 \item How about {\tt x = y = 1}?
 
 \item In some languages every statement ends with a semi-colon, {\tt ;}.
-What happens if you put a semi-colon at the end of a Python statement?
+What happens if you put a semi-colon at the end of a Ruby statement?
 
 \item What if you put a period at the end of a statement?
 
 \item In math notation you can multiply $x$ and $y$ like this: $x y$.
-What happens if you try that in Python?
+What happens if you try that in Ruby?
 
 \end{itemize}
 
@@ -1862,7 +1867,7 @@ What happens if you try that in Python?
 
 \begin{exercise}
 
-Practice using the Python interpreter as a calculator: 
+Practice using the Ruby interpreter as a calculator: 
 \index{calculator}
 
 \begin{enumerate}
@@ -1914,7 +1919,7 @@ a result.  The result is also called the {\bf return value}.
 \index{argument}
 \index{return value}
 
-Python provides functions that convert values
+Ruby provides functions that convert values
 from one type to another.  The {\tt int} function takes any value and
 converts it to an integer, if it can, or complains otherwise:
 \index{conversion!type}
@@ -1967,7 +1972,7 @@ Finally, {\tt str} converts its argument to a string:
 \index{math function}
 \index{function, math}
 
-Python has a math module that provides most of the familiar
+Ruby has a math module that provides most of the familiar
 mathematical functions.  A {\bf module} is a file that contains a
 collection of related functions.
 \index{module}
@@ -2083,7 +2088,7 @@ SyntaxError: can't assign to operator
 
 \section{Adding new functions}
 
-So far, we have only been using the functions that come with Python,
+So far, we have only been using the functions that come with Ruby,
 but it is also possible to add new functions.
 A {\bf function definition} specifies the name of a new function and
 the sequence of statements that run when the function is called.
@@ -2132,7 +2137,7 @@ a single quote (which is also an apostrophe) appears in the string.
 All quotation marks (single and double)
 must be ``straight quotes'', usually
 located next to Enter on the keyboard.  ``Curly quotes'', like
-the ones in this sentence, are not legal in Python.
+the ones in this sentence, are not legal in Ruby.
 
 If you type a function definition in interactive mode, the interpreter
 prints dots ({\tt ...}) to let you know that the definition
@@ -2256,7 +2261,7 @@ have to run the statements in another function.  Then, while
 running that new function, the program might have to run yet
 another function!
 
-Fortunately, Python is good at keeping track of where it is, so each
+Fortunately, Ruby is good at keeping track of where it is, so each
 time a function completes, the program picks up where it left off in
 the function that called it.  When it gets to the end of the program,
 it terminates.
