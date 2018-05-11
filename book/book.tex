@@ -3573,40 +3573,40 @@ kinds).  Solution: \url{http://thinkpython2.com/code/spiral.py}.
 
 The main topic of this chapter is the {\tt if} statement, which
 executes different code depending on the state of the program.
-But first I want to introduce two new operators: floor division
-and modulus.
+But first I want to discuss about floor division and introduce
+a new operator: modulus.
 
 
 \section{Floor division and modulus}
 
-The {\bf floor division} operator, \verb"//", divides
-two numbers and rounds down to an integer.  For example, suppose the
+The {\bf division} operator, \verb"/", divides
+two numbers and rounds down to an integer if both operands are integers.
+For example, suppose the
 run time of a movie is 105 minutes.  You might want to know how
-long that is in hours.  Conventional division
-returns a floating-point number:
+long that is in hours.
 
 \begin{verbatim}
->>> minutes = 105
->>> minutes / 60
-1.75
+>> minutes = 105
+=> 105
+>> hours = minutes / 60
+=> 1
 \end{verbatim}
 
-But we don't normally write hours with decimal points.  Floor
-division returns the integer number of hours, rounding down:
+We don't normally write hours with decimal points.  If it is needed
+for some reason, at least one of the operands should be a floating-point value:
 
 \begin{verbatim}
->>> minutes = 105
->>> hours = minutes // 60
->>> hours
-1
+>> minutes / 60.0
+=> 1.75
+>> Float(minutes) / 60
+=> 1.75
 \end{verbatim}
 
 To get the remainder, you could subtract off one hour in minutes:
 
 \begin{verbatim}
->>> remainder = minutes - hours * 60
->>> remainder
-45
+>> remainder = minutes - hours * 60
+=> 45
 \end{verbatim}
 
 \index{floor division}
@@ -3620,9 +3620,8 @@ An alternative is to use the {\bf modulus operator}, \verb"%", which
 divides two numbers and returns the remainder.
 
 \begin{verbatim}
->>> remainder = minutes % 60
->>> remainder
-45
+>> remainder = minutes % 60
+=> 45
 \end{verbatim}
 %
 The modulus operator is more useful than it seems.  For
@@ -3635,11 +3634,11 @@ or digits from a number.  For example, {\tt x \% 10} yields the
 right-most digit of {\tt x} (in base 10).  Similarly {\tt x \% 100}
 yields the last two digits.
 
-If you are using Python 2, division works differently.  The
-division operator, \verb"/", performs floor division if both
-operands are integers, and floating-point division if either
-operand is a {\tt float}.
-\index{Python 2}
+%% If you are using Python 2, division works differently.  The
+%% division operator, \verb"/", performs floor division if both
+%% operands are integers, and floating-point division if either
+%% operand is a {\tt float}.
+%% \index{Python 2}
 
 
 \section{Boolean expressions}
@@ -3651,29 +3650,30 @@ operand is a {\tt float}.
 A {\bf boolean expression} is an expression that is either true
 or false.  The following examples use the 
 operator {\tt ==}, which compares two operands and produces
-{\tt True} if they are equal and {\tt False} otherwise:
+{\tt true} if they are equal and {\tt false} otherwise:
 
 \begin{verbatim}
->>> 5 == 5
-True
->>> 5 == 6
-False
+>> 5 == 5
+=> true
+>> 5 == 6
+=> false
 \end{verbatim}
 %
-{\tt True} and {\tt False} are special
-values that belong to the type {\tt bool}; they are not strings:
-\index{True special value}
-\index{False special value}
-\index{special value!True}
-\index{special value!False}
-\index{bool type}
-\index{type!bool}
+{\tt true} and {\tt false} are special
+values that belong to the type {\tt TrueClass} and {\tt FalseClass}
+respectively; they are not strings:
+\index{true special value}
+\index{false special value}
+\index{special value!true}
+\index{special value!false}
+%% \index{bool type}
+%% \index{type!bool}
 
 \begin{verbatim}
->>> type(True)
-<class 'bool'>
->>> type(False)
-<class 'bool'>
+>> true.class
+=> TrueClass
+>> false.class
+=> FalseClass
 \end{verbatim}
 %
 The {\tt ==} operator is one of the {\bf relational operators}; the
@@ -3687,12 +3687,12 @@ others are:
       x <= y               # x is less than or equal to y
 \end{verbatim}
 %
-Although these operations are probably familiar to you, the Python
+Although these operations are probably familiar to you, the Ruby
 symbols are different from the mathematical symbols.  A common error
 is to use a single equal sign ({\tt =}) instead of a double equal sign
 ({\tt ==}).  Remember that {\tt =} is an assignment operator and
-{\tt ==} is a relational operator.   There is no such thing as
-{\tt =<} or {\tt =>}.
+{\tt ==} is a relational operator.
+%% todo There is no such thing as {\tt =<} or {\tt =>}.
 \index{relational operator}
 \index{operator!relational}
 
@@ -3701,10 +3701,10 @@ is to use a single equal sign ({\tt =}) instead of a double equal sign
 \index{logical operator}
 \index{operator!logical}
 
-There are three {\bf logical operators}: {\tt and}, {\tt
-or}, and {\tt not}.  The semantics (meaning) of these operators is
-similar to their meaning in English.  For example,
-{\tt x > 0 and x < 10} is true only if {\tt x} is greater than 0
+There are three {\bf logical operators} useful in boolean expressions:
+{\tt \&\&}, {\tt ||}, and {\tt !}.
+%% todo The semantics (meaning) of these operators is similar to their meaning in English.
+For example, {\tt x > 0 \&\& x < 10} is true only if {\tt x} is greater than 0
 {\em and} less than 10.
 \index{and operator}
 \index{or operator}
@@ -3713,26 +3713,28 @@ similar to their meaning in English.  For example,
 \index{operator!or}
 \index{operator!not}
 
-{\tt n\%2 == 0 or n\%3 == 0} is true if {\em either or both} of the
+{\tt n\%2 == 0 || n\%3 == 0} is true if {\em either or both} of the
 conditions is true, that is, if the number is divisible by 2 {\em or}
 3.
 
-Finally, the {\tt not} operator negates a boolean
-expression, so {\tt not (x > y)} is true if {\tt x > y} is false,
+Finally, the {\tt !} operator negates a boolean
+expression, so {\tt !(x > y)} is true if {\tt x > y} is false,
 that is, if {\tt x} is less than or equal to {\tt y}.
 
-Strictly speaking, the operands of the logical operators should be
-boolean expressions, but Python is not very strict.
-Any nonzero number is interpreted as {\tt True}:
+In Ruby, the operands of the logical operators need not be
+boolean expressions:
 
 \begin{verbatim}
->>> 42 and True
-True
+>> a = 42 && true
+=> true
+>> a
+=> true
 \end{verbatim}
 %
 This flexibility can be useful, but there are some subtleties to
 it that might be confusing.  You might want to avoid it (unless
 you know what you are doing).
+% todo add about which values evaluate to false?
 
 
 \section{Conditional execution}
@@ -3749,32 +3751,34 @@ accordingly.  {\bf Conditional statements} give us this ability.  The
 simplest form is the {\tt if} statement:
 
 \begin{verbatim}
-if x > 0:
-    print('x is positive')
+if x > 0
+  puts 'x is positive'
+end
 \end{verbatim}
 %
 The boolean expression after {\tt if} is
-called the {\bf condition}.  If it is true, the indented
+called the {\bf condition}.  If it is true, the body of {\tt if}
 statement runs.  If not, nothing happens.
 \index{condition}
 \index{compound statement}
 \index{statement!compound}
 
-{\tt if} statements have the same structure as function definitions:
-a header followed by an indented body.  Statements like this are
-called {\bf compound statements}.
+{\tt if} statements have the same structure as method definitions:
+a header followed by body (indented two spaces by convention) and end keyword.
+Statements like this are called {\bf compound statements}.
 
 There is no limit on the number of statements that can appear in
-the body, but there has to be at least one.
+the body, and can be empty too.
 Occasionally, it is useful to have a body with no statements (usually
-as a place keeper for code you haven't written yet).  In that
-case, you can use the {\tt pass} statement, which does nothing.
-\index{pass statement}
-\index{statement!pass}
+as a place keeper for code you haven't written yet).
+%% In that case, you can use the {\tt pass} statement, which does nothing.
+%% \index{pass statement}
+%% \index{statement!pass}
 
 \begin{verbatim}
-if x < 0:
-    pass          # TODO: need to handle negative values!
+if x < 0
+  # TODO: need to handle negative values!
+end
 \end{verbatim}
 %
 
@@ -3890,7 +3894,7 @@ if 0 < x and x < 10:
     print('x is a positive single-digit number.')
 \end{verbatim}
 
-For this kind of condition, Python provides a more concise option:
+For this kind of condition, Ruby provides a more concise option:
 
 \begin{verbatim}
 if 0 < x < 10:
@@ -4008,7 +4012,7 @@ In Section~\ref{stackdiagram}, we used a stack diagram to represent
 the state of a program during a function call.  The same kind of
 diagram can help interpret a recursive function.
 
-Every time a function gets called, Python creates a
+Every time a function gets called, Ruby creates a
 frame to contain the function's local variables and parameters.
 For a recursive function, there might be more than one frame on the
 stack at the same time.
@@ -4060,7 +4064,7 @@ def recurse():
 \end{verbatim}
 %
 In most programming environments, a program with infinite recursion
-does not really run forever.  Python reports an error
+does not really run forever.  Ruby reports an error
 message when the maximum recursion depth is reached:
 \index{exception!RuntimeError}
 \index{RuntimeError}
@@ -4092,11 +4096,11 @@ you are guaranteed to reach it.
 The programs we have written so far accept no input from the user.
 They just do the same thing every time.
 
-Python provides a built-in function called {\tt input} that
+Ruby provides a built-in function called {\tt input} that
 stops the program and
 waits for the user to type something.  When the user presses {\sf
   Return} or {\sf Enter}, the program resumes and \verb"input"
-returns what the user typed as a string.  In Python 2, the same
+returns what the user typed as a string.  In Ruby 2, the same
 function is called \verb"raw_input".
 \index{Python 2}
 \index{input function}
