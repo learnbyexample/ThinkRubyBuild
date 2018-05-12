@@ -3793,10 +3793,11 @@ in which there are two possibilities and the condition determines
 which one runs.  The syntax looks like this:
 
 \begin{verbatim}
-if x % 2 == 0:
-    print('x is even')
-else:
-    print('x is odd')
+if x % 2 == 0
+  puts 'x is even'
+else
+  puts 'x is odd'
+end
 \end{verbatim}
 %
 If the remainder when {\tt x} is divided by 2 is 0, then we know that
@@ -3818,28 +3819,30 @@ two branches.  One way to express a computation like that is a {\bf
 chained conditional}:
 
 \begin{verbatim}
-if x < y:
-    print('x is less than y')
-elif x > y:
-    print('x is greater than y')
-else:
-    print('x and y are equal')
+if x < y
+  puts 'x is less than y'
+elsif x > y
+  puts 'x is greater than y'
+else
+  puts 'x and y are equal'
+end
 \end{verbatim}
 %
-{\tt elif} is an abbreviation of ``else if''.  Again, exactly one
+{\tt elsif} is an abbreviation of ``else if''.  Again, exactly one
 branch will run.  There is no limit on the number of {\tt
-elif} statements.  If there is an {\tt else} clause, it has to be
+elsif} statements.  If there is an {\tt else} clause, it has to be
 at the end, but there doesn't have to be one.
-\index{elif keyword}
-\index{keyword!elif}
+\index{elsif keyword}
+\index{keyword!elsif}
 
 \begin{verbatim}
-if choice == 'a':
-    draw_a()
-elif choice == 'b':
-    draw_b()
-elif choice == 'c':
-    draw_c()
+if choice == 'a'
+  draw_a()
+elsif choice == 'b'
+  draw_b()
+elsif choice == 'c'
+  draw_c()
+end
 \end{verbatim}
 %
 Each condition is checked in order.  If the first is false,
@@ -3857,13 +3860,15 @@ One conditional can also be nested within another.  We could have
 written the example in the previous section like this:
 
 \begin{verbatim}
-if x == y:
-    print('x and y are equal')
-else:
-    if x < y:
-        print('x is less than y')
-    else:
-        print('x is greater than y')
+if x == y
+  puts 'x and y are equal'
+else
+  if x < y
+    puts 'x is less than y'
+  else
+    puts 'x is greater than y'
+  end
+end
 \end{verbatim}
 %
 The outer conditional contains two branches.  The
@@ -3881,25 +3886,29 @@ statements.  For example, we can rewrite the following code using a
 single conditional:
 
 \begin{verbatim}
-if 0 < x:
-    if x < 10:
-        print('x is a positive single-digit number.')
+if 0 < x
+  if x < 10
+    puts 'x is a positive single-digit number.'
+  end
+end
 \end{verbatim}
 %
-The {\tt print} statement runs only if we make it past both
-conditionals, so we can get the same effect with the {\tt and} operator:
+The {\tt puts} method runs only if we make it past both
+conditionals, so we can get the same effect with the {\tt \&\&} operator:
 
 \begin{verbatim}
-if 0 < x and x < 10:
-    print('x is a positive single-digit number.')
+if 0 < x && x < 10
+  puts 'x is a positive single-digit number.'
+end
 \end{verbatim}
 
-For this kind of condition, Ruby provides a more concise option:
-
-\begin{verbatim}
-if 0 < x < 10:
-    print('x is a positive single-digit number.')
-\end{verbatim}
+% todo is there an equivalent for this?
+%% For this kind of condition, Ruby provides a more concise option:
+%% 
+%% \begin{verbatim}
+%% if 0 < x < 10:
+%%     print('x is a positive single-digit number.')
+%% \end{verbatim}
 
 
 \section{Recursion}
