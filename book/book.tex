@@ -3782,6 +3782,16 @@ end
 \end{verbatim}
 %
 
+{\tt if} can also be specified after an expression to make it conditional.
+
+\begin{verbatim}
+>> puts '2 is less than 1' if 2 < 1
+=> nil
+>> puts '2 is less than 3' if 2 < 3
+2 is less than 3
+=> nil
+\end{verbatim}
+
 \section{Alternative execution}
 \label{alternative.execution}
 \index{alternative execution}
@@ -3911,33 +3921,37 @@ end
 %% \end{verbatim}
 
 
+
+
 \section{Recursion}
 \label{recursion}
 \index{recursion}
 
-It is legal for one function to call another;
-it is also legal for a function to call itself.  It may not be obvious
+It is legal for one method to call another;
+it is also legal for a method to call itself.  It may not be obvious
 why that is a good thing, but it turns out to be one of the most
 magical things a program can do.
-For example, look at the following function:
+For example, look at the following method:
 
 \begin{verbatim}
-def countdown(n):
-    if n <= 0:
-        print('Blastoff!')
-    else:
-        print(n)
-        countdown(n-1)
+def countdown(n)
+  if n <= 0
+    puts 'Blastoff!'
+  else
+    puts n
+    countdown(n-1)
+  end
+end
 \end{verbatim}
 %
 If {\tt n} is 0 or negative, it outputs the word, ``Blastoff!''
-Otherwise, it outputs {\tt n} and then calls a function named {\tt
+Otherwise, it outputs {\tt n} and then calls a method named {\tt
 countdown}---itself---passing {\tt n-1} as an argument.
 
-What happens if we call this function like this?
+What happens if we call this method like this?
 
 \begin{verbatim}
->>> countdown(3)
+countdown(3)
 \end{verbatim}
 %
 The execution of {\tt countdown} begins with {\tt n=3}, and since
@@ -3965,7 +3979,7 @@ The {\tt countdown} that got {\tt n=2} returns.
 
 The {\tt countdown} that got {\tt n=3} returns.
 
-And then you're back in \verb"__main__".  So, the
+And then you're back in \verb"main".  So, the
 total output looks like this:
 \index{main}
 
@@ -3976,29 +3990,29 @@ total output looks like this:
 Blastoff!
 \end{verbatim}
 %
-A function that calls itself is {\bf recursive}; the process of
+A method that calls itself is {\bf recursive}; the process of
 executing it is called {\bf recursion}.
 \index{recursion}
-\index{function!recursive}
+\index{method!recursive}
 
-As another example, we can write a function that prints a
+As another example, we can write a method that prints a
 string {\tt n} times.
 
 \begin{verbatim}
-def print_n(s, n):
-    if n <= 0:
-        return
-    print(s)
-    print_n(s, n-1)
+def print_n(s, n)
+  return if n <= 0
+  puts s
+  print_n(s, n-1)
+end
 \end{verbatim}
 %
-If {\tt n <= 0} the {\bf return statement} exits the function.  The
+If {\tt n <= 0} the {\bf return statement} exits the method.  The
 flow of execution immediately returns to the caller, and the remaining
-lines of the function don't run.
+lines of the method don't run.
 \index{return statement}
 \index{statement!return}
 
-The rest of the function is similar to {\tt countdown}: it displays
+The rest of the method is similar to {\tt countdown}: it displays
 {\tt s} and then calls itself to display {\tt s} $n-1$ additional
 times.  So the number of lines of output is {\tt 1 + (n - 1)}, which
 adds up to {\tt n}.
@@ -4011,19 +4025,19 @@ good to start early.
 \index{loop!for}
 
 
-\section{Stack diagrams for recursive functions}
+\section{Stack diagrams for recursive methods}
 \label{recursive.stack}
 \index{stack diagram}
-\index{function frame}
+\index{method frame}
 \index{frame}
 
 In Section~\ref{stackdiagram}, we used a stack diagram to represent
-the state of a program during a function call.  The same kind of
-diagram can help interpret a recursive function.
+the state of a program during a method call.  The same kind of
+diagram can help interpret a recursive method.
 
-Every time a function gets called, Ruby creates a
-frame to contain the function's local variables and parameters.
-For a recursive function, there might be more than one frame on the
+Every time a method gets called, Ruby creates a
+frame to contain the method's local variables and parameters.
+For a recursive method, there might be more than one frame on the
 stack at the same time.
 
 Figure~\ref{fig.stack2} shows a stack diagram for {\tt countdown} called with
@@ -4037,9 +4051,9 @@ Figure~\ref{fig.stack2} shows a stack diagram for {\tt countdown} called with
 \end{figure}
 
 
-As usual, the top of the stack is the frame for \verb"__main__".
+As usual, the top of the stack is the frame for \verb"main".
 It is empty because we did not create any variables in 
-\verb"__main__" or pass any arguments to it.
+\verb"main" or pass any arguments to it.
 \index{base case}
 \index{recursion!base case}
 
@@ -4050,9 +4064,9 @@ there are no more frames.
 
 As an exercise, draw a stack diagram for \verb"print_n" called with
 \verb"s = 'Hello'" and {\tt n=2}.
-Then write a function called \verb"do_n" that takes a function
-object and a number, {\tt n}, as arguments, and that calls
-the given function {\tt n} times.
+Then write a method called \verb"do_n" that takes a method's
+symbol and a number, {\tt n}, as arguments, and that calls
+the given method {\tt n} times.
 
 
 \section{Infinite recursion}
@@ -4068,33 +4082,36 @@ known as {\bf infinite recursion}, and it is generally not
 a good idea.  Here is a minimal program with an infinite recursion:
 
 \begin{verbatim}
-def recurse():
-    recurse()
+def recurse()
+  recurse()
+end
 \end{verbatim}
 %
 In most programming environments, a program with infinite recursion
 does not really run forever.  Ruby reports an error
 message when the maximum recursion depth is reached:
-\index{exception!RuntimeError}
-\index{RuntimeError}
+\index{exception!SystemStackError}
+\index{SystemStackError}
 
 \begin{verbatim}
-  File "<stdin>", line 2, in recurse
-  File "<stdin>", line 2, in recurse
-  File "<stdin>", line 2, in recurse
-                  .   
+Traceback (most recent call last):
+       16: from (irb):2:in `recurse'
+       15: from (irb):2:in `recurse'
+       14: from (irb):2:in `recurse'
                   .
                   .
-  File "<stdin>", line 2, in recurse
-RuntimeError: Maximum recursion depth exceeded
+                  .
+        2: from (irb):2:in `recurse'
+        1: from (irb):2:in `recurse'
+SystemStackError (stack level too deep)
 \end{verbatim}
 %
 This traceback is a little bigger than the one we saw in the
-previous chapter.  When the error occurs, there are 1000
+previous chapter.  When the error occurs, there are 16
 {\tt recurse} frames on the stack!
 
 If you encounter an infinite recursion by accident, review
-your function to confirm that there is a base case that does not
+your method to confirm that there is a base case that does not
 make a recursive call.  And if there is a base case, check whether
 you are guaranteed to reach it.
 
@@ -4105,66 +4122,85 @@ you are guaranteed to reach it.
 The programs we have written so far accept no input from the user.
 They just do the same thing every time.
 
-Ruby provides a built-in function called {\tt input} that
+Ruby's Kernel module provides a method called {\tt gets} that
 stops the program and
-waits for the user to type something.  When the user presses {\sf
-  Return} or {\sf Enter}, the program resumes and \verb"input"
-returns what the user typed as a string.  In Ruby 2, the same
-function is called \verb"raw_input".
-\index{Python 2}
-\index{input function}
-\index{function!input}
+waits for the user to type something.  When the user presses
+{\sf Enter} key, the program resumes and \verb"gets"
+returns what the user typed as a string.
+%% In Ruby 2, the same function is called \verb"raw_input".
+%% \index{Python 2}
+\index{gets method}
+\index{method!gets}
+% todo gets actually reads from file, it is STDIN here, link to File chapter?
 
 \begin{verbatim}
->>> text = input()
+>> text = gets()
 What are you waiting for?
->>> text
-'What are you waiting for?'
+=> "What are you waiting for?\n"
+>> text
+=> "What are you waiting for?\n"
 \end{verbatim}
 %
+The sequence \verb"\n" at the end of the received string represents a {\bf
+  newline}, which is a special character that causes a line break.
+String class has a method called {\tt chomp} that removes newline character
+if it is the last character of string.
+\index{newline}
+\index{chomp method}
+\index{method!chomp}
+
+\begin{verbatim}
+>> fruit = gets()
+mango
+=> "mango\n"
+>> fruit = gets().chomp()
+apple
+=> "apple"
+\end{verbatim}
+
 Before getting input from the user, it is a good idea to print a
-prompt telling the user what to type.  \verb"input" can take a
-prompt as an argument:
+prompt telling the user what to type.
+%% \verb"input" can take a prompt as an argument:
 \index{prompt}
 
 \begin{verbatim}
->>> name = input('What...is your name?\n')
-What...is your name?
-Arthur, King of the Britons!
->>> name
-'Arthur, King of the Britons!'
+puts 'What...is your name?'
+name = gets()
 \end{verbatim}
 %
-The sequence \verb"\n" at the end of the prompt represents a {\bf
-  newline}, which is a special character that causes a line break.
-That's why the user's input appears below the prompt.  \index{newline}
+%% The sequence \verb"\n" at the end of the prompt represents a {\bf
+%%   newline}, which is a special character that causes a line break.
+%% That's why the user's input appears below the prompt.  \index{newline}
 
 If you expect the user to type an integer, you can try to convert
-the return value to {\tt int}:
+the return value to {\tt Integer}:
 
 \begin{verbatim}
->>> prompt = 'What...is the airspeed velocity of an unladen swallow?\n'
->>> speed = input(prompt)
+>> puts 'What...is the airspeed velocity of an unladen swallow?'
 What...is the airspeed velocity of an unladen swallow?
+=> nil
+>> speed = gets()
 42
->>> int(speed)
-42
+=> "42\n"
+>> Integer(speed)
+=> 42
 \end{verbatim}
 %
 But if the user types something other than a string of digits,
 you get an error:
 
 \begin{verbatim}
->>> speed = input(prompt)
-What...is the airspeed velocity of an unladen swallow?
+>> speed = gets()
 What do you mean, an African or a European swallow?
->>> int(speed)
-ValueError: invalid literal for int() with base 10
+=> "What do you mean, an African or a European swallow?\n"
+>> Integer(speed)
+ArgumentError (invalid value for Integer():
+    "What do you mean, an African or a European swallow?\n")
 \end{verbatim}
 %
 We will see how to handle this kind of error later.
-\index{ValueError}
-\index{exception!ValueError}
+\index{ArgumentError}
+\index{exception!ArgumentError}
 
 
 \section{Debugging}
@@ -4215,8 +4251,8 @@ you might write something like this:
 import math
 signal_power = 9
 noise_power = 10
-ratio = signal_power // noise_power
-decibels = 10 * math.log10(ratio)
+ratio = signal_power / noise_power
+decibels = 10 * Math.log10(ratio)
 print(decibels)
 \end{verbatim}
 %
