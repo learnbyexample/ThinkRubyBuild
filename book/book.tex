@@ -4143,8 +4143,8 @@ What are you waiting for?
 %
 The sequence \verb"\n" at the end of the received string represents a {\bf
   newline}, which is a special character that causes a line break.
-String class has a method called {\tt chomp} that removes newline character
-if it is the last character of string.
+The {\tt chomp} method can be used on a string object
+to remove newline character if it is the last character of string.
 \index{newline}
 \index{chomp method}
 \index{method!chomp}
@@ -4204,7 +4204,7 @@ We will see how to handle this kind of error later.
 
 
 \section{Debugging}
-\label{whitespace}
+%% \label{whitespace}
 \index{debugging}
 \index{traceback}
 
@@ -4221,21 +4221,24 @@ useful parts are usually:
 \end{itemize}
 
 Syntax errors are usually easy to find, but there are a few
-gotchas.  Whitespace errors can be tricky because spaces and
-tabs are invisible and we are used to ignoring them.
-\index{whitespace}
+gotchas.
+%% Whitespace errors can be tricky because spaces and
+%% tabs are invisible and we are used to ignoring them.
+%% \index{whitespace}
 
 \begin{verbatim}
->>> x = 5
->>>  y = 6
-  File "<stdin>", line 1
-    y = 6
-    ^
-IndentationError: unexpected indent
+>> x = 5
+=> 5
+>> y = 5x + 4
+Traceback (most recent call last):
+        1: from /usr/local/bin/irb:11:in `<main>'
+SyntaxError ((irb):2: syntax error, unexpected tIDENTIFIER, expecting end-of-input
+        y = 5x + 4
+             ^)
 \end{verbatim}
 %
-In this example, the problem is that the second line is indented by
-one space.  But the error message points to {\tt y}, which is
+In this example, the problem is missing operator between
+5 and x.  But the error message points to {\tt x}, which is
 misleading.  In general, error messages indicate where the problem was
 discovered, but the actual error might be earlier in the code,
 sometimes on a previous line.
@@ -4244,37 +4247,36 @@ sometimes on a previous line.
 
 The same is true of runtime errors.  Suppose you are trying
 to compute a signal-to-noise ratio in decibels.  The formula
-is $SNR_{db} = 10 \log_{10} (P_{signal} / P_{noise})$.  In Python,
+is $SNR_{db} = 10 \log_{10} (P_{signal} / P_{noise})$.  In Ruby,
 you might write something like this:
 
 \begin{verbatim}
-import math
 signal_power = 9
-noise_power = 10
+noise_power = 0
 ratio = signal_power / noise_power
 decibels = 10 * Math.log10(ratio)
-print(decibels)
+puts decibels
 \end{verbatim}
 %
 When you run this program, you get an exception:
 %
-\index{exception!OverflowError}
-\index{OverflowError}
+\index{exception!ZeroDivisionError}
+\index{ZeroDivisionError}
 
 \begin{verbatim}
 Traceback (most recent call last):
-  File "snr.py", line 5, in ?
-    decibels = 10 * math.log10(ratio)
-ValueError: math domain error
+	1: from snr.rb:3:in `<main>'
+snr.rb:3:in `/': divided by 0 (ZeroDivisionError)
 \end{verbatim}
 %
-The error message indicates line 5, but there is nothing
+The error message indicates line 3, but there is nothing
 wrong with that line.  To find the real error, it might be
-useful to print the value of {\tt ratio}, which turns out to
-be 0.  The problem is in line 4, which uses floor division
-instead of floating-point division.
-\index{floor division}
-\index{division!floor}
+useful to print the value of {\tt noise\_power}, which turns out to
+be 0.
+%% The problem is in line 4, which uses floor division
+%% instead of floating-point division.
+%% \index{floor division}
+%% \index{division!floor}
 
 You should take the time to read error messages carefully, but don't
 assume that everything they say is correct.
@@ -4284,8 +4286,8 @@ assume that everything they say is correct.
 
 \begin{description}
 
-\item[floor division:] An operator, denoted {\tt //}, that divides two
-  numbers and rounds down (toward negative infinity) to an integer.
+\item[floor division:] An operation, that divides two
+  integers and rounds down (toward negative infinity) to an integer.
   \index{floor division} 
   \index{division!floor}
 
@@ -4296,7 +4298,7 @@ number is divided by another.
 \index{operator!modulus}
 
 \item[boolean expression:]  An expression whose value is either 
-{\tt True} or {\tt False}.
+{\tt true} or {\tt false}.
 \index{boolean expression}
 \index{expression!boolean}
 
@@ -4304,7 +4306,7 @@ number is divided by another.
 its operands: {\tt ==}, {\tt !=}, {\tt >}, {\tt <}, {\tt >=}, and {\tt <=}.
 
 \item[logical operator:] One of the operators that combines boolean
-expressions: {\tt and}, {\tt or}, and {\tt not}.
+expressions: {\tt \&\&}, {\tt ||}, and {\tt !}.
 
 \item[conditional statement:]  A statement that controls the flow of
 execution depending on some condition.
@@ -4315,8 +4317,8 @@ execution depending on some condition.
 that determines which branch runs.
 \index{condition}
 
-\item[compound statement:]  A statement that consists of a header
-and a body.  The header ends with a colon (:).  The body is indented
+\item[compound statement:]  A statement that consists of a header,
+a body and end keyword.  The body is conventionally indented
 relative to the header.
 \index{compound statement}
 
@@ -4334,15 +4336,15 @@ in one of the branches of another conditional statement.
 \index{nested conditional}
 \index{conditional!nested}
 
-\item[return statement:] A statement that causes a function to
+\item[return statement:] A statement that causes a method to
 end immediately and return to the caller.
 
-\item[recursion:]  The process of calling the function that is
+\item[recursion:]  The process of calling the method that is
 currently executing.
 \index{recursion}
 
 \item[base case:]  A conditional branch in a
-recursive function that does not make a recursive call.
+recursive method that does not make a recursive call.
 \index{base case}
 
 \item[infinite recursion:]  A recursion that doesn't have a
@@ -4356,15 +4358,15 @@ causes a runtime error.
 
 \begin{exercise}
 
-The {\tt time} module provides a function, also named {\tt time}, that
+% todo there are methods to obtain hour/min/sec/etc
+    The {\tt Time} module has methods, {\tt now} and {\tt to\_i}, that
 returns the current Greenwich Mean Time in ``the epoch'', which is
 an arbitrary time used as a reference point.  On UNIX systems, the
 epoch is 1 January 1970.
 
 \begin{verbatim}
->>> import time
->>> time.time()
-1437746094.5735958
+>> Time.now.to_i
+=> 1526708312
 \end{verbatim}
 
 Write a script that reads the current time and converts it to
@@ -4386,7 +4388,7 @@ for any values of $n$ greater than 2.
 
 \begin{enumerate}
 
-\item Write a function named \verb"check_fermat" that takes four
+\item Write a method named \verb"check_fermat" that takes four
 parameters---{\tt a}, {\tt b}, {\tt c} and {\tt n}---and
 checks to see if Fermat's theorem holds.  If
 $n$ is greater than 2 and 
@@ -4396,7 +4398,7 @@ $n$ is greater than 2 and
 the program should print, ``Holy smokes, Fermat was wrong!''
 Otherwise the program should print, ``No, that doesn't work.''
 
-\item Write a function that prompts the user to input values
+\item Write a method that prompts the user to input values
 for {\tt a}, {\tt b}, {\tt c} and {\tt n}, converts them to
 integers, and uses \verb"check_fermat" to check whether they
 violate Fermat's theorem.
@@ -4425,12 +4427,12 @@ If any of the three lengths is greater than the sum of the other
 
 \begin{enumerate}
 
-\item Write a function named \verb"is_triangle" that takes three
+\item Write a method named \verb"is_triangle" that takes three
   integers as arguments, and that prints either ``Yes'' or ``No'', depending
   on whether you can or cannot form a triangle from sticks with the
   given lengths.
 
-\item Write a function that prompts the user to input three stick
+\item Write a method that prompts the user to input three stick
   lengths, converts them to integers, and uses \verb"is_triangle" to
   check whether sticks with the given lengths can form a triangle.
 
@@ -4444,107 +4446,110 @@ Draw a stack diagram that shows the state of the program
 when it prints the result.
 
 \begin{verbatim}
-def recurse(n, s):
-    if n == 0:
-        print(s)
-    else:
-        recurse(n-1, n+s)
+def recurse(n, s)
+  if n == 0
+    puts s
+  else
+    recurse(n-1, n+s)
+  end
+end
 
 recurse(3, 0)
 \end{verbatim}
 
 \begin{enumerate}
 
-\item What would happen if you called this function like this: {\tt
+\item What would happen if you called this method like this: {\tt
   recurse(-1, 0)}?
 
-\item Write a docstring that explains everything someone would need to
-  know in order to use this function (and nothing else).
+% todo equivalent of docstring in Ruby?
+\item Write comments before body of the method that explains everything someone would need to
+  know in order to use this method (and nothing else).
 
 \end{enumerate}
 
 \end{exercise}
 
-
-The following exercises use the {\tt turtle} module, described in
-Chapter~\ref{turtlechap}:
-\index{TurtleWorld}
-
-\begin{exercise}
-
-Read the following function and see if you can figure out
-what it does (see the examples in Chapter~\ref{turtlechap}).  Then run it 
-and see if you got it right.
-
-\begin{verbatim}
-def draw(t, length, n):
-    if n == 0:
-        return
-    angle = 50
-    t.fd(length*n)
-    t.lt(angle)
-    draw(t, length, n-1)
-    t.rt(2*angle)
-    draw(t, length, n-1)
-    t.lt(angle)
-    t.bk(length*n)
-\end{verbatim}
-
-\end{exercise}
-
-
-\begin{figure}
-\centerline
-{\includegraphics[scale=0.8]{figs/koch.pdf}}
-\caption{A Koch curve.}
-\label{fig.koch}
-\end{figure}
-
-\begin{exercise}
-\index{Koch curve}
-
-The Koch curve is a fractal that looks something like
-Figure~\ref{fig.koch}.  To draw a Koch curve with length $x$, all you
-have to do is
-
-\begin{enumerate}
-
-\item Draw a Koch curve with length $x/3$.
-
-\item Turn left 60 degrees.
-
-\item Draw a Koch curve with length $x/3$.
-
-\item Turn right 120 degrees.
-
-\item Draw a Koch curve with length $x/3$.
-
-\item Turn left 60 degrees.
-
-\item Draw a Koch curve with length $x/3$.
-
-\end{enumerate}
-
-The exception is if $x$ is less than 3: in that case,
-you can just draw a straight line with length $x$.
-
-\begin{enumerate}
-
-\item Write a function called {\tt koch} that takes a turtle and
-a length as parameters, and that uses the turtle to draw a Koch
-curve with the given length.
-
-\item Write a function called {\tt snowflake} that draws three
-Koch curves to make the outline of a snowflake.
-
-Solution: \url{http://thinkpython2.com/code/koch.py}.
-
-\item The Koch curve can be generalized in several ways.  See
-\url{http://en.wikipedia.org/wiki/Koch_snowflake} for examples and
-implement your favorite.
-
-\end{enumerate}
-\end{exercise}
+% todo
+%% The following exercises use the {\tt turtle} module, described in
+%% Chapter~\ref{turtlechap}:
+%% \index{TurtleWorld}
+%% 
+%% \begin{exercise}
+%% 
+%% Read the following function and see if you can figure out
+%% what it does (see the examples in Chapter~\ref{turtlechap}).  Then run it 
+%% and see if you got it right.
+%% 
+%% \begin{verbatim}
+%% def draw(t, length, n):
+%%     if n == 0:
+%%         return
+%%     angle = 50
+%%     t.fd(length*n)
+%%     t.lt(angle)
+%%     draw(t, length, n-1)
+%%     t.rt(2*angle)
+%%     draw(t, length, n-1)
+%%     t.lt(angle)
+%%     t.bk(length*n)
+%% \end{verbatim}
+%% 
+%% \end{exercise}
+%% 
+%% 
+%% \begin{figure}
+%% \centerline
+%% {\includegraphics[scale=0.8]{figs/koch.pdf}}
+%% \caption{A Koch curve.}
+%% \label{fig.koch}
+%% \end{figure}
+%% 
+%% \begin{exercise}
+%% \index{Koch curve}
+%% 
+%% The Koch curve is a fractal that looks something like
+%% Figure~\ref{fig.koch}.  To draw a Koch curve with length $x$, all you
+%% have to do is
+%% 
+%% \begin{enumerate}
+%% 
+%% \item Draw a Koch curve with length $x/3$.
+%% 
+%% \item Turn left 60 degrees.
+%% 
+%% \item Draw a Koch curve with length $x/3$.
+%% 
+%% \item Turn right 120 degrees.
+%% 
+%% \item Draw a Koch curve with length $x/3$.
+%% 
+%% \item Turn left 60 degrees.
+%% 
+%% \item Draw a Koch curve with length $x/3$.
+%% 
+%% \end{enumerate}
+%% 
+%% The exception is if $x$ is less than 3: in that case,
+%% you can just draw a straight line with length $x$.
+%% 
+%% \begin{enumerate}
+%% 
+%% \item Write a function called {\tt koch} that takes a turtle and
+%% a length as parameters, and that uses the turtle to draw a Koch
+%% curve with the given length.
+%% 
+%% \item Write a function called {\tt snowflake} that draws three
+%% Koch curves to make the outline of a snowflake.
+%% 
+%% Solution: \url{http://thinkpython2.com/code/koch.py}.
+%% 
+%% \item The Koch curve can be generalized in several ways.  See
+%% \url{http://en.wikipedia.org/wiki/Koch_snowflake} for examples and
+%% implement your favorite.
+%% 
+%% \end{enumerate}
+%% \end{exercise}
 
 
 \chapter{Fruitful functions}
