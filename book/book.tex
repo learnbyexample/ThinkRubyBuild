@@ -4974,7 +4974,7 @@ Theory of Computation}.
 
 To give you an idea of what you can do with the tools you have learned
 so far, we'll evaluate a few recursively defined mathematical
-functions.  A recursive definition is similar to a circular
+methods.  A recursive definition is similar to a circular
 definition, in the sense that the definition contains a reference to
 the thing being defined.  A truly circular definition is not very
 useful:
@@ -4990,7 +4990,7 @@ useful:
 
 If you saw that definition in the dictionary, you might be annoyed. On
 the other hand, if you looked up the definition of the factorial
-function, denoted with the symbol $!$, you might get something like
+method, denoted with the symbol $!$, you might get something like
 this:
 %
 \begin{eqnarray*}
@@ -5004,8 +5004,8 @@ of any other value, $n$, is $n$ multiplied by the factorial of $n-1$.
 So $3!$ is 3 times $2!$, which is 2 times $1!$, which is 1 times
 $0!$. Putting it all together, $3!$ equals 3 times 2 times 1 times 1,
 which is 6.
-\index{factorial function}
-\index{function!factorial}
+\index{factorial method}
+\index{method!factorial}
 \index{recursive definition}
 
 If you can write a recursive definition of something, you can
@@ -5014,15 +5014,18 @@ what the parameters should be.  In this case it should be clear
 that {\tt factorial} takes an integer:
 
 \begin{verbatim}
-def factorial(n):
+def factorial(n)
+end
 \end{verbatim}
 %
 If the argument happens to be 0, all we have to do is return 1:
 
 \begin{verbatim}
-def factorial(n):
-    if n == 0:
-        return 1
+def factorial(n)
+  if n == 0
+    return 1
+  end
+end
 \end{verbatim}
 %
 Otherwise, and this is the interesting part, we have to make a
@@ -5030,13 +5033,15 @@ recursive call to find the factorial of $n-1$ and then multiply it by
 $n$:
 
 \begin{verbatim}
-def factorial(n):
-    if n == 0:
-        return 1
-    else:
-        recurse = factorial(n-1)
-        result = n * recurse
-        return result
+def factorial(n)
+  if n == 0
+    return 1
+  else
+    recurse = factorial(n-1)
+    result = n * recurse
+    return result
+  end
+end
 \end{verbatim}
 %
 The flow of execution for this program is similar to the flow of {\tt
@@ -5073,12 +5078,12 @@ result is returned.
 
 
 The return value (2) is multiplied by $n$, which is 3, and the result, 6,
-becomes the return value of the function call that started the whole
+becomes the return value of the method call that started the whole
 process.
 \index{stack diagram}
 
 Figure~\ref{fig.stack3} shows what the stack diagram looks like for
-this sequence of function calls.
+this sequence of method calls.
 
 \begin{figure}
 \centerline
@@ -5090,7 +5095,7 @@ this sequence of function calls.
 The return values are shown being passed back up the stack.  In each
 frame, the return value is the value of {\tt result}, which is the
 product of {\tt n} and {\tt recurse}.
-\index{function frame}
+\index{method frame}
 \index{frame}
 
 In the last frame, the local
@@ -5105,21 +5110,21 @@ the branch that creates them does not run.
 Following the flow of execution is one way to read programs, but
 it can quickly become overwhelming.  An
 alternative is what I call the ``leap of faith''.  When you come to a
-function call, instead of following the flow of execution, you {\em
-assume} that the function works correctly and returns the right
+method call, instead of following the flow of execution, you {\em
+assume} that the method works correctly and returns the right
 result.
 
 In fact, you are already practicing this leap of faith when you use
-built-in functions.  When you call {\tt math.cos} or {\tt math.exp},
-you don't examine the bodies of those functions.  You just
+built-in methods.  When you call {\tt Math.cos} or {\tt Math.exp},
+you don't examine the bodies of those methods.  You just
 assume that they work because the people who wrote the built-in
-functions were good programmers.
+methods were good programmers.
 
-The same is true when you call one of your own functions.  For
-example, in Section~\ref{boolean}, we wrote a function called 
+The same is true when you call one of your own methods.  For
+example, in Section~\ref{boolean}, we wrote a method called 
 \verb"divisible?" that determines whether one number is divisible by
-another.  Once we have convinced ourselves that this function is
-correct---by examining the code and testing---we can use the function
+another.  Once we have convinced ourselves that this method is
+correct---by examining the code and testing---we can use the method
 without looking at the body again.
 \index{testing!leap of faith}
 
@@ -5130,7 +5135,7 @@ yourself, ``Assuming that I can find the factorial of $n-1$, can I
 compute the factorial of $n$?''  It is clear that you
 can, by multiplying by $n$.
 
-Of course, it's a bit strange to assume that the function works
+Of course, it's a bit strange to assume that the method works
 correctly when you haven't finished writing it, but that's why
 it's called a leap of faith!
 
@@ -5138,12 +5143,12 @@ it's called a leap of faith!
 \section{One more example}
 \label{one.more.example}
 
-\index{fibonacci function}
-\index{function!fibonacci}
+\index{fibonacci method}
+\index{method!fibonacci}
 After {\tt factorial}, the most common example of a recursively
-defined mathematical function is {\tt fibonacci}, which has the
+defined mathematical method is {\tt fibonacci}, which has the
 following definition (see
-  \url{http://en.wikipedia.org/wiki/Fibonacci_number}):
+  \url{https://en.wikipedia.org/wiki/Fibonacci_number}):
 %
 \begin{eqnarray*}
 && \mathrm{fibonacci}(0) = 0 \\
@@ -5154,13 +5159,15 @@ following definition (see
 Translated into Ruby, it looks like this:
 
 \begin{verbatim}
-def fibonacci(n):
-    if n == 0:
-        return 0
-    elif  n == 1:
-        return 1
-    else:
-        return fibonacci(n-1) + fibonacci(n-2)
+def fibonacci(n)
+  if n == 0
+    return 0
+  elsif n == 1
+    return 1
+  else
+    return fibonacci(n-1) + fibonacci(n-2)
+  end
+end
 \end{verbatim}
 %
 If you try to follow the flow of execution here, even for fairly
@@ -5177,15 +5184,15 @@ the right result by adding them together.
 What happens if we call {\tt factorial} and give it 1.5 as an argument?
 \index{type checking}
 \index{error checking}
-\index{factorial function}
+\index{factorial method}
 \index{RuntimeError}
 
 \begin{verbatim}
->>> factorial(1.5)
-RuntimeError: Maximum recursion depth exceeded
+>> factorial(1.5)
+SystemStackError (stack level too deep)
 \end{verbatim}
 %
-It looks like an infinite recursion.  How can that be?  The function
+It looks like an infinite recursion.  How can that be?  The method
 has a base case---when {\tt n == 0}.  But if {\tt n} is not an integer,
 we can {\em miss} the base case and recurse forever.
 \index{infinite recursion}
@@ -5196,44 +5203,46 @@ In the next, it is -0.5.  From there, it gets smaller
 (more negative), but it will never be 0.
 
 We have two choices.  We can try to generalize the {\tt factorial}
-function to work with floating-point numbers, or we can make {\tt
+method to work with floating-point numbers, or we can make {\tt
   factorial} check the type of its argument.  The first option is
 called the gamma function and it's a
 little beyond the scope of this book.  So we'll go for the second.
 \index{gamma function}
 
-We can use the built-in function {\tt isinstance} to verify the type
+We can use the built-in method {\tt instance\_of?} to verify the type
 of the argument.  While we're at it, we can also make sure the
 argument is positive:
-\index{isinstance function}
-\index{function!isinstance}
+\index{instance\_of? method}
+\index{method!instance\_of?}
 
 \begin{verbatim}
-def factorial(n):
-    if not isinstance(n, int):
-        print('Factorial is only defined for integers.')
-        return None
-    elif n < 0:
-        print('Factorial is not defined for negative integers.')
-        return None
-    elif n == 0:
-        return 1
-    else:
-        return n * factorial(n-1)
+def factorial(n)
+  if !n.instance_of?(Integer)
+    puts 'Factorial is only defined for integers.'
+    return nil
+  elsif n < 0
+    puts 'Factorial is not defined for negative integers.'
+    return nil
+  elsif n == 0
+    return 1
+  else
+    return n * factorial(n-1)
+  end
+end
 \end{verbatim}
 %
 The first base case handles nonintegers; the
 second handles negative integers.  In both cases, the program prints
-an error message and returns {\tt None} to indicate that something
+an error message and returns {\tt nil} to indicate that something
 went wrong:
 
 \begin{verbatim}
->>> print(factorial('fred'))
+>> factorial('fred')
 Factorial is only defined for integers.
-None
->>> print(factorial(-2))
+=> nil
+>> factorial(-2)
 Factorial is not defined for negative integers.
-None
+=> nil
 \end{verbatim}
 % 
 If we get past both checks, we know that $n$ is positive or
