@@ -4552,54 +4552,58 @@ recurse(3, 0)
 %% \end{exercise}
 
 
-\chapter{Fruitful functions}
+\chapter{Fruitful methods}
 \label{fruitchap}
 
-Many of the Python functions we have used, such as the math
-functions, produce return values.  But the functions we've written
-are all void: they have an effect, like printing a value
-or moving a turtle, but they don't have a return value.  In
-this chapter you will learn to write fruitful functions.
+Many of the Ruby methods we have used, such as the Math
+methods, produce return values.  But the methods we've written
+are all void: they have an effect, like printing a value,
+%% or moving a turtle,
+but they don't have an explicit and meaningful return value.  In
+this chapter you will learn to write fruitful methods.
 
 
 \section{Return values}
 \index{return value}
 
-Calling the function generates a return
+Calling the method generates a return
 value, which we usually assign to a variable or use as part of an
 expression.
 
 \begin{verbatim}
-e = math.exp(1.0)
-height = radius * math.sin(radians)
+e = Math.exp(1.0)
+height = radius * Math.sin(radians)
 \end{verbatim}
 %
-The functions we have written so far are void.  Speaking casually,
+The methods we have written so far are void.  Speaking casually,
 they have no return value; more precisely,
-their return value is {\tt None}.
+their return value is result of last expression evaluated (for ex:
+{\tt nil} in case of {\tt puts}).
 
-In this chapter, we are (finally) going to write fruitful functions.
+In this chapter, we are (finally) going to write fruitful methods.
 The first example is {\tt area}, which returns the area of a circle
 with the given radius:
 
 \begin{verbatim}
-def area(radius):
-    a = math.pi * radius**2
-    return a
+def area(radius)
+  a = Math::PI * radius**2
+  return a
+end
 \end{verbatim}
 %
 We have seen the {\tt return} statement before, but in a fruitful
-function the {\tt return} statement includes
+method the {\tt return} statement includes
 an expression.  This statement means: ``Return immediately from
-this function and use the following expression as a return value.''
+this method and use the following expression as a return value.''
 The expression can be arbitrarily complicated, so we could
-have written this function more concisely:
+have written this method more concisely:
 \index{return statement}
 \index{statement!return}
 
 \begin{verbatim}
-def area(radius):
-    return math.pi * radius**2
+def area(radius)
+  return Math::PI * radius**2
+end
 \end{verbatim}
 %
 On the other hand, {\bf temporary variables} like {\tt a} can make
@@ -4611,64 +4615,74 @@ Sometimes it is useful to have multiple return statements, one in each
 branch of a conditional:
 
 \begin{verbatim}
-def absolute_value(x):
-    if x < 0:
-        return -x
-    else:
-        return x
+def absolute_value(x)
+  if x < 0
+    return -x
+  else
+    return x
+  end
+end
 \end{verbatim}
 %
 Since these {\tt return} statements are in an alternative conditional,
 only one runs.
 
-As soon as a return statement runs, the function
+As soon as a return statement runs, the method
 terminates without executing any subsequent statements.
 Code that appears after a {\tt return} statement, or any other place
 the flow of execution can never reach, is called {\bf dead code}.
 \index{dead code}
 
-In a fruitful function, it is a good idea to ensure
+In a fruitful method, it is a good idea to ensure
 that every possible path through the program hits a
 {\tt return} statement.  For example:
 
 \begin{verbatim}
-def absolute_value(x):
-    if x < 0:
-        return -x
-    if x > 0:
-        return x
+def absolute_value(x)
+  return -x if x < 0
+  return x if x > 0
+end
 \end{verbatim}
 %
-This function is incorrect because if {\tt x} happens to be 0,
-neither condition is true, and the function ends without hitting a
+This method is incorrect because if {\tt x} happens to be 0,
+neither condition is true, and the method ends without hitting a
 {\tt return} statement.  If the flow of execution gets to the end
-of a function, the return value is {\tt None}, which is not
-the absolute value of 0.
-\index{None special value}
-\index{special value!None}
+of a method without executing any code, the default return value
+is {\tt nil}, which is not the absolute value of 0.
+\index{nil special value}
+\index{special value!nil}
 
 \begin{verbatim}
->>> print(absolute_value(0))
-None
+>> absolute_value(0)
+=> nil
 \end{verbatim}
 %
-By the way, Python provides a built-in function called 
+By the way, both Integer and Float class provide a method called 
 {\tt abs} that computes absolute values.
-\index{abs function}
-\index{function!abs}
 
-As an exercise, write a {\tt compare} function
+\begin{verbatim}
+>> -15.abs
+=> 15
+>> 3.abs
+=> 3
+>> -1.52.abs
+=> 1.52
+\end{verbatim}
+\index{abs method}
+\index{method!abs}
+
+As an exercise, write a {\tt compare} method
 takes two values, {\tt x} and {\tt y}, and returns {\tt 1} if {\tt x > y},
 {\tt 0} if {\tt x == y}, and {\tt -1} if {\tt x < y}.
-\index{compare function}
-\index{function!compare}
+\index{compare method}
+\index{method!compare}
 
 
 \section{Incremental development}
 \label{incremental.development}
 \index{development plan!incremental}
 
-As you write larger functions, you might find yourself
+As you write larger methods, you might find yourself
 spending more time debugging.
 
 To deal with increasingly complex programs,
@@ -4687,91 +4701,96 @@ By the Pythagorean theorem, the distance is:
 \mathrm{distance} = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}
 \end{displaymath}
 %
-The first step is to consider what a {\tt distance} function should
-look like in Python.  In other words, what are the inputs (parameters)
+The first step is to consider what a {\tt distance} method should
+look like in Ruby.  In other words, what are the inputs (parameters)
 and what is the output (return value)?
 
 In this case, the inputs are two points, which you can represent
 using four numbers.  The return value is the distance represented by
 a floating-point value.
 
-Immediately you can write an outline of the function:
+Immediately you can write an outline of the method:
 
 \begin{verbatim}
-def distance(x1, y1, x2, y2):
-    return 0.0
+def distance(x1, y1, x2, y2)
+  return 0.0
+end
 \end{verbatim}
 %
 Obviously, this version doesn't compute distances; it always returns
 zero.  But it is syntactically correct, and it runs, which means that
 you can test it before you make it more complicated.
 
-To test the new function, call it with sample arguments:
+To test the new method, call it with sample arguments:
 
 \begin{verbatim}
->>> distance(1, 2, 4, 6)
-0.0
+>> distance(1, 2, 4, 6)
+=> 0.0
 \end{verbatim}
 %
 I chose these values so that the horizontal distance is 3 and the
 vertical distance is 4; that way, the result is 5, the hypotenuse 
-of a 3-4-5 triangle. When testing a function, it is
+of a 3-4-5 triangle. When testing a method, it is
 useful to know the right answer.
 \index{testing!knowing the answer}
 
-At this point we have confirmed that the function is syntactically
+At this point we have confirmed that the method is syntactically
 correct, and we can start adding code to the body.
 A reasonable next step is to find the differences
 $x_2 - x_1$ and $y_2 - y_1$.  The next version stores those values in
 temporary variables and prints them.
+% todo variable interpolation not mentioned before
 
 \begin{verbatim}
-def distance(x1, y1, x2, y2):
-    dx = x2 - x1
-    dy = y2 - y1
-    print('dx is', dx)
-    print('dy is', dy)
-    return 0.0
+def distance(x1, y1, x2, y2)
+  dx = x2 - x1
+  dy = y2 - y1
+  puts "dx is #{dx}"
+  puts "dy is #{dy}"
+  return 0.0
+end
 \end{verbatim}
 %
-If the function is working, it should display \verb"dx is 3" and 
-\verb"dy is 4".  If so, we know that the function is getting the right
+If the method is working, it should display \verb"dx is 3" and 
+\verb"dy is 4".  If so, we know that the method is getting the right
 arguments and performing the first computation correctly.  If not,
 there are only a few lines to check.
 
 Next we compute the sum of squares of {\tt dx} and {\tt dy}:
 
 \begin{verbatim}
-def distance(x1, y1, x2, y2):
-    dx = x2 - x1
-    dy = y2 - y1
-    dsquared = dx**2 + dy**2
-    print('dsquared is: ', dsquared)
-    return 0.0
+def distance(x1, y1, x2, y2)
+  dx = x2 - x1
+  dy = y2 - y1
+  dsquared = dx**2 + dy**2
+  puts "dsquared is: #{dsquared}"
+  return 0.0
+end
 \end{verbatim}
 %
 Again, you would run the program at this stage and check the output
 (which should be 25).
-Finally, you can use {\tt math.sqrt} to compute and return the result:
+Finally, you can use {\tt Math.sqrt} to compute and return the result:
 \index{sqrt}
-\index{function!sqrt}
+\index{method!sqrt}
 
 \begin{verbatim}
-def distance(x1, y1, x2, y2):
-    dx = x2 - x1
-    dy = y2 - y1
-    dsquared = dx**2 + dy**2
-    result = math.sqrt(dsquared)
-    return result
+def distance(x1, y1, x2, y2)
+  dx = x2 - x1
+  dy = y2 - y1
+  dsquared = dx**2 + dy**2
+  result = Math.sqrt(dsquared)
+  return result
+end
 \end{verbatim}
 %
 If that works correctly, you are done.  Otherwise, you might
 want to print the value of {\tt result} before the return
 statement.
 
-The final version of the function doesn't display anything when it
-runs; it only returns a value.  The {\tt print} statements we wrote
-are useful for debugging, but once you get the function working, you
+The final version of the method doesn't display anything when it
+runs; it only returns a value.  The {\tt puts} statements we wrote
+are useful for debugging, but once you get the method working, you
 should remove them.  Code like that is called {\bf scaffolding}
 because it is helpful for building the program but is not part of the
 final product.
@@ -4800,7 +4819,7 @@ read.
 
 \end{enumerate}
 
-As an exercise, use incremental development to write a function
+As an exercise, use incremental development to write a method
 called {\tt hypotenuse} that returns the length of the hypotenuse of a
 right triangle given the lengths of the other two legs as arguments.
 Record each stage of the development process as you go.
@@ -4810,17 +4829,17 @@ Record each stage of the development process as you go.
 
 \section{Composition}
 \index{composition}
-\index{function composition}
+\index{method composition}
 
-As you should expect by now, you can call one function from within
-another.  As an example, we'll write a function that takes two points,
+As you should expect by now, you can call one method from within
+another.  As an example, we'll write a method that takes two points,
 the center of the circle and a point on the perimeter, and computes
 the area of the circle.
 
 Assume that the center point is stored in the variables {\tt xc} and
 {\tt yc}, and the perimeter point is in {\tt xp} and {\tt yp}. The
 first step is to find the radius of the circle, which is the distance
-between the two points.  We just wrote a function, {\tt
+between the two points.  We just wrote a method, {\tt
 distance}, that does that:
 
 \begin{verbatim}
@@ -4834,82 +4853,99 @@ we just wrote that, too:
 result = area(radius)
 \end{verbatim}
 %
-Encapsulating these steps in a function, we get:
+Encapsulating these steps in a method, we get:
 \index{encapsulation}
 
 \begin{verbatim}
-def circle_area(xc, yc, xp, yp):
-    radius = distance(xc, yc, xp, yp)
-    result = area(radius)
-    return result
+def circle_area(xc, yc, xp, yp)
+  radius = distance(xc, yc, xp, yp)
+  result = area(radius)
+  return result
+end
 \end{verbatim}
 %
 The temporary variables {\tt radius} and {\tt result} are useful for
 development and debugging, but once the program is working, we can
-make it more concise by composing the function calls:
+make it more concise by composing the method calls:
 
 \begin{verbatim}
-def circle_area(xc, yc, xp, yp):
-    return area(distance(xc, yc, xp, yp))
+def circle_area(xc, yc, xp, yp)
+  return area(distance(xc, yc, xp, yp))
+end
 \end{verbatim}
 %
 
-\section{Boolean functions}
+\section{Boolean methods}
 \label{boolean}
 
-Functions can return booleans, which is often convenient for hiding
-complicated tests inside functions.  \index{boolean function}
+Methods can return booleans, which is often convenient for hiding
+complicated tests inside methods.
+\index{boolean method}
 For example:
 
 \begin{verbatim}
-def is_divisible(x, y):
-    if x % y == 0:
-        return True
-    else:
-        return False
+def divisible?(x, y)
+  if x % y == 0
+    return true
+  else
+    return false
+  end
+end
 \end{verbatim}
 %
-It is common to give boolean functions names that sound like yes/no
-questions; \verb"is_divisible" returns either {\tt True} or {\tt False}
+It is common to add a {\tt ?} character to method names to make
+it sound like yes/no questions;
+\verb"divisible?" returns either {\tt true} or {\tt false}
 to indicate whether {\tt x} is divisible by {\tt y}.
 
-Here is an example:
+Here is an example for method we just wrote and a built-in String method:
 
 \begin{verbatim}
->>> is_divisible(6, 4)
-False
->>> is_divisible(6, 3)
-True
+>> divisible?(6, 4)
+=> false
+>> divisible?(6, 3)
+=> true
+
+>> 'good' == 'Good'
+=> false
+>> 'good'.casecmp?('Good')
+=> true
 \end{verbatim}
 %
+We'll see other such special characters that can be added
+to method names later.
+
 The result of the {\tt ==} operator is a boolean, so we can write the
-function more concisely by returning it directly:
+method more concisely by returning it directly:
 
 \begin{verbatim}
-def is_divisible(x, y):
-    return x % y == 0
+def divisible?(x, y)
+  return x % y == 0
+end
 \end{verbatim}
 %
-Boolean functions are often used in conditional statements:
+Boolean methods are often used in conditional statements:
 \index{conditional statement}
 \index{statement!conditional}
 
 \begin{verbatim}
-if is_divisible(x, y):
-    print('x is divisible by y')
+if divisible?(x, y)
+  puts 'x is divisible by y'
+end
 \end{verbatim}
 %
 It might be tempting to write something like:
 
 \begin{verbatim}
-if is_divisible(x, y) == True:
-    print('x is divisible by y')
+if divisible?(x, y) == true
+  puts 'x is divisible by y'
+end
 \end{verbatim}
 %
 But the extra comparison is unnecessary.
 
-As an exercise, write a function \verb"is_between(x, y, z)" that
-returns {\tt True} if $x \le y \le z$ or {\tt False} otherwise.
+As an exercise, write a method \verb"between?(x, y, z)" that
+returns {\tt true} if $x \le y \le z$ or {\tt false} otherwise.
 
 
 \section{More recursion}
@@ -4920,7 +4956,7 @@ returns {\tt True} if $x \le y \le z$ or {\tt False} otherwise.
 \index{Turing, Alan}
 \index{Turing Thesis}
 
-We have only covered a small subset of Python, but you might
+We have only covered a small subset of Ruby, but you might
 be interested to know that this subset is a {\em complete}
 programming language, which means that anything that can be
 computed can be expressed in this language.  Any program ever written
@@ -4973,7 +5009,7 @@ which is 6.
 \index{recursive definition}
 
 If you can write a recursive definition of something, you can
-write a Python program to evaluate it. The first step is to decide
+write a Ruby program to evaluate it. The first step is to decide
 what the parameters should be.  In this case it should be clear
 that {\tt factorial} takes an integer:
 
@@ -5081,7 +5117,7 @@ functions were good programmers.
 
 The same is true when you call one of your own functions.  For
 example, in Section~\ref{boolean}, we wrote a function called 
-\verb"is_divisible" that determines whether one number is divisible by
+\verb"divisible?" that determines whether one number is divisible by
 another.  Once we have convinced ourselves that this function is
 correct---by examining the code and testing---we can use the function
 without looking at the body again.
@@ -5115,7 +5151,7 @@ following definition (see
 && \mathrm{fibonacci}(n) = \mathrm{fibonacci}(n-1) + \mathrm{fibonacci}(n-2)
 \end{eqnarray*}
 %
-Translated into Python, it looks like this:
+Translated into Ruby, it looks like this:
 
 \begin{verbatim}
 def fibonacci(n):
