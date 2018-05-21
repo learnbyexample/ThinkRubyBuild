@@ -2862,6 +2862,12 @@ Credit: This exercise is based on an exercise in Oualline, {\em
 \chapter{Case study: interface design}
 \label{turtlechap}
 
+
+% todo
+NOTE: {\bf Translation of this chapter skipped for now...}
+
+
+
 This chapter presents a case study that demonstrates a process for
 designing methods that work together.
 
@@ -5146,7 +5152,7 @@ it's called a leap of faith!
 \index{fibonacci method}
 \index{method!fibonacci}
 After {\tt factorial}, the most common example of a recursively
-defined mathematical method is {\tt fibonacci}, which has the
+defined mathematical function is {\tt fibonacci}, which has the
 following definition (see
   \url{https://en.wikipedia.org/wiki/Fibonacci_number}):
 %
@@ -5262,17 +5268,17 @@ an error message: raising an exception.
 \section{Debugging}
 \label{factdebug}
 
-Breaking a large program into smaller functions creates natural
-checkpoints for debugging.  If a function is not
+Breaking a large program into smaller methods creates natural
+checkpoints for debugging.  If a method is not
 working, there are three possibilities to consider:
 \index{debugging} 
 
 \begin{itemize}
 
-\item There is something wrong with the arguments the function
+\item There is something wrong with the arguments the method
 is getting; a precondition is violated.
 
-\item There is something wrong with the function; a postcondition
+\item There is something wrong with the method; a postcondition
 is violated.
 
 \item There is something wrong with the return value or the
@@ -5280,41 +5286,43 @@ way it is being used.
 
 \end{itemize}
 
-To rule out the first possibility, you can add a {\tt print} statement
-at the beginning of the function and display the values of the
+To rule out the first possibility, you can add a {\tt puts} statement
+at the beginning of the method and display the values of the
 parameters (and maybe their types).  Or you can write code
 that checks the preconditions explicitly.
 \index{precondition}
 \index{postcondition}
 
-If the parameters look good, add a {\tt print} statement before each
+If the parameters look good, add a {\tt puts} statement before each
 {\tt return} statement and display the return value.  If
 possible, check the result by hand.  Consider calling the
-function with values that make it easy to check the result
+method with values that make it easy to check the result
 (as in Section~\ref{incremental.development}).
 
-If the function seems to be working, look at the function call
+If the method seems to be working, look at the method call
 to make sure the return value is being used correctly (or used
 at all!).
 \index{flow of execution}
 
-Adding print statements at the beginning and end of a function
+Adding puts statements at the beginning and end of a method
 can help make the flow of execution more visible.
 For example, here is a version of {\tt factorial} with
-print statements:
+puts statements:
 
 \begin{verbatim}
-def factorial(n):
-    space = ' ' * (4 * n)
-    print(space, 'factorial', n)
-    if n == 0:
-        print(space, 'returning 1')
-        return 1
-    else:
-        recurse = factorial(n-1)
-        result = n * recurse
-        print(space, 'returning', result)
-        return result
+def factorial(n)
+  space = ' ' * (4 * n)
+  puts "#{space} factorial #{n}"
+  if n == 0
+    puts "#{space} returning 1"
+    return 1
+  else
+    recurse = factorial(n-1)
+    result = n * recurse
+    puts "#{space} returning #{result}"
+    return result
+  end
+end
 \end{verbatim}
 %
 {\tt space} is a string of space characters that controls the
@@ -5377,23 +5385,26 @@ Draw a stack diagram for the following program.  What does the program print?
 \index{stack diagram}
 
 \begin{verbatim}
-def b(z):
-    prod = a(z, z)
-    print(z, prod)
-    return prod
+def b(z)
+  prod = a(z, z)
+  puts "#{z} #{prod}"
+  return prod
+end
 
-def a(x, y):
-    x = x + 1
-    return x * y
+def a(x, y)
+  x = x + 1
+  return x * y
+end
 
-def c(x, y, z):
-    total = x + y + z
-    square = b(total)**2
-    return square
+def c(x, y, z)
+  total = x + y + z
+  square = b(total)**2
+  return square
+end
 
 x = 1
 y = x + 1
-print(c(x, y+3, x+y))
+puts c(x, y+3, x+y)
 \end{verbatim}
 
 \end{exercise}
@@ -5412,11 +5423,12 @@ A(m-1, A(m, n-1)) & \mbox{if } m > 0 \mbox{ and } n > 0.
 \end{cases} 
 \end{eqnarray*}
 %
-See \url{http://en.wikipedia.org/wiki/Ackermann_function}.
-Write a function named {\tt ack} that evaluates the Ackermann function.
-Use your function to evaluate {\tt ack(3, 4)}, which should be 125.
+See \url{https://en.wikipedia.org/wiki/Ackermann_function}.
+Write a method named {\tt ack} that evaluates the Ackermann function.
+Use your method to evaluate {\tt ack(3, 4)}, which should be 125.
 What happens for larger values of {\tt m} and {\tt n}?
-Solution: \url{http://thinkpython2.com/code/ackermann.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/ackermann.py}.
 \index{Ackermann function}
 \index{function!ack}
 
@@ -5432,46 +5444,50 @@ is a palindrome if the first and last letters are the same
 and the middle is a palindrome.
 \index{palindrome}
 
-The following are functions that take a string argument and
+The following are methods that take a string argument and
 return the first, last, and middle letters:
 
 \begin{verbatim}
-def first(word):
-    return word[0]
+def first(word)
+  return word[0]
+end
 
-def last(word):
-    return word[-1]
+def last(word)
+  return word[-1]
+end
 
-def middle(word):
-    return word[1:-1]
+def middle(word)
+  return word[1..-2]
+end
 \end{verbatim}
 %
 We'll see how they work in Chapter~\ref{strings}.
 
 \begin{enumerate}
 
-\item Type these functions into a file named {\tt palindrome.py}
+\item Type these methods into a file named {\tt palindrome.rb}
 and test them out.  What happens if you call {\tt middle} with
 a string with two letters?  One letter?  What about the empty
 string, which is written \verb"''" and contains no letters?
 
-\item Write a function called \verb"is_palindrome" that takes
-a string argument and returns {\tt True} if it is a palindrome
-and {\tt False} otherwise.  Remember that you can use the
-built-in function {\tt len} to check the length of a string.
+\item Write a method called \verb"palindrome?" that takes
+a string argument and returns {\tt true} if it is a palindrome
+and {\tt false} otherwise.  Remember that you can use the
+built-in method {\tt length} to check the length of a string.
 
 \end{enumerate}
 
-Solution: \url{http://thinkpython2.com/code/palindrome_soln.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/palindrome_soln.py}.
 
 \end{exercise}
 
 \begin{exercise}
 
 A number, $a$, is a power of $b$ if it is divisible by $b$
-and $a/b$ is a power of $b$.  Write a function called
-\verb"is_power" that takes parameters {\tt a} and {\tt b}
-and returns {\tt True} if {\tt a} is a power of {\tt b}.
+and $a/b$ is a power of $b$.  Write a method called
+\verb"power?" that takes parameters {\tt a} and {\tt b}
+and returns {\tt true} if {\tt a} is a power of {\tt b}.
 Note: you will have to think about the base case.
 
 \end{exercise}
@@ -5488,7 +5504,7 @@ One way to find the GCD of two numbers is based on the observation
 that if $r$ is the remainder when $a$ is divided by $b$, then $gcd(a,
 b) = gcd(b, r)$.  As a base case, we can use $gcd(a, 0) = a$.
 
-Write a function called
+Write a method called
 \verb"gcd" that takes parameters {\tt a} and {\tt b}
 and returns their greatest common divisor.
 
@@ -6837,7 +6853,7 @@ A step size of -1 goes through the word backwards, so
 the slice \verb"[::-1]" generates a reversed string.
 \index{palindrome}
 
-Use this idiom to write a one-line version of \verb"is_palindrome"
+Use this idiom to write a one-line version of \verb"palindrome?"
 from Exercise~\ref{palindrome}.
 \end{exercise}
 
@@ -7261,12 +7277,12 @@ it compares the second-to-last character to the last, which is
 what we want.
 \index{palindrome}
 
-Here is a version of \verb"is_palindrome" (see
+Here is a version of \verb"palindrome?" (see
 Exercise~\ref{palindrome}) that uses two indices; one starts at the
 beginning and goes up; the other starts at the end and goes down.
 
 \begin{verbatim}
-def is_palindrome(word):
+def palindrome?(word):
     i = 0
     j = len(word)-1
 
@@ -7285,7 +7301,7 @@ problem and write:
 \index{development plan!reduction}
 
 \begin{verbatim}
-def is_palindrome(word):
+def palindrome?(word):
     return is_reverse(word, word)
 \end{verbatim}
 %
