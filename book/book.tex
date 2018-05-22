@@ -2144,7 +2144,7 @@ By convention, the body is indented by
 two spaces.  The body can contain any number of statements.
 
 % todo? differences discussed in more detail later?
-The strings in the puts method are enclosed in double
+In the example above, the strings in the puts statement are enclosed in double
 quotes.  Single quotes and double quotes do similar things;
 most people use single quotes except in cases like this where
 a single quote (which is also an apostrophe) appears in the string.
@@ -4745,7 +4745,7 @@ correct, and we can start adding code to the body.
 A reasonable next step is to find the differences
 $x_2 - x_1$ and $y_2 - y_1$.  The next version stores those values in
 temporary variables and prints them.
-% todo variable interpolation not mentioned before
+% todid variable interpolation not mentioned before
 
 \begin{verbatim}
 def distance(x1, y1, x2, y2)
@@ -4757,6 +4757,10 @@ def distance(x1, y1, x2, y2)
 end
 \end{verbatim}
 %
+When using double quotes, an expression can be given by enclosing
+it within {\tt \#\{\}}. This is called string interpolation.
+\index{string interpolation}
+
 If the method is working, it should display \verb"dx is 3" and 
 \verb"dy is 4".  If so, we know that the method is getting the right
 arguments and performing the first computation correctly.  If not,
