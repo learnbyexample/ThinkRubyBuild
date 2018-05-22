@@ -4165,7 +4165,8 @@ apple
 \end{verbatim}
 
 Before getting input from the user, it is a good idea to print a
-prompt telling the user what to type.
+prompt telling the user what to type. Use {\tt print} method
+instead of {\tt puts} if line break is not needed.
 %% \verb"input" can take a prompt as an argument:
 \index{prompt}
 
@@ -5368,6 +5369,8 @@ avoid debugging by adding and testing only
 a small amount of code at a time.
 \index{incremental development}
 
+%todo add string interpolation?
+
 \item[scaffolding:]  Code that is used during program development but is
 not part of the final version.
 \index{scaffolding}
@@ -5520,6 +5523,7 @@ Sussman's {\em Structure and Interpretation of Computer Programs}.
 
 \chapter{Iteration}
 
+% todo repetition reference is to turtle chapter
 This chapter is about iteration, which is the ability to run
 a block of statements repeatedly.  We saw a kind of iteration,
 using recursion, in Section~\ref{recursion}.
@@ -5539,24 +5543,24 @@ assignment to the same variable.  A new assignment makes an existing
 variable refer to a new value (and stop referring to the old value).
 
 \begin{verbatim}
->>> x = 5
->>> x
-5
->>> x = 7
->>> x
-7
+>> x = 5
+=> 5
+>> x = 7
+=> 7
 \end{verbatim}
 %
-The first time we display 
+The first time we assign 
 {\tt x}, its value is 5; the second time, its
 value is 7.
 
 Figure~\ref{fig.assign2} shows what {\bf reassignment} looks
-like in a state diagram. \index{state diagram} \index{diagram!state}
+like in a state diagram.
+\index{state diagram}
+\index{diagram!state}
 
 At this point I want to address a common source of
 confusion.
-Because Python uses the equal sign ({\tt =}) for assignment, it is
+Because Ruby uses the equal sign ({\tt =}) for assignment, it is
 tempting to interpret a statement like {\tt a = b} as a
 mathematical
 proposition of equality; that is, the claim that {\tt a} and
@@ -5564,23 +5568,26 @@ proposition of equality; that is, the claim that {\tt a} and
 \index{equality and assignment}
 
 First, equality is a symmetric relationship and assignment is not.  For
-example, in mathematics, if $a=7$ then $7=a$.  But in Python, the
+example, in mathematics, if $a=7$ then $7=a$.  But in Ruby, the
 statement {\tt a = 7} is legal and {\tt 7 = a} is not.
 
 Also, in mathematics, a proposition of equality is either true or
 false for all time.  If $a=b$ now, then $a$ will always equal $b$.
-In Python, an assignment statement can make two variables equal, but
+In Ruby, an assignment statement can make two variables equal, but
 they don't have to stay that way:
 
 \begin{verbatim}
->>> a = 5
->>> b = a    # a and b are now equal
->>> a = 3    # a and b are no longer equal
->>> b
-5
+>> a = 5
+=> 5
+>> b = a    # a and b are now equal
+=> 5
+>> a = 3    # a and b are no longer equal
+=> 3
+>> b
+=> 5
 \end{verbatim}
 %
-The third line changes the value of {\tt a} but does not change the
+The third statement changes the value of {\tt a} but does not change the
 value of {\tt b}, so they are no longer equal. 
 
 Reassigning variables is often useful, but you should use it
@@ -5606,19 +5613,19 @@ A common kind of reassignment is an {\bf update},
 where the new value of the variable depends on the old.
 
 \begin{verbatim}
->>> x = x + 1
+x = x + 1
 \end{verbatim}
 %
 This means ``get the current value of {\tt x}, add one, and then
 update {\tt x} with the new value.''
 
 If you try to update a variable that doesn't exist, you get an
-error, because Python evaluates the right side before it assigns
+error, because Ruby evaluates the right side before it assigns
 a value to {\tt x}:
 
 \begin{verbatim}
->>> x = x + 1
-NameError: name 'x' is not defined
+>> x = x + 1
+NoMethodError (undefined method `+' for nil:NilClass)
 \end{verbatim}
 %
 Before you can update a variable, you have to {\bf initialize}
@@ -5626,8 +5633,10 @@ it, usually with a simple assignment:
 \index{initialization (before update)}
 
 \begin{verbatim}
->>> x = 0
->>> x = x + 1
+>> x = 0
+=> 0
+>> x = x + 1
+=> 1
 \end{verbatim}
 %
 Updating a variable by adding 1 is called an {\bf increment};
@@ -5638,6 +5647,7 @@ subtracting 1 is called a {\bf decrement}.
 
 
 
+% todo add for statement before this?
 \section{The {\tt while} statement}
 \index{statement!while}
 \index{while loop}
@@ -5649,9 +5659,10 @@ identical or similar tasks without making errors is something that
 computers do well and people do poorly.  In a computer program,
 repetition is also called {\bf iteration}.
 
-We have already seen two functions, {\tt countdown} and
+% todo again, reference to section from turtle chapter
+We have already seen two methods, {\tt countdown} and
 \verb"print_n", that iterate using recursion.  Because iteration is so
-common, Python provides language features to make it easier.
+common, Ruby provides language features to make it easier.
 One is the {\tt for} statement we saw in Section~\ref{repetition}.
 We'll get back to that later.
 
@@ -5659,11 +5670,13 @@ Another is the {\tt while} statement.  Here is a version of {\tt
 countdown} that uses a {\tt while} statement:
 
 \begin{verbatim}
-def countdown(n):
-    while n > 0:
-        print(n)
-        n = n - 1
-    print('Blastoff!')
+def countdown(n)
+  while n > 0
+    puts n
+    n = n - 1
+  end
+  puts 'Blastoff!'
+end
 \end{verbatim}
 %
 You can almost read the {\tt while} statement as if it were English.
@@ -5709,13 +5722,16 @@ loop, so eventually we have to get to 0.
 For some other loops, it is not so easy to tell.  For example:
 
 \begin{verbatim}
-def sequence(n):
-    while n != 1:
-        print(n)
-        if n % 2 == 0:        # n is even
-            n = n / 2
-        else:                 # n is odd
-            n = n*3 + 1
+def sequence(n)
+  while n != 1
+    puts n
+    if n % 2 == 0        # n is even
+      n = n / 2
+    else                 # n is odd
+      n = n*3 + 1
+    end
+  end
+end
 \end{verbatim}
 %
 The condition for this loop is {\tt n != 1}, so the loop will continue
@@ -5739,9 +5755,9 @@ starting with 16.
 The hard question is whether we can prove that this program terminates
 for {\em all} positive values of {\tt n}.  So far, no one has
 been able to prove it {\em or} disprove it!  (See
-  \url{http://en.wikipedia.org/wiki/Collatz_conjecture}.)
+  \url{https://en.wikipedia.org/wiki/Collatz_conjecture}.)
 
-As an exercise, rewrite the function \verb"print_n" from
+As an exercise, rewrite the method \verb"print_n" from
 Section~\ref{recursion} using iteration instead of recursion.
 
 
@@ -5757,19 +5773,23 @@ For example, suppose you want to take input from the user until they
 type {\tt done}.  You could write:
 
 \begin{verbatim}
-while True:
-    line = input('> ')
-    if line == 'done':
-        break
-    print(line)
+while true
+  print '> '
+  line = gets.chomp
+  if line == 'done'
+      break
+  end
+  puts line
+end
 
-print('Done!')
+puts 'Done!'
 \end{verbatim}
 %
-The loop condition is {\tt True}, which is always true, so the
+The loop condition is {\tt true}, which is always true, so the
 loop runs until it hits the break statement.
 
 Each time through, it prompts the user with an angle bracket.
+{\tt print} is used here to have the prompt on same line as user input.
 If the user types {\tt done}, the {\tt break} statement exits
 the loop.  Otherwise the program echoes whatever the user types
 and goes back to the top of the loop.  Here's a sample run:
@@ -5807,35 +5827,37 @@ estimate with the following formula:
 For example, if $a$ is 4 and $x$ is 3:
 
 \begin{verbatim}
->>> a = 4
->>> x = 3
->>> y = (x + a/x) / 2
->>> y
-2.16666666667
+>> a = 4.0
+=> 4.0
+>> x = 3.0
+=> 3.0
+>> y = (x + a/x) / 2
+=> 2.1666666666666665
 \end{verbatim}
 %
 The result is closer to the correct answer ($\sqrt{4} = 2$).  If we
 repeat the process with the new estimate, it gets even closer:
 
 \begin{verbatim}
->>> x = y
->>> y = (x + a/x) / 2
->>> y
-2.00641025641
+>> x = y
+=> 2.1666666666666665
+>> y = (x + a/x) / 2
+=> 2.0064102564102564
 \end{verbatim}
 %
 After a few more updates, the estimate is almost exact:
 \index{update}
 
 \begin{verbatim}
->>> x = y
->>> y = (x + a/x) / 2
->>> y
-2.00001024003
->>> x = y
->>> y = (x + a/x) / 2
->>> y
-2.00000000003
+>> x = y
+=> 2.0064102564102564
+>> y = (x + a/x) / 2
+=> 2.0000102400262145
+
+>> x = y
+=> 2.0000102400262145
+>> y = (x + a/x) / 2
+=> 2.0000000000262146
 \end{verbatim}
 %
 In general we don't know ahead of time how many steps it takes
@@ -5844,14 +5866,15 @@ because the estimate
 stops changing:
 
 \begin{verbatim}
->>> x = y
->>> y = (x + a/x) / 2
->>> y
-2.0
->>> x = y
->>> y = (x + a/x) / 2
->>> y
-2.0
+>> x = y
+=> 2.0000000000262146
+>> y = (x + a/x) / 2
+=> 2.0
+
+>> x = y
+=> 2.0
+>> y = (x + a/x) / 2
+=> 2.0
 \end{verbatim}
 %
 When {\tt y == x}, we can stop.  Here is a loop that starts
@@ -5859,12 +5882,12 @@ with an initial estimate, {\tt x}, and improves it until it
 stops changing:
 
 \begin{verbatim}
-while True:
-    print(x)
-    y = (x + a/x) / 2
-    if y == x:
-        break
-    x = y
+while true
+  puts x
+  y = (x + a/x) / 2
+  break if y == x
+  x = y
+end
 \end{verbatim}
 %
 For most values of {\tt a} this works fine, but in general it is
@@ -5876,12 +5899,11 @@ $\sqrt{2}$, can't be represented exactly with a {\tt float}.
 \index{epsilon}
 
 Rather than checking whether {\tt x} and {\tt y} are exactly equal, it
-is safer to use the built-in function {\tt abs} to compute the
+is safer to use the built-in method {\tt abs} to compute the
 absolute value, or magnitude, of the difference between them:
 
 \begin{verbatim}
-    if abs(y-x) < epsilon:
-        break
+  break if (y-x).abs < epsilon
 \end{verbatim}
 %
 Where \verb"epsilon" has a value like {\tt 0.0000001} that
