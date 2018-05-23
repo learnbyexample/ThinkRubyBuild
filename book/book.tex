@@ -5964,7 +5964,7 @@ check them one at a time, it would take 100 steps.
 
 Instead, try to break the problem in half.  Look at the middle
 of the program, or near it, for an intermediate value you
-can check.  Add a {\tt print} statement (or something else
+can check.  Add a {\tt puts} statement (or something else
 that has a verifiable effect) and run the program.
 
 If the mid-point check is incorrect, there must be a problem in the
@@ -6011,7 +6011,7 @@ a variable that will be updated.
 \index{decrement}
 
 \item[iteration:] Repeated execution of a set of statements using
-either a recursive function call or a loop.
+either a recursive method call or a loop.
 \index{iteration}
 
 \item[infinite loop:] A loop in which the terminating condition is
@@ -6031,16 +6031,17 @@ problems.
 \index{algorithm!square root}
 
 Copy the loop from Section~\ref{squareroot}
-and encapsulate it in a function called
+and encapsulate it in a method called
 \verb"mysqrt" that takes {\tt a} as a parameter, chooses a
 reasonable value of {\tt x}, and returns an estimate of the square
 root of {\tt a}.  \index{encapsulation}
 
-To test it, write a function named \verb"test_square_root"
+To test it, write a method named \verb"test_square_root"
 that prints a table like this:
 
+% todo precision doesn't match with earlier examples, change it or leave it?
 \begin{verbatim}
-a   mysqrt(a)     math.sqrt(a)  diff
+a   mysqrt(a)     Math.sqrt(a)  diff
 -   ---------     ------------  ----
 1.0 1.0           1.0           0.0
 2.0 1.41421356237 1.41421356237 2.22044604925e-16
@@ -6055,29 +6056,28 @@ a   mysqrt(a)     math.sqrt(a)  diff
 %
 The first column is a number, $a$; the second column is the square
 root of $a$ computed with \verb"mysqrt"; the third column is the
-square root computed by {\tt math.sqrt}; the fourth column is the
+square root computed by {\tt Math.sqrt}; the fourth column is the
 absolute value of the difference between the two estimates.
 \end{exercise}
 
 
 \begin{exercise}
-\index{eval function}
-\index{function!eval}
+\index{eval method}
+\index{method!eval}
 
-The built-in function {\tt eval} takes a string and evaluates
-it using the Python interpreter.  For example:
+The built-in method {\tt eval} takes a string and evaluates
+it using the Ruby interpreter.  For example:
 
 \begin{verbatim}
->>> eval('1 + 2 * 3')
-7
->>> import math
->>> eval('math.sqrt(5)')
-2.2360679774997898
->>> eval('type(math.pi)')
-<class 'float'>
+>> eval('1 + 2 * 3')
+=> 7
+>> eval('Math.sqrt(5)')
+=> 2.23606797749979
+>> eval('Math::PI.class')
+=> Float
 \end{verbatim}
 %
-Write a function called \verb"eval_loop" that iteratively
+Write a method called \verb"eval_loop" that iteratively
 prompts the user, takes the resulting input and evaluates
 it using {\tt eval}, and prints the result.
 
@@ -6099,13 +6099,14 @@ approximation of $1 / \pi$:
 \[ \frac{1}{\pi} = \frac{2\sqrt{2}}{9801} 
 \sum^\infty_{k=0} \frac{(4k)!(1103+26390k)}{(k!)^4 396^{4k}} \]
 
-Write a function called \verb"estimate_pi" that uses this formula
+Write a method called \verb"estimate_pi" that uses this formula
 to compute and return an estimate of $\pi$.  It should use a {\tt while}
 loop to compute terms of the summation until the last term is
-smaller than {\tt 1e-15} (which is Python notation for $10^{-15}$).
-You can check the result by comparing it to {\tt math.pi}.
+smaller than {\tt 1e-15} (which is Ruby notation for $10^{-15}$).
+You can check the result by comparing it to {\tt Math::PI}.
 
-Solution: \url{http://thinkpython2.com/code/pi.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/pi.py}.
 
 \end{exercise}
 
