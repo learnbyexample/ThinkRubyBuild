@@ -6133,8 +6133,8 @@ You can access the characters one at a time with the
 bracket operator:
 
 \begin{verbatim}
->>> fruit = 'banana'
->>> letter = fruit[1]
+fruit = 'banana'
+letter = fruit[1]
 \end{verbatim}
 %
 The second statement selects character number 1 from {\tt
@@ -6148,8 +6148,8 @@ want (hence the name).
 But you might not get what you expect:
 
 \begin{verbatim}
->>> letter
-'a'
+>> letter
+=> "a"
 \end{verbatim}
 %
 For most people, the first letter of \verb"'banana'" is {\tt b}, not
@@ -6157,73 +6157,77 @@ For most people, the first letter of \verb"'banana'" is {\tt b}, not
 beginning of the string, and the offset of the first letter is zero.
 
 \begin{verbatim}
->>> letter = fruit[0]
->>> letter
-'b'
+>> letter = fruit[0]
+=> "b"
 \end{verbatim}
 %
 So {\tt b} is the 0th letter (``zero-eth'') of \verb"'banana'", {\tt
   a} is the 1th letter (``one-eth''), and {\tt n} is the 2th letter
-(``two-eth'').  \index{index!starting at zero} \index{zero, index
-  starting at}
+(``two-eth'').
+\index{index!starting at zero}
+\index{zero, index starting at}
 
 As an index you can use an expression that contains variables and
 operators:
 \index{index}
 
 \begin{verbatim}
->>> i = 1
->>> fruit[i]
-'a'
->>> fruit[i+1]
-'n'
+>> i = 1
+=> 1
+>> fruit[i]
+=> "a"
+>> fruit[i+1]
+=> "n"
 \end{verbatim}
 %
 
-But the value of the index has to be an integer.  Otherwise you
-get:
-\index{exception!TypeError}
-\index{TypeError}
+If a floating-point value is given as index, it is rounded
+down to an integer:
+%% \index{exception!TypeError}
+%% \index{TypeError}
 
 \begin{verbatim}
->>> letter = fruit[1.5]
-TypeError: string indices must be integers
+>> letter = fruit[1.2]
+=> "a"
+>> letter = fruit[1.7]
+=> "a"
 \end{verbatim}
 %
 
-\section{{\tt len}}
-\index{len function}
-\index{function!len}
+\section{{\tt length}}
+\index{length method}
+\index{method!length}
 
-{\tt len} is a built-in function that returns the number of characters
+{\tt length} is a built-in String method that returns the number of characters
 in a string:
 
 \begin{verbatim}
->>> fruit = 'banana'
->>> len(fruit)
-6
+>> fruit = 'banana'
+=> "banana"
+>> fruit.length
+=> 6
 \end{verbatim}
 %
 To get the last letter of a string, you might be tempted to try something
 like this:
-\index{exception!IndexError}
-\index{IndexError}
+%% \index{exception!IndexError}
+%% \index{IndexError}
 
 \begin{verbatim}
->>> length = len(fruit)
->>> last = fruit[length]
-IndexError: string index out of range
+>> length = fruit.length
+=> 6
+>> last = fruit[length]
+=> nil
 \end{verbatim}
 %
-The reason for the {\tt IndexError} is that there is no letter in {\tt
+The reason for the {\tt nil} is that there is no letter in {\tt
 'banana'} with the index 6.  Since we started counting at zero, the
 six letters are numbered 0 to 5.  To get the last character, you have
 to subtract 1 from {\tt length}:
 
 \begin{verbatim}
->>> last = fruit[length-1]
->>> last
-'a'
+>> last = fruit[length-1]
+=> "a"
 \end{verbatim}
 %
 Or you can use negative indices, which count backward from
@@ -6250,35 +6254,54 @@ is with a {\tt while} loop:
 
 \begin{verbatim}
 index = 0
-while index < len(fruit):
-    letter = fruit[index]
-    print(letter)
-    index = index + 1
+while index < fruit.length
+  letter = fruit[index]
+  puts letter
+  index = index + 1
+end
 \end{verbatim}
 %
 This loop traverses the string and displays each letter on a line by
-itself.  The loop condition is {\tt index < len(fruit)}, so
+itself.  The loop condition is {\tt index < fruit.length}, so
 when {\tt index} is equal to the length of the string, the
 condition is false, and the body of the loop doesn't run.  The
-last character accessed is the one with the index {\tt len(fruit)-1},
+last character accessed is the one with the index {\tt fruit.length-1},
 which is the last character in the string.
 
-As an exercise, write a function that takes a string as an argument
+As an exercise, write a method that takes a string as an argument
 and displays the letters backward, one per line.
 
 Another way to write a traversal is with a {\tt for} loop:
 
 \begin{verbatim}
-for letter in fruit:
-    print(letter)
+for letter in fruit.chars
+  puts letter
+end
 \end{verbatim}
 %
 Each time through the loop, the next character in the string is assigned
 to the variable {\tt letter}.  The loop continues until no characters are
 left.
-\index{concatenation}
-\index{abecedarian}
-\index{McCloskey, Robert}
+
+The {\tt chars} method converts a string into an array with each
+character as a separate element.
+\index{chars method}
+\index{method!chars}
+
+\begin{verbatim}
+>> fruit.chars
+=> ["b", "a", "n", "a", "n", "a"]
+\end{verbatim}
+
+Yet another way to traverse is using the {\tt each\_char} method:
+\index{each\_char method}
+\index{method!each\_char}
+
+\begin{verbatim}
+fruit.each_char do |letter|
+  puts letter
+end
+\end{verbatim}
 
 The following example shows how to use concatenation (string addition)
 and a {\tt for} loop to generate an abecedarian series (that is, in
@@ -6286,13 +6309,17 @@ alphabetical order).  In Robert McCloskey's book {\em Make
 Way for Ducklings}, the names of the ducklings are Jack, Kack, Lack,
 Mack, Nack, Ouack, Pack, and Quack.  This loop outputs these names in
 order:
+\index{concatenation}
+\index{abecedarian}
+\index{McCloskey, Robert}
 
 \begin{verbatim}
 prefixes = 'JKLMNOPQ'
 suffix = 'ack'
 
-for letter in prefixes:
-    print(letter + suffix)
+for letter in prefixes.chars
+  puts letter + suffix
+end
 \end{verbatim}
 %
 The output is:
