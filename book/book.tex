@@ -6342,23 +6342,24 @@ misspelled.  As an exercise, modify the program to fix this error.
 
 \section{String slices}
 \label{slice}
-\index{slice operator} \index{operator!slice} \index{index!slice}
+\index{range operator} \index{operator!range} \index{index!slice}
 \index{string!slice} \index{slice!string}
 
 A segment of a string is called a {\bf slice}.  Selecting a slice is
 similar to selecting a character:
 
 \begin{verbatim}
->>> s = 'Monty Python'
->>> s[0:5]
-'Monty'
->>> s[6:12]
-'Python'
+>> s = 'Monty Python'
+>> s[0..4]
+=> "Monty"
+>> s[6..11]
+=> "Python"
 \end{verbatim}
 %
-The operator {\tt [n:m]} returns the part of the string from the 
-``n-eth'' character to the ``m-eth'' character, including the first but
-excluding the last.  This behavior is counterintuitive, but it might
+The range operator {\tt ..} helps to return the part of the string from the 
+``n-eth'' index to the ``m-eth'' index. To return including the first but
+excluding the second index, use {\tt ...} form of the range operator.  This
+behavior is counterintuitive, but it might
 help to imagine the indices pointing {\em between} the
 characters, as in Figure~\ref{fig.banana}.
 
@@ -6369,75 +6370,96 @@ characters, as in Figure~\ref{fig.banana}.
 \label{fig.banana}
 \end{figure}
 
-If you omit the first index (before the colon), the slice starts at
-the beginning of the string.  If you omit the second index, the slice
+If the first index is {\tt 0}, the slice starts at
+the beginning of the string.  If the second index is {\tt -1}, the slice
 goes to the end of the string:
 
 \begin{verbatim}
->>> fruit = 'banana'
->>> fruit[:3]
-'ban'
->>> fruit[3:]
-'ana'
+>> fruit = 'banana'
+=> "banana"
+>> fruit[0..2]
+=> "ban"
+>> fruit[3..-1]
+=> "ana"
 \end{verbatim}
 %
-If the first index is greater than or equal to the second the result
+If the first index is greater than the second the result
 is an {\bf empty string}, represented by two quotation marks:
 \index{quotation mark}
 
 \begin{verbatim}
->>> fruit = 'banana'
->>> fruit[3:3]
-''
+>> fruit = 'banana'
+=> "banana"
+>> fruit[3..2]
+=> ""
 \end{verbatim}
 %
 An empty string contains no characters and has length 0, but other
 than that, it is the same as any other string.
 
 Continuing this example, what do you think 
-{\tt fruit[:]} means?  Try it and see.
+{\tt fruit[0..-1]} means?  Try it and see.
 \index{copy!slice}
 \index{slice!copy}
 
+Another way to get a slice is to specify starting index and length
+of string needed from that index separated by a comma.
+
+\begin{verbatim}
+>> fruit = 'pineapple'
+=> "pineapple"
+>> fruit[0, 3]
+=> "pin"
+>> fruit[-4, 3]
+=> "ppl"
+\end{verbatim}
 
 
-\section{Strings are immutable}
+\section{Strings are mutable}
 \index{mutability}
-\index{immutability}
-\index{string!immutable}
+\index{string!mutable}
 
-It is tempting to use the {\tt []} operator on the left side of an
-assignment, with the intention of changing a character in a string.
+%% It is tempting to use the {\tt []} operator on the left side of an
+%% assignment, with the intention of changing a character in a string.
+Slicing can be used to change character(s) in a string.
 For example:
 \index{TypeError}
 \index{exception!TypeError}
 
 \begin{verbatim}
->>> greeting = 'Hello, world!'
->>> greeting[0] = 'J'
-TypeError: 'str' object does not support item assignment
+>> greeting = 'Hello, world!'
+=> "Hello, world!"
+>> greeting[0] = 'J'
+=> "J"
+>> greeting
+=> "Jello, world!"
+
+>> greeting[5..-1] = '.'
+=> "."
+>> greeting
+=> "Jello."
 \end{verbatim}
 %
-The ``object'' in this case is the string and the ``item'' is
-the character you tried to assign.  For now, an object is
-the same thing as a value, but we will refine that definition
-later (Section~\ref{equivalence}).  
-\index{object}
-\index{item}
-\index{item assignment}
-\index{assignment!item}
-\index{immutability}
+%% The ``object'' in this case is the string and the ``item'' is
+%% the character you tried to assign.  For now, an object is
+%% the same thing as a value, but we will refine that definition
+%% later (Section~\ref{equivalence}).  
+%% \index{object}
+%% \index{item}
+%% \index{item assignment}
+%% \index{assignment!item}
+%% \index{immutability}
 
-The reason for the error is that
-strings are {\bf immutable}, which means you can't change an
-existing string.  The best you can do is create a new string
-that is a variation on the original:
+%% The reason for the error is that
+%% strings are {\bf immutable}, which means you can't change an
+%% existing string.  The best you can do is create a new string
+To create a new string that is a variation on the original:
 
 \begin{verbatim}
->>> greeting = 'Hello, world!'
->>> new_greeting = 'J' + greeting[1:]
->>> new_greeting
-'Jello, world!'
+>> greeting = 'Hello, world!'
+=> "Hello, world!"
+>> new_greeting = 'J' + greeting[1..-1]
+=> "Jello, world!"
 \end{verbatim}
 %
 This example concatenates a new first letter onto
@@ -6449,28 +6471,29 @@ the original string.
 \section{Searching}
 \label{find}
 
-What does the following function do?
-\index{find function}
-\index{function!find}
+What does the following method do?
+\index{find method}
+\index{method!find}
 
 \begin{verbatim}
-def find(word, letter):
-    index = 0
-    while index < len(word):
-        if word[index] == letter:
-            return index
-        index = index + 1
-    return -1
+def find(word, letter)
+  index = 0
+  while index < word.length
+    return index if word[index] == letter
+    index = index + 1
+  end
+  return -1
+end
 \end{verbatim}
 %
 In a sense, {\tt find} is the inverse of the {\tt []} operator.
 Instead of taking an index and extracting the corresponding character,
 it takes a character and finds the index where that character
-appears.  If the character is not found, the function returns {\tt
+appears.  If the character is not found, the method returns {\tt
 -1}.
 
 This is the first example we have seen of a {\tt return} statement
-inside a loop.  If {\tt word[index] == letter}, the function breaks
+inside a loop.  If {\tt word[index] == letter}, the method breaks
 out of the loop and returns immediately.
 
 If the character doesn't appear in the string, the program
@@ -6500,10 +6523,12 @@ appears in a string:
 \begin{verbatim}
 word = 'banana'
 count = 0
-for letter in word:
-    if letter == 'a':
-        count = count + 1
-print(count)
+word.each_char do |letter|
+  if letter == 'a'
+    count = count + 1
+  end
+end
+puts count
 \end{verbatim}
 %
 This program demonstrates another pattern of computation called a {\bf
