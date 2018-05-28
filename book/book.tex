@@ -6284,7 +6284,7 @@ to the variable {\tt letter}.  The loop continues until no characters are
 left.
 
 The {\tt chars} method converts a string into an array with each
-character as a separate element.
+character as a separate item.
 \index{chars method}
 \index{method!chars}
 
@@ -6423,8 +6423,8 @@ of string needed from that index separated by a comma.
 %% assignment, with the intention of changing a character in a string.
 Slicing can be used to change character(s) in a string.
 For example:
-\index{TypeError}
-\index{exception!TypeError}
+%% \index{TypeError}
+%% \index{exception!TypeError}
 
 \begin{verbatim}
 >> greeting = 'Hello, world!'
@@ -6482,7 +6482,7 @@ def find(word, letter)
     return index if word[index] == letter
     index = index + 1
   end
-  return -1
+  return nil
 end
 \end{verbatim}
 %
@@ -6490,14 +6490,14 @@ In a sense, {\tt find} is the inverse of the {\tt []} operator.
 Instead of taking an index and extracting the corresponding character,
 it takes a character and finds the index where that character
 appears.  If the character is not found, the method returns {\tt
--1}.
+nil}.
 
 This is the first example we have seen of a {\tt return} statement
 inside a loop.  If {\tt word[index] == letter}, the method breaks
 out of the loop and returns immediately.
 
 If the character doesn't appear in the string, the program
-exits the loop normally and  returns {\tt -1}.
+exits the loop normally and  returns {\tt nil}.
 
 This pattern of computation---traversing a sequence and returning
 when we find what we are looking for---is called a {\bf search}.
@@ -6538,11 +6538,11 @@ When the loop exits, {\tt count}
 contains the result---the total number of {\tt a}'s.
 
 \index{encapsulation}
-As an exercise, encapsulate this code in a function named {\tt
+As an exercise, encapsulate this code in a method named {\tt
 count}, and generalize it so that it accepts the string and the
 letter as arguments.
 
-Then rewrite the function so that instead of
+Then rewrite the method so that instead of
 traversing the string, it uses the three-parameter version of {\tt
 find} from the previous section.
 
@@ -6550,122 +6550,132 @@ find} from the previous section.
 \section{String methods}
 \label{optional}
 
+% todo take notes on methods provided here to be added in previous chapters
 Strings provide methods that perform a variety of useful operations.
-A method is similar to a function---it takes arguments and
-returns a value---but the syntax is different.  For example, the
-method {\tt upper} takes a string and returns a new string with
+%% A method is similar to a function---it takes arguments and
+%% returns a value---but the syntax is different.
+For example, the
+method {\tt upcase} takes a string and returns a new string with
 all uppercase letters.
 \index{method}
 \index{string!method}
 
-Instead of the function syntax {\tt upper(word)}, it uses
-the method syntax {\tt word.upper()}.
+%% Instead of the function syntax {\tt upper(word)}, it uses
+%% the method syntax {\tt word.upper()}.
 
 \begin{verbatim}
->>> word = 'banana'
->>> new_word = word.upper()
->>> new_word
-'BANANA'
+>> word = 'banana'
+=> "banana"
+>> new_word = word.upcase
+=> "BANANA"
 \end{verbatim}
 %
-This form of dot notation specifies the name of the method, {\tt
-upper}, and the name of the string to apply the method to, {\tt
-word}.  The empty parentheses indicate that this method takes no
-arguments.
-\index{parentheses!empty}
-\index{dot notation}
+%% This form of dot notation specifies the name of the method, {\tt
+%% upper}, and the name of the string to apply the method to, {\tt
+%% word}.  The empty parentheses indicate that this method takes no
+%% arguments.
+%% \index{parentheses!empty}
+%% \index{dot notation}
+%% 
+%% A method call is called an {\bf invocation}; in this case, we would
+%% say that we are invoking {\tt upper} on {\tt word}.
+%% \index{invocation}
 
-A method call is called an {\bf invocation}; in this case, we would
-say that we are invoking {\tt upper} on {\tt word}.
-\index{invocation}
-
-As it turns out, there is a string method named {\tt find} that
-is remarkably similar to the function we wrote:
+As it turns out, there is a string method named {\tt index} that
+is remarkably similar to the {\tt find} method we wrote:
 
 \begin{verbatim}
->>> word = 'banana'
->>> index = word.find('a')
->>> index
-1
+>> word = 'banana'
+=> "banana"
+>> word.index('a')
+=> 1
+>> word.index('z')
+=> nil
 \end{verbatim}
 %
-In this example, we invoke {\tt find} on {\tt word} and pass
+In this example, we invoke {\tt index} on {\tt word} and pass
 the letter we are looking for as a parameter.
 
-Actually, the {\tt find} method is more general than our function;
+Actually, the {\tt index} method is more general than our {\tt find} method;
 it can find substrings, not just characters:
 
 \begin{verbatim}
->>> word.find('na')
-2
+>> word.index('na')
+=> 2
 \end{verbatim}
 %
-By default, {\tt find} starts at the beginning of the string, but
+By default, {\tt index} starts at the beginning of the string, but
 it can take a second argument, the index where it should start:
 \index{optional argument}
 \index{argument!optional}
 
 \begin{verbatim}
->>> word.find('na', 3)
-4
+>> word.index('na', 3)
+=> 4
 \end{verbatim}
 %
 This is an example of an {\bf optional argument};
-{\tt find} can
-also take a third argument, the index where it should stop:
+% todo is there an equivalent in Ruby for 3rd argument?
+%%{\tt find} can
+%%also take a third argument, the index where it should stop:
+%%
+%%\begin{verbatim}
+%%>>> name = 'bob'
+%%>>> name.find('b', 1, 2)
+%%-1
+%%\end{verbatim}
+%%%
+%%This search fails because {\tt b} does not
+%%appear in the index range from {\tt 1} to {\tt 2}, not including {\tt
+%%2}.  Searching up to, but not including, the second index makes
+%%{\tt find} consistent with the slice operator.
+
+
+
+\section{The {\tt include?} method}
+\index{include? method}
+\index{method!include?}
+%% \label{inboth}
+%% \index{in operator}
+%% \index{operator!in}
+%% \index{boolean operator}
+%% \index{operator!boolean}
+
+The {\tt include?} method
+returns {\tt true} if the given string argument appears as a substring:
 
 \begin{verbatim}
->>> name = 'bob'
->>> name.find('b', 1, 2)
--1
+>> 'banana'.include?('a')
+=> true
+>> 'banana'.include?('seed')
+=> false
 \end{verbatim}
 %
-This search fails because {\tt b} does not
-appear in the index range from {\tt 1} to {\tt 2}, not including {\tt
-2}.  Searching up to, but not including, the second index makes
-{\tt find} consistent with the slice operator.
-
-
-
-\section{The {\tt in} operator}
-\label{inboth}
-\index{in operator}
-\index{operator!in}
-\index{boolean operator}
-\index{operator!boolean}
-
-The word {\tt in} is a boolean operator that takes two strings and
-returns {\tt True} if the first appears as a substring in the second:
-
-\begin{verbatim}
->>> 'a' in 'banana'
-True
->>> 'seed' in 'banana'
-False
-\end{verbatim}
-%
-For example, the following function prints all the
+For example, the following method prints all the
 letters from {\tt word1} that also appear in {\tt word2}:
 
 \begin{verbatim}
-def in_both(word1, word2):
-    for letter in word1:
-        if letter in word2:
-            print(letter)
+def in_both(word1, word2)
+  word1.each_char do |letter|
+    puts letter if word2.include?(letter)
+  end
+end
 \end{verbatim}
 %
-With well-chosen variable names,
-Python sometimes reads like English.  You could read
-this loop, ``for (each) letter in (the first) word, if (the) letter 
-(appears) in (the second) word, print (the) letter.''
+% todo ?
+%% With well-chosen variable names,
+%% Ruby sometimes reads like English.  You could read
+%% this loop, ``for (each) letter in (the first) word, if (the) letter 
+%% (appears) in (the second) word, print (the) letter.''
 
 Here's what you get if you compare apples and oranges:
 
 \begin{verbatim}
->>> in_both('apples', 'oranges')
+>> in_both('apples', 'oranges')
 a
 e
 s
+=> "apples"
 \end{verbatim}
 %
 
@@ -6676,23 +6686,25 @@ s
 The relational operators work on strings.  To see if two strings are equal:
 
 \begin{verbatim}
-if word == 'banana':
-    print('All right, bananas.')
+if word == 'banana'
+  puts 'All right, bananas.'
+end
 \end{verbatim}
 %
 Other relational operations are useful for putting words in alphabetical
 order:
 
 \begin{verbatim}
-if word < 'banana':
-    print('Your word, ' + word + ', comes before banana.')
-elif word > 'banana':
-    print('Your word, ' + word + ', comes after banana.')
-else:
-    print('All right, bananas.')
+if word < 'banana'
+  puts "Your word, #{word}, comes before banana."
+elsif word > 'banana'
+  puts "Your word, #{word}, comes after banana."
+else
+  puts 'All right, bananas.'
+end
 \end{verbatim}
 %
-Python does not handle uppercase and lowercase letters the same way
+Ruby does not handle uppercase and lowercase letters the same way
 people do.  All the uppercase letters come before all the
 lowercase letters, so:
 
@@ -6712,30 +6724,30 @@ against a man armed with a Pineapple.
 
 When you use indices to traverse the values in a sequence,
 it is tricky to get the beginning and end of the traversal
-right.  Here is a function that is supposed to compare two
-words and return {\tt True} if one of the words is the reverse
+right.  Here is a method that is supposed to compare two
+words and return {\tt true} if one of the words is the reverse
 of the other, but it contains two errors:
 
 \begin{verbatim}
-def is_reverse(word1, word2):
-    if len(word1) != len(word2):
-        return False
-    
-    i = 0
-    j = len(word2)
+def reverse?(word1, word2)
+  return false if word1.length != word2.length
+  
+  i = 0
+  j = word2.length
 
-    while j > 0:
-        if word1[i] != word2[j]:
-            return False
-        i = i+1
-        j = j-1
+  while j > 0
+    return false if word1[i] != word2[j]
+    i = i+1
+    j = j-1
+  end
 
-    return True
+  return true
+end
 \end{verbatim}
 %
 The first {\tt if} statement checks whether the words are the
-same length.  If not, we can return {\tt False} immediately.
-Otherwise, for the rest of the function, we can assume that the words
+same length.  If not, we can return {\tt false} immediately.
+Otherwise, for the rest of the method, we can assume that the words
 are the same length.  This is an example of the guardian pattern
 in Section~\ref{guardian}.
 \index{guardian pattern}
@@ -6744,66 +6756,65 @@ in Section~\ref{guardian}.
 
 {\tt i} and {\tt j} are indices: {\tt i} traverses {\tt word1}
 forward while {\tt j} traverses {\tt word2} backward.  If we find
-two letters that don't match, we can return {\tt False} immediately.
+two letters that don't match, we can return {\tt false} immediately.
 If we get through the whole loop and all the letters match, we
-return {\tt True}.
+return {\tt true}.
 
-If we test this function with the words ``pots'' and ``stop'', we
-expect the return value {\tt True}, but we get an IndexError:
-\index{IndexError}
-\index{exception!IndexError}
+If we test this method with the words ``pots'' and ``stop'', we
+expect the return value {\tt true}, but we get {\tt false}:
+%% \index{IndexError}
+%% \index{exception!IndexError}
 
 \begin{verbatim}
->>> is_reverse('pots', 'stop')
-...
-  File "reverse.py", line 15, in is_reverse
-    if word1[i] != word2[j]:
-IndexError: string index out of range
+>> reverse?('pots', 'stop')
+=> false
 \end{verbatim}
 %
-For debugging this kind of error, my first move is to
-print the values of the indices immediately before the line
-where the error appears.
+For debugging this kind of issue, my first move is to
+print the values of the indices inside the loop:
+%% immediately before the line
+%% where the error appears.
 
 \begin{verbatim}
-    while j > 0:
-        print(i, j)        # print here
-        
-        if word1[i] != word2[j]:
-            return False
-        i = i+1
-        j = j-1
+  while j > 0
+    puts "#{i} #{j}"
+
+    return false if word1[i] != word2[j]
+    i = i+1
+    j = j-1
+  end
 \end{verbatim}
 %
 Now when I run the program again, I get more information:
 
 \begin{verbatim}
->>> is_reverse('pots', 'stop')
+>> reverse?('pots', 'stop')
 0 4
-...
-IndexError: string index out of range
+=> false
 \end{verbatim}
 %
 The first time through the loop, the value of {\tt j} is 4,
-which is out of range for the string \verb"'pots'".
+which is out of range for the string \verb"'stop'".
 The index of the last character is 3, so the
-initial value for {\tt j} should be {\tt len(word2)-1}.
+initial value for {\tt j} should be {\tt word2.length-1}.
 
-If I fix that error and run the program again, I get:
+If I fix that issue and run the program again, I get:
 
 \begin{verbatim}
->>> is_reverse('pots', 'stop')
+>> reverse?('pots', 'stop')
 0 3
 1 2
 2 1
-True
+=> true
 \end{verbatim}
 %
 This time we get the right answer, but it looks like the loop only ran
 three times, which is suspicious.  To get a better idea of what is
 happening, it is useful to draw a state diagram.  During the first
-iteration, the frame for \verb"is_reverse" is shown in
-Figure~\ref{fig.state4}.  \index{state diagram} \index{diagram!state}
+iteration, the frame for \verb"reverse?" is shown in
+Figure~\ref{fig.state4}.
+\index{state diagram}
+\index{diagram!state}
 
 \begin{figure}
 \centerline
@@ -6818,8 +6829,8 @@ and adding dotted lines to show that the values of {\tt i} and
 
 Starting with this diagram, run the program on paper, changing the
 values of {\tt i} and {\tt j} during each iteration.  Find and fix the
-second error in this function.
-\label{isreverse}
+second error in this method.
+\label{reverse?}
 
 
 \section{Glossary}
@@ -6838,7 +6849,7 @@ values where each value is identified by an integer index.
 \index{item}
 
 \item[index:] An integer value used to select an item in
-a sequence, such as a character in a string.  In Python
+a sequence, such as a character in a string.  In Ruby
 indices start from 0.
 \index{index}
 
@@ -6849,9 +6860,10 @@ indices start from 0.
 by two quotation marks.
 \index{empty string}
 
-\item[immutable:] The property of a sequence whose items cannot
-be changed.
-\index{immutability}
+% todo? string is mutable in Ruby
+%% \item[immutable:] The property of a sequence whose items cannot
+%% be changed.
+%% \index{immutability}
 
 \item[traverse:] To iterate through the items in a sequence,
 performing a similar operation on each.
@@ -6866,6 +6878,7 @@ when it finds what it is looking for.
 to zero and then incremented.
 \index{counter}
 
+% todo this should be moved to earlier chapter wrt method?
 \item[invocation:] A statement that calls a method.
 \index{invocation}
 
@@ -6884,18 +6897,18 @@ required.
 \index{method!string}
 
 Read the documentation of the string methods at
-\url{http://docs.python.org/3/library/stdtypes.html#string-methods}.
+\url{https://ruby-doc.org/core-2.5.0/String.html}.
 You might want to experiment with some of them to make sure you
-understand how they work.  {\tt strip} and {\tt replace} are
+understand how they work.  {\tt strip}, {\tt match} and {\tt gsub} are
 particularly useful.
 
-The documentation uses a syntax that might be confusing.
-For example, in \verb"find(sub[, start[, end]])", the brackets
-indicate optional arguments.  So {\tt sub} is required, but
-{\tt start} is optional, and if you include {\tt start},
-then {\tt end} is optional.
-\index{optional argument}
-\index{argument!optional}
+%% The documentation uses a syntax that might be confusing.
+%% For example, in \verb"find(sub[, start[, end]])", the brackets
+%% indicate optional arguments.  So {\tt sub} is required, but
+%% {\tt start} is optional, and if you include {\tt start},
+%% then {\tt end} is optional.
+%% \index{optional argument}
+%% \index{argument!optional}
 
 \end{exercise}
 
@@ -6912,69 +6925,98 @@ in \verb"'banana'".
 \end{exercise}
 
 
+% todo Ruby has reverse method, string slice with step is complicated
+%% \begin{exercise}
+%% \index{step size}
+%% \index{slice operator}
+%% \index{operator!slice}
+%% 
+%% A string slice can take a third index that specifies the ``step
+%% size''; that is, the number of spaces between successive characters.
+%% A step size of 2 means every other character; 3 means every third,
+%% etc.
+%% 
+%% \begin{verbatim}
+%% >>> fruit = 'banana'
+%% >>> fruit[0:5:2]
+%% 'bnn'
+%% \end{verbatim}
+%% 
+%% A step size of -1 goes through the word backwards, so
+%% the slice \verb"[::-1]" generates a reversed string.
+%% \index{palindrome}
+%% 
+%% Use this idiom to write a one-line version of \verb"palindrome?"
+%% from Exercise~\ref{palindrome}.
+%% \end{exercise}
 \begin{exercise}
-\index{step size}
-\index{slice operator}
-\index{operator!slice}
+\index{reverse method}
+\index{method!reverse}
 
-A string slice can take a third index that specifies the ``step
-size''; that is, the number of spaces between successive characters.
-A step size of 2 means every other character; 3 means every third,
-etc.
+The string method {\tt reverse} gives back characters in reversed order:
 
 \begin{verbatim}
->>> fruit = 'banana'
->>> fruit[0:5:2]
-'bnn'
+>> fruit = 'banana'
+=> "banana"
+>> fruit.reverse
+=> "ananab"
 \end{verbatim}
 
-A step size of -1 goes through the word backwards, so
-the slice \verb"[::-1]" generates a reversed string.
-\index{palindrome}
-
-Use this idiom to write a one-line version of \verb"palindrome?"
+Use this method to write a one-line version of \verb"palindrome?"
 from Exercise~\ref{palindrome}.
 \end{exercise}
 
 
 \begin{exercise}
 
-The following functions are all {\em intended} to check whether a
+% todo mention what ASCII is?
+The following methods are all {\em intended} to check whether a
 string contains any lowercase letters, but at least some of them are
-wrong.  For each function, describe what the function actually does
-(assuming that the parameter is a string).
+wrong.  For each method, describe what the method actually does
+(assuming that the parameter is a string consisting of ASCII characters only).
 
 \begin{verbatim}
-def any_lowercase1(s):
-    for c in s:
-        if c.islower():
-            return True
-        else:
-            return False
+def any_lowercase1(s)
+  for c in s.chars
+    if c.match?(/[a-z]/)
+      return true
+    else
+      return false
+    end
+  end
+end
 
-def any_lowercase2(s):
-    for c in s:
-        if 'c'.islower():
-            return 'True'
-        else:
-            return 'False'
+def any_lowercase2(s)
+  for c in s.chars
+    if 'c'.match?(/[a-z]/)
+      return 'true'
+    else
+      return 'false'
+    end
+  end
+end
 
-def any_lowercase3(s):
-    for c in s:
-        flag = c.islower()
-    return flag
+def any_lowercase3(s)
+  for c in s.chars
+    flag = c.match?(/[a-z]/)
+  end
+  return flag
+end
 
-def any_lowercase4(s):
-    flag = False
-    for c in s:
-        flag = flag or c.islower()
-    return flag
+def any_lowercase4(s)
+  flag = false
+  for c in s.chars
+    flag = flag || c.match?(/[a-z]/)
+  end
+  return flag
+end
 
-def any_lowercase5(s):
-    for c in s:
-        if not c.islower():
-            return False
-    return True
+def any_lowercase5(s)
+  for c in s.chars
+    return false if !c.match?(/[a-z]/)
+  end
+  return true
+end
 \end{verbatim}
 
 \end{exercise}
@@ -6998,19 +7040,24 @@ ship computer is called HAL, which is IBM rotated by -1.
 %For example ``sleep''
 %rotated by 9 is ``bunny'' and ``latex'' rotated by 7 is ``shale''.
 
-Write a function called \verb"rotate_word"
+Write a method called \verb"rotate_word"
 that takes a string and an integer as parameters, and returns
 a new string that contains the letters from the original string
 rotated by the given amount.  
 
-You might want to use the built-in function {\tt ord}, which converts
+You might want to use the built-in method {\tt ord}, which converts
 a character to a numeric code, and {\tt chr}, which converts numeric
 codes to characters.  Letters of the alphabet are encoded in alphabetical
 order, so for example:
 
 \begin{verbatim}
->>> ord('c') - ord('a')
-2
+>> 97.chr
+=> "a"
+>> 99.chr
+=> "c"
+
+>> 'c'.ord - 'a'.ord
+=> 2
 \end{verbatim}
 
 Because \verb"'c'" is the two-eth letter of the alphabet.  But
@@ -7018,8 +7065,9 @@ beware: the numeric codes for upper case letters are different.
 
 Potentially offensive jokes on the Internet are sometimes encoded in
 ROT13, which is a Caesar cypher with rotation 13.  If you are not
-easily offended, find and decode some of them.  Solution:
-\url{http://thinkpython2.com/code/rotate.py}.
+easily offended, find and decode some of them.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/rotate.py}.
 
 \end{exercise}
 
@@ -7384,7 +7432,7 @@ def palindrome?(word):
     return is_reverse(word, word)
 \end{verbatim}
 %
-Using \verb"is_reverse" from Section~\ref{isreverse}.
+Using \verb"reverse?" from Section~\ref{reverse?}.
 
 
 \section{Debugging}
