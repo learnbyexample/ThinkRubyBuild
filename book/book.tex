@@ -6918,7 +6918,7 @@ particularly useful.
 \index{method!count}
 
 There is a string method called {\tt count} that is similar
-to the function in Section~\ref{counter}.  Read the documentation
+to the method in Section~\ref{counter}.  Read the documentation
 of this method
 and write an invocation that counts the number of {\tt a}'s
 in \verb"'banana'".
@@ -7090,39 +7090,44 @@ For the exercises in this chapter we need a list of English words.
 There are lots of word lists available on the Web, but the one most
 suitable for our purpose is one of the word lists collected and
 contributed to the public domain by Grady Ward as part of the Moby
-lexicon project (see \url{http://wikipedia.org/wiki/Moby_Project}).  It
+lexicon project (see \url{https://wikipedia.org/wiki/Moby_Project}).  It
 is a list of 113,809 official crosswords; that is, words that are
 considered valid in crossword puzzles and other word games.  In the
 Moby collection, the filename is {\tt 113809of.fic}; you can download
-a copy, with the simpler name {\tt words.txt}, from
-\url{http://thinkpython2.com/code/words.txt}.
+a copy from \url{https://www.gutenberg.org/files/3201/files/CROSSWD.TXT}.
+For this chapter, the file is renamed as {\tt words.txt} and DOS style
+line endings have been converted to UNIX style (use dos2unix command
+if available or use: \verb"sed 's/\r$//'").
+%a copy, with the simpler name {\tt words.txt}, from
 \index{Moby Project}
 \index{crosswords}
 
 This file is in plain text, so you can open it with a text
-editor, but you can also read it from Python.  The built-in
-function {\tt open} takes the name of the file as a parameter
+editor, but you can also read it from Ruby.  The {\tt File} module's built-in
+method {\tt open} takes the name of the file as a parameter
 and returns a {\bf file object} you can use to read the file.
-\index{open function}
-\index{function!open}
+\index{open method}
+\index{method!open}
 \index{plain text}
 \index{text!plain}
 \index{object!file}
 \index{file object}
 
 \begin{verbatim}
->>> fin = open('words.txt')
+>> fin = File.open('words.txt')
+=> #<File:words.txt>
 \end{verbatim}
 %
 {\tt fin} is a common name for a file object used for input.  The file
 object provides several methods for reading, including {\tt readline},
 which reads characters from the file until it gets to a newline and
-returns the result as a string: \index{readline method}
+returns the result as a string:
+\index{readline method}
 \index{method!readline}
 
 \begin{verbatim}
->>> fin.readline()
-'aa\n'
+>> fin.readline
+=> "aa\n"
 \end{verbatim}
 %
 The first word in this particular list is ``aa'', which is a kind of
@@ -7133,8 +7138,8 @@ The file object keeps track of where it is in the file, so
 if you call {\tt readline} again, you get the next word:
 
 \begin{verbatim}
->>> fin.readline()
-'aah\n'
+>> fin.readline
+=> "aah\n"
 \end{verbatim}
 %
 The next word is ``aah'', which is a perfectly legitimate
@@ -7145,23 +7150,24 @@ we can get rid of it with the string method {\tt strip}:
 \index{method!strip}
 
 \begin{verbatim}
->>> line = fin.readline()
->>> word = line.strip()
->>> word
-'aahed'
+>> line = fin.readline
+=> "aahed\n"
+>> word = line.strip
+=> "aahed"
 \end{verbatim}
 %
 You can also use a file object as part of a {\tt for} loop.
 This program reads {\tt words.txt} and prints each word, one
 per line:
-\index{open function}
-\index{function!open}
+\index{open method}
+\index{method!open}
 
 \begin{verbatim}
-fin = open('words.txt')
-for line in fin:
-    word = line.strip()
-    print(word)
+fin = File.open('words.txt')
+for line in fin
+  word = line.strip
+  puts word
+end
 \end{verbatim}
 %
 
@@ -7189,7 +7195,7 @@ and hours of training you can gradually gain facility.
 
 All right, I'll stop now.
 
-Write a function called \verb"has_no_e" that returns {\tt True} if
+Write a method called \verb"has_no_e" that returns {\tt true} if
 the given word doesn't have the letter ``e'' in it.
 
 Modify your program from the previous section to print only the words
@@ -7202,9 +7208,9 @@ that have no ``e''.
 
 \begin{exercise} 
 
-Write a function named {\tt avoids}
+Write a method named {\tt avoids}
 that takes a word and a string of forbidden letters, and
-that returns {\tt True} if the word doesn't use any of the forbidden
+that returns {\tt true} if the word doesn't use any of the forbidden
 letters.
 
 Modify your program to prompt the user to enter a string
@@ -7219,8 +7225,8 @@ excludes the smallest number of words?
 
 \begin{exercise}
 
-Write a function named \verb"uses_only" that takes a word and a
-string of letters, and that returns {\tt True} if the word contains
+Write a method named \verb"uses_only" that takes a word and a
+string of letters, and that returns {\tt true} if the word contains
 only letters in the list.  Can you make a sentence using only the
 letters {\tt acefhlo}?  Other than ``Hoe alfalfa?''
 
@@ -7229,8 +7235,8 @@ letters {\tt acefhlo}?  Other than ``Hoe alfalfa?''
 
 \begin{exercise} 
 
-Write a function named \verb"uses_all" that takes a word and a
-string of required letters, and that returns {\tt True} if the word
+Write a method named \verb"uses_all" that takes a word and a
+string of required letters, and that returns {\tt true} if the word
 uses all the required letters at least once.  How many words are there
 that use all the vowels {\tt aeiou}?  How about {\tt aeiouy}?
 
@@ -7239,8 +7245,8 @@ that use all the vowels {\tt aeiou}?  How about {\tt aeiouy}?
 
 \begin{exercise}
 
-Write a function called \verb"is_abecedarian" that returns
-{\tt True} if the letters in a word appear in alphabetical order
+Write a method called \verb"is_abecedarian" that returns
+{\tt true} if the letters in a word appear in alphabetical order
 (double letters are ok).  
 How many abecedarian words are there?
 
