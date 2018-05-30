@@ -974,7 +974,7 @@ so-called because the letters it contains are strung together.
 \index{floating-point}
 
 If you are not sure what type a value has, the interpreter can
-tell you:
+tell you by invoking the {\bf class} method:
 
 \begin{verbatim}
 >> 2.class
@@ -985,12 +985,14 @@ tell you:
 => String
 \end{verbatim}
 %
-In these results, the word ``class'' is used in the sense of
-a category; a type is a category of values.
-\index{class}
+% todo?
+%% In these results, the word ``class'' is used in the sense of
+%% a category; a type is a category of values.
+%% \index{class}
 
 % todo
 % should the term 'object' be introduced here?
+% should method/dot notation explained here?
 Not surprisingly, integers belong to the type {\tt Integer},
 strings belong to {\tt String} and floating-point
 numbers belong to {\tt Float}.  
@@ -2769,8 +2771,8 @@ that takes a symbol as an argument and calls it twice:
 \begin{verbatim}
 def do_twice(s)
   m = method(s)
-  m.call()
-  m.call()
+  m.call
+  m.call
 end
 \end{verbatim}
 
@@ -4140,15 +4142,20 @@ returns what the user typed as a string.
 % todo gets actually reads from file, it is STDIN here, link to File chapter?
 
 \begin{verbatim}
->> text = gets()
+>> text = gets
 What are you waiting for?
 => "What are you waiting for?\n"
 >> text
 => "What are you waiting for?\n"
 \end{verbatim}
 %
-The sequence \verb"\n" at the end of the received string represents a {\bf
-  newline}, which is a special character that causes a line break.
+The sequence \verb"\n" at the end of the received string represents a
+{\bf newline}, which is a special character that causes a line break.
+
+As noted before, parentheses are optional for calling methods
+unless necessary. Built-in methods, for example {\tt puts} and {\tt gets},
+are often used and leaving out parentheses for them is conventional.
+
 The {\tt chomp} method can be used on a string object
 to remove newline character if it is the last character of string.
 \index{newline}
@@ -4156,10 +4163,10 @@ to remove newline character if it is the last character of string.
 \index{method!chomp}
 
 \begin{verbatim}
->> fruit = gets()
+>> fruit = gets
 mango
 => "mango\n"
->> fruit = gets().chomp()
+>> fruit = gets.chomp
 apple
 => "apple"
 \end{verbatim}
@@ -4172,7 +4179,7 @@ instead of {\tt puts} if line break is not needed.
 
 \begin{verbatim}
 puts 'What...is your name?'
-name = gets()
+name = gets
 \end{verbatim}
 %
 %% The sequence \verb"\n" at the end of the prompt represents a {\bf
@@ -4186,7 +4193,7 @@ the return value to {\tt Integer}:
 >> puts 'What...is the airspeed velocity of an unladen swallow?'
 What...is the airspeed velocity of an unladen swallow?
 => nil
->> speed = gets()
+>> speed = gets
 42
 => "42\n"
 >> Integer(speed)
@@ -4197,7 +4204,7 @@ But if the user types something other than a string of digits,
 you get an error:
 
 \begin{verbatim}
->> speed = gets()
+>> speed = gets
 What do you mean, an African or a European swallow?
 => "What do you mean, an African or a European swallow?\n"
 >> Integer(speed)
@@ -7280,8 +7287,8 @@ have to go to the next letter.  If we exit the loop normally, that
 means we didn't find an ``e'', so we return {\tt true}.
 \index{traversal}
 
-%% \index{in operator}
-%% \index{operator!in}
+\index{include? method}
+\index{method!include?}
 You could write this method more concisely using the {\tt include?}
 method, but I started with this version because it 
 demonstrates the logic of the search pattern.
