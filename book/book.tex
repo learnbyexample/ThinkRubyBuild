@@ -7195,7 +7195,7 @@ and hours of training you can gradually gain facility.
 
 All right, I'll stop now.
 
-Write a method called \verb"has_no_e" that returns {\tt true} if
+Write a method called \verb"no_e?" that returns {\tt true} if
 the given word doesn't have the letter ``e'' in it.
 
 Modify your program from the previous section to print only the words
@@ -7208,7 +7208,7 @@ that have no ``e''.
 
 \begin{exercise} 
 
-Write a method named {\tt avoids}
+Write a method named {\tt avoids?}
 that takes a word and a string of forbidden letters, and
 that returns {\tt true} if the word doesn't use any of the forbidden
 letters.
@@ -7225,7 +7225,7 @@ excludes the smallest number of words?
 
 \begin{exercise}
 
-Write a method named \verb"uses_only" that takes a word and a
+Write a method named \verb"uses_only?" that takes a word and a
 string of letters, and that returns {\tt true} if the word contains
 only letters in the list.  Can you make a sentence using only the
 letters {\tt acefhlo}?  Other than ``Hoe alfalfa?''
@@ -7235,7 +7235,7 @@ letters {\tt acefhlo}?  Other than ``Hoe alfalfa?''
 
 \begin{exercise} 
 
-Write a method named \verb"uses_all" that takes a word and a
+Write a method named \verb"uses_all?" that takes a word and a
 string of required letters, and that returns {\tt true} if the word
 uses all the required letters at least once.  How many words are there
 that use all the vowels {\tt aeiou}?  How about {\tt aeiouy}?
@@ -7245,7 +7245,7 @@ that use all the vowels {\tt aeiou}?  How about {\tt aeiouy}?
 
 \begin{exercise}
 
-Write a method called \verb"is_abecedarian" that returns
+Write a method called \verb"abecedarian?" that returns
 {\tt true} if the letters in a word appear in alphabetical order
 (double letters are ok).  
 How many abecedarian words are there?
@@ -7266,139 +7266,146 @@ in common; they can be solved with the search pattern we saw
 in Section~\ref{find}.  The simplest example is:
 
 \begin{verbatim}
-def has_no_e(word):
-    for letter in word:
-        if letter == 'e':
-            return False
-    return True
+def no_e?(word)
+  for letter in word.chars
+    return false if letter == 'e'
+  end
+  return true
+end
 \end{verbatim}
 %
 The {\tt for} loop traverses the characters in {\tt word}.  If we find
-the letter ``e'', we can immediately return {\tt False}; otherwise we
+the letter ``e'', we can immediately return {\tt false}; otherwise we
 have to go to the next letter.  If we exit the loop normally, that
-means we didn't find an ``e'', so we return {\tt True}.
+means we didn't find an ``e'', so we return {\tt true}.
 \index{traversal}
 
-\index{in operator}
-\index{operator!in}
-You could write this function more concisely using the {\tt in}
-operator, but I started with this version because it 
+%% \index{in operator}
+%% \index{operator!in}
+You could write this method more concisely using the {\tt include?}
+method, but I started with this version because it 
 demonstrates the logic of the search pattern.
 
 \index{generalization}
-{\tt avoids} is a more general version of \verb"has_no_e" but it
+{\tt avoids?} is a more general version of \verb"no_e?" but it
 has the same structure:
 
 \begin{verbatim}
-def avoids(word, forbidden):
-    for letter in word:
-        if letter in forbidden:
-            return False
-    return True
+def avoids?(word, forbidden)
+  for letter in word.chars
+    return false if forbidden.include?(letter)
+  end
+  return true
+end
 \end{verbatim}
 %
-We can return {\tt False} as soon as we find a forbidden letter;
-if we get to the end of the loop, we return {\tt True}.
+We can return {\tt false} as soon as we find a forbidden letter;
+if we get to the end of the loop, we return {\tt true}.
 
-\verb"uses_only" is similar except that the sense of the condition
+\verb"uses_only?" is similar except that the sense of the condition
 is reversed:
 
 \begin{verbatim}
-def uses_only(word, available):
-    for letter in word: 
-        if letter not in available:
-            return False
-    return True
+def uses_only?(word, available)
+  for letter in word.chars
+    return false if !available.include?(letter)
+  end
+  return true
+end
 \end{verbatim}
 %
 Instead of a list of forbidden letters, we have a list of available
 letters.  If we find a letter in {\tt word} that is not in
-{\tt available}, we can return {\tt False}.
+{\tt available}, we can return {\tt false}.
 
-\verb"uses_all" is similar except that we reverse the role
+\verb"uses_all?" is similar except that we reverse the role
 of the word and the string of letters:
 
 \begin{verbatim}
-def uses_all(word, required):
-    for letter in required: 
-        if letter not in word:
-            return False
-    return True
+def uses_all?(word, required)
+  for letter in required.chars
+    return false if !word.include?(letter)
+  end
+  return true
+end
 \end{verbatim}
 %
 Instead of traversing the letters in {\tt word}, the loop
 traverses the required letters.  If any of the required letters
-do not appear in the word, we can return {\tt False}.
+do not appear in the word, we can return {\tt false}.
 \index{traversal}
 
 If you were really thinking like a computer scientist, you would
-have recognized that \verb"uses_all" was an instance of a
+have recognized that \verb"uses_all?" was an instance of a
 previously solved problem, and you would have written:
 
 \begin{verbatim}
-def uses_all(word, required):
-    return uses_only(required, word)
+def uses_all?(word, required)
+  return uses_only?(required, word)
+end
 \end{verbatim}
 %
-This is an example of a program development plan called {\bf
-  reduction to a previously solved problem}, which means that you
+This is an example of a program development plan called
+{\bf reduction to a previously solved problem}, which means that you
 recognize the problem you are working on as an instance of a solved
-problem and apply an existing solution.  \index{reduction to a
-  previously solved problem} \index{development plan!reduction}
+problem and apply an existing solution.
+\index{reduction to a previously solved problem}
+\index{development plan!reduction}
 
 
 \section{Looping with indices}
 \index{looping!with indices}
 \index{index!looping with}
 
-I wrote the functions in the previous section with {\tt for}
+I wrote the methods in the previous section with {\tt for}
 loops because I only needed the characters in the strings; I didn't
 have to do anything with the indices.
 
-For \verb"is_abecedarian" we have to compare adjacent letters,
+For \verb"abecedarian?" we have to compare adjacent letters,
 which is a little tricky with a {\tt for} loop:
 
 \begin{verbatim}
-def is_abecedarian(word):
-    previous = word[0]
-    for c in word:
-        if c < previous:
-            return False
-        previous = c
-    return True
+def abecedarian?(word)
+  previous = word[0]
+  for c in word.chars
+    return false if c < previous
+    previous = c
+  end
+  return true
+end
 \end{verbatim}
 
 An alternative is to use recursion:
 
 \begin{verbatim}
-def is_abecedarian(word):
-    if len(word) <= 1:
-        return True
-    if word[0] > word[1]:
-        return False
-    return is_abecedarian(word[1:])
+def abecedarian?(word)
+  return true if word.length <= 1
+  return false if word[0] > word[1]
+  return abecedarian?(word[1..-1])
+end
 \end{verbatim}
 
 Another option is to use a {\tt while} loop:
 
 \begin{verbatim}
-def is_abecedarian(word):
-    i = 0
-    while i < len(word)-1:
-        if word[i+1] < word[i]:
-            return False
-        i = i+1
-    return True
+def abecedarian?(word)
+  i = 0
+  while i < word.length-1
+    return false if word[i+1] < word[i]
+    i = i+1
+  end
+  return true
+end
 \end{verbatim}
 %
-The loop starts at {\tt i=0} and ends when {\tt i=len(word)-1}.  Each
+The loop starts at {\tt i=0} and ends when {\tt i=word.length-1}.  Each
 time through the loop, it compares the $i$th character (which you can
 think of as the current character) to the $i+1$th character (which you
 can think of as the next).
 
 If the next character is less than (alphabetically before) the current
 one, then we have discovered a break in the abecedarian trend, and
-we return {\tt False}.
+we return {\tt false}.
 
 If we get to the end of the loop without finding a fault, then the
 word passes the test.  To convince yourself that the loop ends
@@ -7415,17 +7422,18 @@ Exercise~\ref{palindrome}) that uses two indices; one starts at the
 beginning and goes up; the other starts at the end and goes down.
 
 \begin{verbatim}
-def palindrome?(word):
-    i = 0
-    j = len(word)-1
+def palindrome?(word)
+  i = 0
+  j = word.length-1
 
-    while i<j:
-        if word[i] != word[j]:
-            return False
-        i = i+1
-        j = j-1
+  while i < j
+    return false if word[i] != word[j]
+    i = i+1
+    j = j-1
+  end
 
-    return True
+  return true
+end
 \end{verbatim}
 
 Or we could reduce to a previously solved
@@ -7434,8 +7442,9 @@ problem and write:
 \index{development plan!reduction}
 
 \begin{verbatim}
-def palindrome?(word):
-    return is_reverse(word, word)
+def palindrome?(word)
+  return reverse?(word, word)
+end
 \end{verbatim}
 %
 Using \verb"reverse?" from Section~\ref{reverse?}.
@@ -7451,7 +7460,7 @@ relatively easy to test because you can check the results by hand.
 Even so, it is somewhere between difficult and impossible to choose a
 set of words that test for all possible errors.
 
-Taking \verb"has_no_e" as an example, there are two obvious
+Taking \verb"no_e?" as an example, there are two obvious
 cases to check: words that have an `e' should return {\tt False}, and
 words that don't should return {\tt True}.  You should have no
 trouble coming up with one of each.
@@ -15448,16 +15457,16 @@ True
 That example isn't very useful because it does the same thing
 as the {\tt in} operator.  But we could use {\tt any} to rewrite
 some of the search functions we wrote in Section~\ref{search}.  For
-example, we could write {\tt avoids} like this:
+example, we could write {\tt avoids?} like this:
 \index{search pattern}
 \index{pattern!search}
 
 \begin{verbatim}
-def avoids(word, forbidden):
+def avoids?(word, forbidden):
     return not any(letter in forbidden for letter in word)
 \end{verbatim}
 %
-The function almost reads like English, ``{\tt word} avoids
+The function almost reads like English, ``{\tt word} avoids?
 {\tt forbidden} if there are not any forbidden letters in {\tt word}.''
 
 Using {\tt any} with a generator expression is efficient because
@@ -15466,7 +15475,7 @@ so it doesn't have to evaluate the whole sequence.
 
 Python provides another built-in function, {\tt all}, that returns
 {\tt True} if every element of the sequence is {\tt True}.  As
-an exercise, use {\tt all} to re-write \verb"uses_all" from
+an exercise, use {\tt all} to re-write \verb"uses_all?" from
 Section~\ref{search}.
 \index{all}
 \index{built-in function!any}
@@ -15548,21 +15557,21 @@ are no duplicates, the set will be the same size as {\tt t}.
 
 We can also use sets to do some of the exercises in
 Chapter~\ref{wordplay}.  For example, here's a version of
-\verb"uses_only" with a loop:
+\verb"uses_only?" with a loop:
 
 \begin{verbatim}
-def uses_only(word, available):
+def uses_only?(word, available):
     for letter in word: 
         if letter not in available:
             return False
     return True
 \end{verbatim}
 %
-\verb"uses_only" checks whether all letters in {\tt word} are
+\verb"uses_only?" checks whether all letters in {\tt word} are
 in {\tt available}.  We can rewrite it like this:
 
 \begin{verbatim}
-def uses_only(word, available):
+def uses_only?(word, available):
     return set(word) <= set(available)
 \end{verbatim}
 %
@@ -15571,7 +15580,7 @@ including the possibility that they are equal, which is true if all
 the letters in {\tt word} appear in {\tt available}.
 \index{subset}
 
-As an exercise, rewrite \verb"avoids" using sets.
+As an exercise, rewrite \verb"avoids?" using sets.
 
 
 \section{Counters}
