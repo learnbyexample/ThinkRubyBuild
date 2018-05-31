@@ -6356,11 +6356,12 @@ A segment of a string is called a {\bf slice}.  Selecting a slice is
 similar to selecting a character:
 
 \begin{verbatim}
->> s = 'Monty Python'
->> s[0..4]
-=> "Monty"
->> s[6..11]
-=> "Python"
+>> s = 'Ruby gems'
+=> "Ruby gems"
+>> s[0..3]
+=> "Ruby"
+>> s[5..8]
+=> "gems"
 \end{verbatim}
 %
 The range operator {\tt ..} helps to return the part of the string from the 
@@ -7462,14 +7463,14 @@ Using \verb"reverse?" from Section~\ref{reverse?}.
 \index{testing!is hard}
 \index{program testing}
 
-Testing programs is hard.  The functions in this chapter are
+Testing programs is hard.  The methods in this chapter are
 relatively easy to test because you can check the results by hand.
 Even so, it is somewhere between difficult and impossible to choose a
 set of words that test for all possible errors.
 
 Taking \verb"no_e?" as an example, there are two obvious
-cases to check: words that have an `e' should return {\tt False}, and
-words that don't should return {\tt True}.  You should have no
+cases to check: words that have an `e' should return {\tt false}, and
+words that don't should return {\tt true}.  You should have no
 trouble coming up with one of each.
 
 Within each case, there are some less obvious subcases.  Among the
@@ -7531,7 +7532,7 @@ show their absence!
 
 This question is based on a Puzzler that was broadcast on the radio
 program {\em Car Talk} 
-(\url{http://www.cartalk.com/content/puzzlers}):
+(\url{https://www.cartalk.com/puzzler/browse}):
 
 \begin{quote}
 Give me a word with three consecutive double letters. I'll give you a
@@ -7545,14 +7546,15 @@ think of one. What is the word?
 \end{quote}
 
 Write a program to find it.
-Solution: \url{http://thinkpython2.com/code/cartalk1.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/cartalk1.py}.
 
 \end{exercise}
 
 
 \begin{exercise}
 Here's another {\em Car Talk}
-Puzzler (\url{http://www.cartalk.com/content/puzzlers}):
+Puzzler (\url{https://www.cartalk.com/puzzler/browse}):
 \index{Car Talk}
 \index{Puzzler}
 \index{odometer}
@@ -7577,16 +7579,17 @@ all 6 were palindromic!
 ``The question is, what was on the odometer when I first looked?''
 \end{quote}
 
-Write a Python program that tests all the six-digit numbers and prints
+Write a Ruby program that tests all the six-digit numbers and prints
 any numbers that satisfy these requirements.  
-Solution: \url{http://thinkpython2.com/code/cartalk2.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/cartalk2.py}.
 
 \end{exercise}
 
 
 \begin{exercise}
 Here's another {\em Car Talk} Puzzler you can solve with a
-search (\url{http://www.cartalk.com/content/puzzlers}):
+search (\url{https://www.cartalk.com/puzzler/browse}):
 \index{Car Talk}
 \index{Puzzler}
 \index{palindrome}
@@ -7606,10 +7609,11 @@ happened 8 times over all. So the question is, how old am I now?''
 
 \end{quote}
 
-Write a Python program that searches for solutions to this Puzzler.
-Hint: you might find the string method {\tt zfill} useful.
+Write a Ruby program that searches for solutions to this Puzzler.
+Hint: you might find the string method {\tt rjust} useful.
 
-Solution: \url{http://thinkpython2.com/code/cartalk3.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/cartalk3.py}.
 
 \end{exercise}
 
