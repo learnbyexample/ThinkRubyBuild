@@ -1020,7 +1020,7 @@ They're strings.
 
 When you type a large integer, you might be tempted to use commas
 between groups of digits, as in {\tt 1,000,000}.  This is not a
-legal {\em integer} in Ruby. You can use underscores instead:
+legal {\em integer} in Ruby.  You can use underscores instead:
 
 \begin{verbatim}
 >> 1_000_000
@@ -1598,7 +1598,7 @@ remember the rules:
 \begin{itemize}
 
 \item {\bf P}arentheses have the highest precedence and can be used 
-to force an expression to evaluate in the order you want. Since
+to force an expression to evaluate in the order you want.  Since
 expressions in parentheses are evaluated first, {\tt 2 * (3-1)} is 4,
 and {\tt (1+1)**(5-2)} is 8. You can also use parentheses to make an
 expression easier to read, as in {\tt (minute * 100) / 60}, even
@@ -1621,7 +1621,7 @@ if it doesn't change the result.
 
 I don't work very hard to remember the precedence of
 operators.  If I can't tell by looking at the expression, I use
-parentheses to make it obvious. See \url{https://ruby-doc.org/core-2.5.0/doc/syntax/precedence_rdoc.html}
+parentheses to make it obvious.  See \url{https://ruby-doc.org/core-2.5.0/doc/syntax/precedence_rdoc.html}
 for documentation on precedence of Ruby operations.
 
 
@@ -2031,7 +2031,7 @@ which computes logarithms base {\tt e}.
 
 The second example finds the sine of {\tt radians}.  The name of the
 variable is a hint that {\tt sin} and the other trigonometric
-methods ({\tt cos}, {\tt tan}, etc.)  take arguments in radians. To
+methods ({\tt cos}, {\tt tan}, etc.)  take arguments in radians.  To
 convert from degrees to radians, divide by 180 and multiply by
 $\pi$:
 
@@ -2132,7 +2132,7 @@ name.
 \index{argument}
 
 The empty parentheses after the name indicate that this method
-doesn't take any arguments. In Ruby, parentheses are optional
+doesn't take any arguments.  In Ruby, parentheses are optional
 while defining and calling methods.
 \index{parentheses!empty}
 \index{header}
@@ -2160,7 +2160,7 @@ the ones in this sentence, are not legal in Ruby.
 % todo 'reference to the method' is okay?
 If you type a method definition in interactive mode, the interpreter
 displays a return value which is same as name of the
-method prefixed by a colon. That is a value of {\tt Symbol} class and
+method prefixed by a colon.  That is a value of {\tt Symbol} class and
 can be used as reference to the method.
 %% \index{ellipses}
 
@@ -2254,7 +2254,7 @@ run it.  In other words, the method definition has to run
 before the method gets called.
 
 As an exercise, move the last line of this program
-to the top, so the method call appears before the definitions. Run 
+to the top, so the method call appears before the definitions.  Run 
 the program and see what error
 message you get.
 
@@ -2277,7 +2277,7 @@ Method definitions do not alter the flow of execution of the
 program, but remember that statements inside the method don't
 run until the method is called.
 
-A method call is like a detour in the flow of execution. Instead of
+A method call is like a detour in the flow of execution.  Instead of
 going to the next statement, the flow jumps to the body of
 the method, runs the statements there, and then comes back
 to pick up where it left off.
@@ -2384,6 +2384,7 @@ here in \verb"print_twice", we call everybody {\tt bruce}.
 
 
 \section{Variables and parameters are local}
+\label{methodscope}
 \index{local variable}
 \index{variable!local}
 
@@ -2539,7 +2540,7 @@ or display the result, it is not very useful.
 \index{script mode}
 
 Void methods might display something on the screen or have some
-other effect. If you
+other effect.  If you
 assign the result to a variable, by default you get the
 result of last evaluated expression of the method.
 
@@ -2662,7 +2663,7 @@ specifying its name, parameters, and the statements it contains.
 passed as an argument.
 \index{parameter}
 
-\item[method call:] A statement that runs a method. It
+\item[method call:] A statement that runs a method.  It
 consists of the method name followed by an argument list in
 parentheses.
 \index{method call}
@@ -2841,7 +2842,7 @@ far.
 + - - - - + - - - - +
 \end{verbatim}
 %
-Hint: Use string concatenation and repetition. By defining
+Hint: Use string concatenation and repetition.  By defining
 a method that accepts two characters as arguments, you could
 get both types of lines.
 
@@ -4153,7 +4154,7 @@ The sequence \verb"\n" at the end of the received string represents a
 {\bf newline}, which is a special character that causes a line break.
 
 As noted before, parentheses are optional for calling methods
-unless necessary. Built-in methods, for example {\tt puts} and {\tt gets},
+unless necessary.  Built-in methods, for example {\tt puts} and {\tt gets},
 are often used and leaving out parentheses for them is conventional.
 
 The {\tt chomp} method can be used on a string object
@@ -4172,7 +4173,7 @@ apple
 \end{verbatim}
 
 Before getting input from the user, it is a good idea to print a
-prompt telling the user what to type. Use {\tt print} method
+prompt telling the user what to type.  Use {\tt print} method
 instead of {\tt puts} if line break is not needed.
 %% \verb"input" can take a prompt as an argument:
 \index{prompt}
@@ -4744,7 +4745,7 @@ To test the new method, call it with sample arguments:
 %
 I chose these values so that the horizontal distance is 3 and the
 vertical distance is 4; that way, the result is 5, the hypotenuse 
-of a 3-4-5 triangle. When testing a method, it is
+of a 3-4-5 triangle.  When testing a method, it is
 useful to know the right answer.
 \index{testing!knowing the answer}
 
@@ -5006,7 +5007,7 @@ useful:
 
 \end{description}
 
-If you saw that definition in the dictionary, you might be annoyed. On
+If you saw that definition in the dictionary, you might be annoyed.  On
 the other hand, if you looked up the definition of the factorial
 method, denoted with the symbol $!$, you might get something like
 this:
@@ -5027,7 +5028,7 @@ which is 6.
 \index{recursive definition}
 
 If you can write a recursive definition of something, you can
-write a Ruby program to evaluate it. The first step is to decide
+write a Ruby program to evaluate it.  The first step is to decide
 what the parameters should be.  In this case it should be clear
 that {\tt factorial} takes an integer:
 
@@ -6365,7 +6366,7 @@ similar to selecting a character:
 \end{verbatim}
 %
 The range operator {\tt ..} helps to return the part of the string from the 
-``n-eth'' index to the ``m-eth'' index. To return including the first but
+``n-eth'' index to the ``m-eth'' index.  To return including the first but
 excluding the second index, use {\tt ...} form of the range operator.  This
 behavior is counterintuitive, but it might
 help to imagine the indices pointing {\em between} the
@@ -7701,7 +7702,7 @@ indices start at 0:
 => "Cheddar"
 \end{verbatim}
 %
-Like strings, lists are mutable.  When the bracket operator appears
+Like strings, arrays are mutable.  When the bracket operator appears
 on the left side of an assignment, it identifies the element of the
 array that will be assigned.
 \index{mutability}
@@ -7743,7 +7744,7 @@ value of the second element has been reassigned from 123 to 5.
 \index{assignment!item}
 \index{reassignment}
 
-List indices work similar to string indices:
+Array indices work similar to string indices:
 
 \begin{itemize}
 
@@ -7754,8 +7755,6 @@ down to an integer.
 
 \item If you try to read an element that does not exist, you
 get back {\tt nil} value.
-%% \index{exception!IndexError}
-%% \index{IndexError}
 
 \item If you try to write to an element that does not exist, it
 gets added to the array, with {\tt nil} values as filler if needed.
@@ -7783,55 +7782,93 @@ The {\tt include?} method also works on arrays.
 \end{verbatim}
 
 
-\section{Traversing a list}
-\index{list!traversal}
-\index{traversal!list}
+\section{Traversing an array}
+\index{array!traversal}
+\index{traversal!array}
 \index{for loop}
 \index{loop!for}
 \index{statement!for}
 
-The most common way to traverse the elements of a list is
-with a {\tt for} loop.  The syntax is the same as for strings:
+To traverse the elements of an array, a {\tt for} loop can be used:
 
 \begin{verbatim}
-for cheese in cheeses:
-    print(cheese)
+for cheese in cheeses
+  puts cheese
+end
 \end{verbatim}
 %
-This works well if you only need to read the elements of the
-list.  But if you want to write or update the elements, you
-need the indices.  A common way to do that is to combine
-the built-in functions {\tt range} and {\tt len}:
+
+\index{block}
+\index{each method}
+\index{method!each}
+More commonly, a {\tt block} of statements is passed to one of various
+array built-in methods, {\tt each} for example:
+
+\begin{verbatim}
+# preferred way for multiple statements
+cheeses.each do |cheese|
+  all_caps = cheese.upcase
+  puts all_caps
+end
+
+# preferred way for single statement
+cheeses.each { |cheese| puts cheese }
+\end{verbatim}
+%
+
+% todo |cheese| won't destroy variable named cheese outside the block
+% but all_caps would overwrite.  also, what about blocks in string chapter
+A significant difference between {\tt for} loop and {\tt block} form
+is variable scope.  Similar to what we saw for user defined methods in
+Section~\ref{methodscope}, variables defined inside the {\tt block}
+are local.  In above example, \verb"cheese" and \verb"all_caps" are local
+and will raise exception if called outside the {\tt block}.
+
+{\tt for} loop and {\tt each} works well if you only need to read the elements of the
+array.  But if you want to write or update the elements, you
+need the indices.
 \index{looping!with indices}
 \index{index!looping with}
+\index{each\_index method}
+\index{method!each\_index}
 
 \begin{verbatim}
-for i in range(len(numbers)):
-    numbers[i] = numbers[i] * 2
+# using for loop
+for i in 0...numbers.length
+  numbers[i] = numbers[i] * 2
+end
+
+# using each_index method
+numbers.each_index { |i| numbers[i] = numbers[i] * 2 }
 \end{verbatim}
 %
-This loop traverses the list and updates each element.  {\tt len}
-returns the number of elements in the list.  {\tt range} returns
-a list of indices from 0 to $n-1$, where $n$ is the length of
-the list.  Each time through the loop {\tt i} gets the index
+These loops traverse the array and update each element.
+%% {\tt length}
+%% returns the number of elements in the array.  {\tt range} returns
+%% an array of indices from 0 to $n-1$, where $n$ is the length of
+%% the array.
+Each time through the loop {\tt i} gets the index
 of the next element.  The assignment statement in the body uses
 {\tt i} to read the old value of the element and to assign the
 new value.
 \index{item update}
 \index{update!item}
 
-A {\tt for} loop over an empty list never runs the body:
+Looping over an empty array never runs the body:
 
 \begin{verbatim}
-for x in []:
-    print('This never happens.')
+for x in []
+  puts 'This never happens.'
+end
+
+[].each { puts 'This never happens.' }
 \end{verbatim}
 %
-Although a list can contain another list, the nested
-list still counts as a single element.  The length of this list is
+Although an array can contain another array, the nested
+array still counts as a single element.  The length of this array is
 four:
-\index{nested list}
-\index{list!nested}
+\index{nested array}
+\index{array!nested}
 
 \begin{verbatim}
 ['spam', 1, ['Brie', 'Roquefort', 'Pol le Veq'], [1, 2, 3]]
@@ -7839,81 +7876,104 @@ four:
 
 
 
-\section{List operations}
-\index{list!operation}
+\section{Array operations}
+\index{array!operation}
 
-The {\tt +} operator concatenates lists:
-\index{concatenation!list}
-\index{list!concatenation}
+% todo inplace concatenation, for string as well in previous chapter?
+The {\tt +} operator concatenates arrays:
+\index{concatenation!array}
+\index{array!concatenation}
 
 \begin{verbatim}
->>> a = [1, 2, 3]
->>> b = [4, 5, 6]
->>> c = a + b
->>> c
-[1, 2, 3, 4, 5, 6]
+>> a = [1, 2, 3]
+=> [1, 2, 3]
+>> b = [4, 5, 6]
+=> [4, 5, 6]
+>> c = a + b
+=> [1, 2, 3, 4, 5, 6]
 \end{verbatim}
 %
-The {\tt *} operator repeats a list a given number of times:
-\index{repetition!list}
-\index{list!repetition}
+The {\tt *} operator repeats an array a given number of times:
+\index{repetition!array}
+\index{array!repetition}
 
 \begin{verbatim}
->>> [0] * 4
-[0, 0, 0, 0]
->>> [1, 2, 3] * 3
-[1, 2, 3, 1, 2, 3, 1, 2, 3]
+>> [0] * 4
+=> [0, 0, 0, 0]
+>> [1, 2, 3] * 3
+=> [1, 2, 3, 1, 2, 3, 1, 2, 3]
 \end{verbatim}
 %
 The first example repeats {\tt [0]} four times.  The second example
-repeats the list {\tt [1, 2, 3]} three times.
+repeats the array {\tt [1, 2, 3]} three times.
 
-
-\section{List slices}
-\index{slice operator}
-\index{operator!slice}
-\index{index!slice}
-\index{list!slice}
-\index{slice!list}
-
-The slice operator also works on lists:
+The {\tt -} operator performs array difference:
 
 \begin{verbatim}
->>> t = ['a', 'b', 'c', 'd', 'e', 'f']
->>> t[1:3]
-['b', 'c']
->>> t[:4]
-['a', 'b', 'c', 'd']
->>> t[3:]
-['d', 'e', 'f']
+>> a = [2, 6, 12, 4, 5, 12]
+=> [2, 6, 12, 4, 5, 12]
+>> b = [12, 1, 5, 2]
+=> [12, 1, 5, 2]
+>> c = a - b
+=> [6, 4]
+\end{verbatim}
+
+\section{array slices}
+%% \index{slice operator}
+%% \index{operator!slice}
+\index{index!slice}
+\index{array!slice}
+\index{slice!array}
+
+Slicing also works on arrays:
+
+\begin{verbatim}
+>> t = ['a', 'b', 'c', 'd', 'e', 'f']
+=> ["a", "b", "c", "d", "e", "f"]
+>> t[1..2]
+=> ["b", "c"]
+>> t[0..3]
+=> ["a", "b", "c", "d"]
+>> t[4..-1]
+=> ["e", "f"]
 \end{verbatim}
 %
-If you omit the first index, the slice starts at the beginning.
-If you omit the second, the slice goes to the end.  So if you
-omit both, the slice is a copy of the whole list.
-\index{list!copy}
+If you use {\tt 0} as first index, the slice starts at the beginning.
+If you use {\tt -1} as the second, the slice goes to the end.  So if you
+use both, the slice is a copy of the whole array.  Which is same as
+using the {\tt clone} method.
+\index{array!copy}
 \index{slice!copy}
 \index{copy!slice}
+\index{clone method}
+\index{method!clone}
 
 \begin{verbatim}
->>> t[:]
-['a', 'b', 'c', 'd', 'e', 'f']
+>> t[0..-1]
+=> ["a", "b", "c", "d", "e", "f"]
+
+>> t.clone
+=> ["a", "b", "c", "d", "e", "f"]
 \end{verbatim}
 %
-Since lists are mutable, it is often useful to make a copy
-before performing operations that modify lists.
+% todo since the elements are string, this is still not safe
+% safe copy covered later? else mention it here
+Since arrays are mutable, it is often useful to make a copy
+before performing operations that modify arrays.
 \index{mutability}
 
-A slice operator on the left side of an assignment
+Slicing used on the left side of an assignment
 can update multiple elements:
 \index{slice!update}
 \index{update!slice}
 
 \begin{verbatim}
->>> t = ['a', 'b', 'c', 'd', 'e', 'f']
->>> t[1:3] = ['x', 'y']
->>> t
-['a', 'x', 'y', 'd', 'e', 'f']
+>> t = ['a', 'b', 'c', 'd', 'e', 'f']
+=> ["a", "b", "c", "d", "e", "f"]
+>> t[1..2] = ['x', 'y']
+=> ["x", "y"]
+>> t
+=> ["a", "x", "y", "d", "e", "f"]
 \end{verbatim}
 %
 
