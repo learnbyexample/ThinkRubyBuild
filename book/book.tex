@@ -8003,74 +8003,87 @@ can update multiple elements:
 % with list methods.
 
 
-\section{List methods}
-\index{list!method}
-\index{method, list}
+\section{Array methods}
+\index{array!method}
+\index{method, array}
 
-Python provides methods that operate on lists.  For example,
-{\tt append} adds a new element to the end of a list:
+Ruby provides methods that operate on array.  For example,
+{\tt append} adds new element(s) to the end of an array:
 \index{append method}
 \index{method!append}
 
 \begin{verbatim}
->>> t = ['a', 'b', 'c']
->>> t.append('d')
->>> t
-['a', 'b', 'c', 'd']
+>> t = ['a', 'b', 'c']
+=> ["a", "b", "c"]
+>> t.append('d')
+=> ["a", "b", "c", "d"]
+>> t.append('e', 'f', 'g')
+=> ["a", "b", "c", "d", "e", "f", "g"]
 \end{verbatim}
 %
-{\tt extend} takes a list as an argument and appends all of
-the elements:
-\index{extend method}
-\index{method!extend}
+To append all of the elements from another array, use
+splat operator {\tt *} which turns array into an argument list:
+\index{splat operator}
+\index{operator!splat}
 
 \begin{verbatim}
->>> t1 = ['a', 'b', 'c']
->>> t2 = ['d', 'e']
->>> t1.extend(t2)
->>> t1
-['a', 'b', 'c', 'd', 'e']
+>> t1 = ['a', 'b', 'c']
+=> ["a", "b", "c"]
+>> t2 = ['d', 'e']
+=> ["d", "e"]
+>> t1.append(*t2)
+=> ["a", "b", "c", "d", "e"]
 \end{verbatim}
 %
 This example leaves {\tt t2} unmodified.
 
-{\tt sort} arranges the elements of the list from low to high:
+{\tt sort} arranges the elements of the array from low to high:
 \index{sort method}
 \index{method!sort}
 
 \begin{verbatim}
->>> t = ['d', 'c', 'e', 'b', 'a']
->>> t.sort()
->>> t
-['a', 'b', 'c', 'd', 'e']
+>> t = ['d', 'c', 'e', 'b', 'a']
+=> ["d", "c", "e", "b", "a"]
+>> t.sort
+=> ["a", "b", "c", "d", "e"]
+>> t
+=> ["d", "c", "e", "b", "a"]
 \end{verbatim}
 %
-Most list methods are void; they modify the list and return {\tt None}.
-If you accidentally write {\tt t = t.sort()}, you will be disappointed
-with the result.
-\index{void method}
-\index{method!void}
-\index{None special value}
-\index{special value!None}
+Most array methods not ending with {\tt !} in their name
+return an array without modifying the original array.
+Similar to {\tt ?} special character we saw in Section~\ref{boolean},
+{\tt !} at end of method name is used to indicate that the method modifies
+the object it was invoked upon. 
 
+So, use {\tt sort!} to modify the array in-place:
+
+\begin{verbatim}
+>> t = ['d', 'c', 'e', 'b', 'a']
+=> ["d", "c", "e", "b", "a"]
+>> t.sort!
+=> ["a", "b", "c", "d", "e"]
+>> t
+=> ["a", "b", "c", "d", "e"]
+\end{verbatim}
 
 \section{Map, filter and reduce}
 \label{filter}
 
-To add up all the numbers in a list, you can use a loop like this:
+To add up all the numbers in an array, you can use a loop like this:
 
 % see add.py
 
 \begin{verbatim}
-def add_all(t):
-    total = 0
-    for x in t:
-        total += x
-    return total
+def add_all(t)
+  total = 0
+  t.each { |x| total += x }
+  return total
+end
 \end{verbatim}
 %
 {\tt total} is initialized to 0.  Each time through the loop,
-{\tt x} gets one element from the list.  The {\tt +=} operator
+{\tt x} gets one element from the array.  The {\tt +=} operator
 provides a short way to update a variable.  This 
 {\bf augmented assignment statement},
 \index{update operator}
@@ -8079,13 +8092,13 @@ provides a short way to update a variable.  This
 \index{augmented assignment}
 
 \begin{verbatim}
-    total += x
+total += x
 \end{verbatim}
 %
 is equivalent to
 
 \begin{verbatim}
-    total = total + x
+total = total + x
 \end{verbatim}
 %
 As the loop runs, {\tt total} accumulates the sum of the
@@ -8093,13 +8106,20 @@ elements; a variable used this way is sometimes called an
 {\bf accumulator}.
 \index{accumulator!sum}
 
-Adding up the elements of a list is such a common operation
-that Python provides it as a built-in function, {\tt sum}:
+% todo - improve the wording
+Note that since {\tt total} was defined in same scope before
+passing the block to {\tt each} method, a local version of the
+variable is not created inside the block.
+% todo add about |x| too? it will never affect variable of same name
+
+Adding up the elements of an array is such a common operation
+that Ruby provides it as a built-in method, {\tt sum}:
 
 \begin{verbatim}
->>> t = [1, 2, 3]
->>> sum(t)
-6
+>> t = [1, 2, 3]
+=> [1, 2, 3]
+>> t.sum
+=> 6
 \end{verbatim}
 %
 An operation like this that combines a sequence of elements into
@@ -8108,25 +8128,25 @@ a single value is sometimes called {\bf reduce}.
 \index{pattern!reduce}
 \index{traversal}
 
-Sometimes you want to traverse one list while building
-another.  For example, the following function takes a list of strings
-and returns a new list that contains capitalized strings:
+Sometimes you want to traverse one array while building
+another.  For example, the following method takes an array of strings
+and returns a new array that contains capitalized strings:
 
 \begin{verbatim}
-def capitalize_all(t):
-    res = []
-    for s in t:
-        res.append(s.capitalize())
-    return res
+def capitalize_all(t)
+  res = []
+  t.each { |s| res.append(s.capitalize) }
+  return res
+end
 \end{verbatim}
 %
-{\tt res} is initialized with an empty list; each time through
+{\tt res} is initialized with an empty array; each time through
 the loop, we append the next element.  So {\tt res} is another
 kind of accumulator.
-\index{accumulator!list}
+\index{accumulator!array}
 
 An operation like \verb"capitalize_all" is sometimes called a {\bf
-map} because it ``maps'' a function (in this case the method {\tt
+map} because it ``maps'' a method (in this case the method {\tt
 capitalize}) onto each of the elements in a sequence.
 \index{map pattern}
 \index{pattern!map}
@@ -8134,26 +8154,27 @@ capitalize}) onto each of the elements in a sequence.
 \index{pattern!filter}
 
 Another common operation is to select some of the elements from
-a list and return a sublist.  For example, the following
-function takes a list of strings and returns a list that contains
-only the uppercase strings:
+an array and return a subarray.  For example, the following
+method takes an array of words and returns an array that contains
+words only made up of uppercase letters:
 
 \begin{verbatim}
-def only_upper(t):
-    res = []
-    for s in t:
-        if s.isupper():
-            res.append(s)
-    return res
+def only_upper(t)
+  res = []
+  t.each { |s| res.append(s) if !s.match?(/[^A-Z]/) }
+  return res
+end
 \end{verbatim}
 %
-{\tt isupper} is a string method that returns {\tt True} if
-the string contains only upper case letters.
+% todo regex covered later? or add an intro to string chapter?
+% or change this example altogether?
+%% {\tt isupper} is a string method that returns {\tt True} if
+%% the string contains only upper case letters.
 
 An operation like \verb"only_upper" is called a {\bf filter} because
 it selects some of the elements and filters out the others.
 
-Most common list operations can be expressed as a combination
+Most common array operations can be expressed as a combination
 of map, filter and reduce.
 
 
