@@ -7721,6 +7721,7 @@ used to be 123, is now 5.
 \index{index!starting at zero}
 \index{zero, index starting at}
 
+% todo change fig.list in various places to fig.array?
 Figure~\ref{fig.liststate} shows 
 the state diagram for {\tt
 cheeses}, {\tt numbers} and {\tt empty}:
@@ -8180,104 +8181,92 @@ of map, filter and reduce.
 
 \section{Deleting elements}
 \index{element deletion}
-\index{deletion, element of list}
+\index{deletion, element of array}
 
-There are several ways to delete elements from a list.  If you
+There are several ways to delete elements from an array.  If you
 know the index of the element you want, you can use
-{\tt pop}:
-\index{pop method}
-\index{method!pop}
+{\tt slice!}:
+\index{slice method}
+\index{method!slice}
 
 \begin{verbatim}
->>> t = ['a', 'b', 'c']
->>> x = t.pop(1)
->>> t
-['a', 'c']
->>> x
-'b'
+>> t = ['a', 'b', 'c']
+=> ["a", "b", "c"]
+>> x = t.slice!(1)
+=> "b"
+>> t
+=> ["a", "c"]
+>> x
+=> "b"
 \end{verbatim}
 %
-{\tt pop} modifies the list and returns the element that was removed.
-If you don't provide an index, it deletes and returns the
-last element.
+{\tt slice!} modifies the array and returns the element that was removed.
 
-If you don't need the removed value, you can use the {\tt del}
-operator:
-\index{del operator}
-\index{operator!del}
+To remove more than one element, you can use slicing notation:
 
 \begin{verbatim}
->>> t = ['a', 'b', 'c']
->>> del t[1]
->>> t
-['a', 'c']
+>> t = ['a', 'b', 'c', 'd', 'e', 'f']
+=> ["a", "b", "c", "d", "e", "f"]
+>> t.slice!(1..4)
+=> ["b", "c", "d", "e"]
+>> t
+=> ["a", "f"]
 \end{verbatim}
+%
+
 %
 If you know the element you want to remove (but not the index), you
-can use {\tt remove}:
-\index{remove method}
-\index{method!remove}
+can use {\tt delete}:
+\index{delete method}
+\index{method!delete}
 
 \begin{verbatim}
->>> t = ['a', 'b', 'c']
->>> t.remove('b')
->>> t
-['a', 'c']
+>> t = ['a', 'b', 'c', 'b']
+=> ["a", "b", "c", "b"]
+>> t.delete('b')
+=> "b"
+>> t
+=> ["a", "c"]
 \end{verbatim}
 %
-The return value from {\tt remove} is {\tt None}.
-\index{None special value}
-\index{special value!None}
-
-To remove more than one element, you can use {\tt del} with
-a slice index:
-
-\begin{verbatim}
->>> t = ['a', 'b', 'c', 'd', 'e', 'f']
->>> del t[1:5]
->>> t
-['a', 'f']
-\end{verbatim}
-%
-As usual, the slice selects all the elements up to but not
-including the second index.
+To remove multiple elements, use the {\tt -} operator as discussed before.
 
 
 
-\section{Lists and strings}
-\index{list}
+\section{Arrays and strings}
+\index{array}
 \index{string}
 \index{sequence}
 
-A string is a sequence of characters and a list is a sequence
-of values, but a list of characters is not the same as a
-string.  To convert from a string to a list of characters,
-you can use {\tt list}:
-\index{list!function}
-\index{function!list}
+A string is a sequence of characters and an array is a sequence
+of values, but an array of characters is not the same as a
+string.  To convert from a string to an array of characters,
+you can use {\tt chars} method:
+\index{chars!method}
+\index{method!chars}
 
 \begin{verbatim}
->>> s = 'spam'
->>> t = list(s)
->>> t
-['s', 'p', 'a', 'm']
+>> s = 'spam'
+=> "spam"
+>> t = s.chars
+=> ["s", "p", "a", "m"]
 \end{verbatim}
 %
-Because {\tt list} is the name of a built-in function, you should
-avoid using it as a variable name.  I also avoid {\tt l} because
-it looks too much like {\tt 1}.  So that's why I use {\tt t}.
+%% Because {\tt array} is the name of a built-in method, you should
+%% avoid using it as a variable name.  I also avoid {\tt l} because
+%% it looks too much like {\tt 1}.  So that's why I use {\tt t}.
 
-The {\tt list} function breaks a string into individual letters.  If
+The {\tt chars} method breaks a string into individual letters.  If
 you want to break a string into words, you can use the {\tt split}
 method:
 \index{split method}
 \index{method!split}
 
 \begin{verbatim}
->>> s = 'pining for the fjords'
->>> t = s.split()
->>> t
-['pining', 'for', 'the', 'fjords']
+>> s = 'pining for the fjords'
+=> "pining for the fjords"
+>> t = s.split
+=> ["pining", "for", "the", "fjords"]
 \end{verbatim}
 %
 An optional argument called a {\bf delimiter} specifies which
@@ -8289,37 +8278,34 @@ uses a hyphen as a delimiter:
 \index{delimiter}
 
 \begin{verbatim}
->>> s = 'spam-spam-spam'
->>> delimiter = '-'
->>> t = s.split(delimiter)
->>> t
-['spam', 'spam', 'spam']
+>> s = 'spam-spam-spam'
+=> "spam-spam-spam"
+>> delimiter = '-'
+=> "-"
+>> t = s.split(delimiter)
+=> ["spam", "spam", "spam"]
 \end{verbatim}
 %
 {\tt join} is the inverse of {\tt split}.  It
-takes a list of strings and
-concatenates the elements.  {\tt join} is a string method,
-so you have to invoke it on the delimiter and pass the
-list as a parameter:
+takes an array of strings and
+concatenates the elements.
 \index{join method}
 \index{method!join}
 \index{concatenation}
 
 \begin{verbatim}
->>> t = ['pining', 'for', 'the', 'fjords']
->>> delimiter = ' '
->>> s = delimiter.join(t)
->>> s
-'pining for the fjords'
+>> t = ['pining', 'for', 'the', 'fjords']
+=> ["pining", "for", "the", "fjords"]
+>> delimiter = ' '
+=> " "
+>> s = t.join(delimiter)
+=> "pining for the fjords"
 \end{verbatim}
 %
 In this case the delimiter is a space character, so
 {\tt join} puts a space between words.  To concatenate
-strings without spaces, you can use the empty string,
-\verb"''", as a delimiter. 
-\index{empty string}
-\index{string!empty}
-
+strings without spaces, you can call {\tt join} without
+argument as default delimiter is empty string.
 
 \section{Objects and values}
 \label{equivalence}
@@ -8329,13 +8315,13 @@ strings without spaces, you can use the empty string,
 If we run these assignment statements:
 
 \begin{verbatim}
-a = 'banana'
-b = 'banana'
+a = 42
+b = 42
 \end{verbatim}
 %
-We know that {\tt a} and {\tt b} both refer to a
-string, but we don't
-know whether they refer to the {\em same} string.
+We know that {\tt a} and {\tt b} both refer to an
+integer, but we don't
+know whether they refer to the {\em same} integer.
 There are two possible states, shown in Figure~\ref{fig.list1}.
 \index{aliasing}
 
@@ -8349,28 +8335,32 @@ There are two possible states, shown in Figure~\ref{fig.list1}.
 In one case, {\tt a} and {\tt b} refer to two different objects that
 have the same value.  In the second case, they refer to the same
 object.
-\index{is operator}
-\index{operator!is}
+\index{equal? method}
+\index{method!equal?}
 
 To check whether two variables refer to the same object, you can
-use the {\tt is} operator.
+use the {\tt equal?} method.
 
 \begin{verbatim}
->>> a = 'banana'
->>> b = 'banana'
->>> a is b
-True
+>> a = 42
+=> 42
+>> b = 42
+=> 42
+>> a.equal?(b)
+=> true
 \end{verbatim}
 %
-In this example, Python only created one string object, and both {\tt
-  a} and {\tt b} refer to it.  But when you create two lists, you get
+In this example, Ruby only created one integer object, and both {\tt
+  a} and {\tt b} refer to it.  But when you create two arrays, you get
 two objects:
 
 \begin{verbatim}
->>> a = [1, 2, 3]
->>> b = [1, 2, 3]
->>> a is b
-False
+>> a = [1, 2, 3]
+=> [1, 2, 3]
+>> b = [1, 2, 3]
+=> [1, 2, 3]
+>> a.equal?(b)
+=> false
 \end{verbatim}
 %
 So the state diagram looks like Figure~\ref{fig.list2}.
@@ -8384,7 +8374,7 @@ So the state diagram looks like Figure~\ref{fig.list2}.
 \label{fig.list2}
 \end{figure}
 
-In this case we would say that the two lists are {\bf equivalent},
+In this case we would say that the two arrays are {\bf equivalent},
 because they have the same elements, but not {\bf identical}, because
 they are not the same object.  If two objects are identical, they are
 also equivalent, but if they are equivalent, they are not necessarily
@@ -8394,9 +8384,9 @@ identical.
 
 Until now, we have been using ``object'' and ``value''
 interchangeably, but it is more precise to say that an object has a
-value.  If you evaluate {\tt [1, 2, 3]}, you get a list
+value.  If you evaluate {\tt [1, 2, 3]}, you get an array
 object whose value is a sequence of integers.  If another
-list has the same elements, we say it has the same value, but
+array has the same elements, we say it has the same value, but
 it is not the same object.
 \index{object}
 \index{value}
@@ -8410,10 +8400,12 @@ If {\tt a} refers to an object and you assign {\tt b = a},
 then both variables refer to the same object:
 
 \begin{verbatim}
->>> a = [1, 2, 3]
->>> b = a
->>> b is a
-True
+>> a = [1, 2, 3]
+=> [1, 2, 3]
+>> b = a
+=> [1, 2, 3]
+>> b.equal?(a)
+=> true
 \end{verbatim}
 %
 The state diagram looks like Figure~\ref{fig.list3}.
@@ -8440,9 +8432,10 @@ If the aliased object is mutable, changes made with one alias affect
 the other:
 
 \begin{verbatim}
->>> b[0] = 42
->>> a
-[42, 2, 3]
+>> b[0] = 42
+=> 42
+>> a
+=> [42, 2, 3]
 \end{verbatim}
 %
 Although this behavior can be useful, it is error-prone.  In general,
@@ -8450,43 +8443,46 @@ it is safer to avoid aliasing when you are working with mutable
 objects.
 \index{immutability}
 
-For immutable objects like strings, aliasing is not as much of a
+For immutable objects like integers, aliasing is not as much of a
 problem.  In this example:
 
 \begin{verbatim}
-a = 'banana'
-b = 'banana'
+a = 42
+b = 42
 \end{verbatim}
 %
 It almost never makes a difference whether {\tt a} and {\tt b} refer
-to the same string or not.
+to the same integer or not.
 
 
-\section{List arguments}
-\label{list.arguments}
-\index{list!as argument}
+\section{Array arguments}
+\label{array.arguments}
+\index{array!as argument}
 \index{argument}
-\index{argument!list}
+\index{argument!array}
 \index{reference}
 \index{parameter}
 
-When you pass a list to a function, the function gets a reference to
-the list.  If the function modifies the list, the caller sees
+When you pass an array to a method, the method gets a reference to
+the array.  If the method modifies the array, the caller sees
 the change.  For example, \verb"delete_head" removes the first element
-from a list:
+from an array:
 
 \begin{verbatim}
-def delete_head(t):
-    del t[0]
+def delete_head(t)
+  t.slice!(0)
+end
 \end{verbatim}
 %
 Here's how it is used:
 
 \begin{verbatim}
->>> letters = ['a', 'b', 'c']
->>> delete_head(letters)
->>> letters
-['b', 'c']
+>> letters = ['a', 'b', 'c']
+=> ["a", "b", "c"]
+>> delete_head(letters)
+=> "a"
+>> letters
+=> ["b", "c"]
 \end{verbatim}
 %
 The parameter {\tt t} and the variable {\tt letters} are
@@ -8502,87 +8498,95 @@ Figure~\ref{fig.stack5}.
 \label{fig.stack5}
 \end{figure}
 
-Since the list is shared by two frames, I drew
+Since the array is shared by two frames, I drew
 it between them.
 
 It is important to distinguish between operations that
-modify lists and operations that create new lists.  For
-example, the {\tt append} method modifies a list, but the
-{\tt +} operator creates a new list.
+modify arrays and operations that create new arrays.  For
+example, the {\tt append} method modifies an array, but the
+{\tt +} operator creates a new array.
 \index{append method}
 \index{method!append}
-\index{list!concatenation}
-\index{concatenation!list}
+\index{array!concatenation}
+\index{concatenation!array}
 
 Here's an example using {\tt append}:
 %
 \begin{verbatim}
->>> t1 = [1, 2]
->>> t2 = t1.append(3)
->>> t1
-[1, 2, 3]
->>> t2
-None
+>> t1 = [1, 2]
+=> [1, 2]
+>> t2 = t1.append(3)
+=> [1, 2, 3]
+>> t1
+=> [1, 2, 3]
+>> t2
+=> [1, 2, 3]
 \end{verbatim}
 %
-The return value from {\tt append} is {\tt None}.
+%% The return value from {\tt append} is {\tt None}.
 
 Here's an example using the {\tt +} operator:
 %
 \begin{verbatim}
->>> t3 = t1 + [4]
->>> t1
-[1, 2, 3]
->>> t3
-[1, 2, 3, 4]
+>> t3 = t1 + [4]
+=> [1, 2, 3, 4]
+>> t1
+=> [1, 2, 3]
+>> t3
+=> [1, 2, 3, 4]
 \end{verbatim}
 %
-The result of the operator is a new list, and the original list is
+The result of the operator is a new array, and the original array is
 unchanged.
 
-This difference is important when you write functions that
-are supposed to modify lists.  For example, this function
-{\em does not} delete the head of a list:
+This difference is important when you write methods that
+are supposed to modify arrays.  For example, this method
+{\em does not} delete the head of an array:
 %
 \begin{verbatim}
-def bad_delete_head(t):
-    t = t[1:]              # WRONG!
+def bad_delete_head(t)
+  t = t[1..-1]              # WRONG!
+end
 \end{verbatim}
 %
-The slice operator creates a new list and the assignment
+The slicing creates a new array and the assignment
 makes {\tt t} refer to it, but that doesn't affect the caller.
-\index{slice operator}
-\index{operator!slice}
+\index{slicing}
 %
 \begin{verbatim}
->>> t4 = [1, 2, 3]
->>> bad_delete_head(t4)
->>> t4
-[1, 2, 3]
+>> t4 = [1, 2, 3]
+=> [1, 2, 3]
+>> bad_delete_head(t4)
+=> [2, 3]
+>> t4
+=> [1, 2, 3]
 \end{verbatim}
 %
 At the beginning of \verb"bad_delete_head", {\tt t} and {\tt t4}
-refer to the same list.  At the end, {\tt t} refers to a new list,
-but {\tt t4} still refers to the original, unmodified list.
+refer to the same array.  At the end, {\tt t} refers to a new array,
+but {\tt t4} still refers to the original, unmodified array.
 
-An alternative is to write a function that creates and
-returns a new list.  For
+An alternative is to write a method that creates and
+returns a new array.  For
 example, {\tt tail} returns all but the first
-element of a list:
+element of an array:
 
 \begin{verbatim}
-def tail(t):
-    return t[1:]
+def tail(t)
+  return t[1..-1]
+end
 \end{verbatim}
 %
-This function leaves the original list unmodified.
+This method leaves the original array unmodified.
 Here's how it is used:
 
 \begin{verbatim}
->>> letters = ['a', 'b', 'c']
->>> rest = tail(letters)
->>> rest
-['b', 'c']
+>> letters = ['a', 'b', 'c']
+=> ["a", "b", "c"]
+>> rest = tail(letters)
+=> ["b", "c"]
+>> rest
+=> ["b", "c"]
 \end{verbatim}
 
 
