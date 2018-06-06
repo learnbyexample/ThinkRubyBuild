@@ -7878,6 +7878,7 @@ four:
 
 
 \section{Array operations}
+\label{arrayoperation}
 \index{array!operation}
 
 % todo inplace concatenation, for string as well in previous chapter?
@@ -8051,7 +8052,7 @@ This example leaves {\tt t2} unmodified.
 => ["d", "c", "e", "b", "a"]
 \end{verbatim}
 %
-Most array methods not ending with {\tt !} in their name
+Some array methods not ending with {\tt !} in their name
 return an array without modifying the original array.
 Similar to {\tt ?} special character we saw in Section~\ref{boolean},
 {\tt !} at end of method name is used to indicate that the method modifies
@@ -8229,7 +8230,7 @@ can use {\tt delete}:
 => ["a", "c"]
 \end{verbatim}
 %
-To remove multiple elements, use the {\tt -} operator as discussed before.
+To remove multiple elements, use the {\tt -} operator as discussed in Section~\ref{arrayoperation}
 
 
 
@@ -8287,8 +8288,7 @@ uses a hyphen as a delimiter:
 \end{verbatim}
 %
 {\tt join} is the inverse of {\tt split}.  It
-takes an array of strings and
-concatenates the elements.
+takes an array and concatenates the elements.
 \index{join method}
 \index{method!join}
 \index{concatenation}
@@ -8300,12 +8300,14 @@ concatenates the elements.
 => " "
 >> s = t.join(delimiter)
 => "pining for the fjords"
+
+>> [1, 2, [3, 4]].join
+=> "1234"
 \end{verbatim}
 %
 In this case the delimiter is a space character, so
-{\tt join} puts a space between words.  To concatenate
-strings without spaces, you can call {\tt join} without
-argument as default delimiter is empty string.
+{\tt join} puts a space between elements.  If you don't
+pass an argument, the default delimiter is empty string.
 
 \section{Objects and values}
 \label{equivalence}
@@ -8594,46 +8596,48 @@ Here's how it is used:
 \section{Debugging}
 \index{debugging}
 
-Careless use of lists (and other mutable objects)
+Careless use of arrays (and other mutable objects)
 can lead to long hours of debugging.  Here are some common
 pitfalls and ways to avoid them:
 
 \begin{enumerate}
 
-\item Most list methods modify the argument and
-  return {\tt None}.  This is the opposite of the string methods,
-  which return a new string and leave the original alone.
+\item Array methods like {\tt sort} and {\tt slice} have two
+    versions, one that returns the result and the other
+    having {\tt !} in their name to indicate argument is modified in-place.
+    Methods like {\tt append} and {\tt delete} have only one version
+    that always modify the argument.
 
-If you are used to writing string code like this:
+If you are used to writing array code like this:
 
 \begin{verbatim}
-word = word.strip()
+numbers.append(4)
 \end{verbatim}
 
-It is tempting to write list code like this:
+It is tempting to write array code for in-place sorting like this:
 
 \begin{verbatim}
-t = t.sort()           # WRONG!
+numbers.sort           # WRONG!
 \end{verbatim}
 \index{sort method}
 \index{method!sort}
 
-Because {\tt sort} returns {\tt None}, the
-next operation you perform with {\tt t} is likely to fail.
+Because {\tt sort} doesn't modify array in-place, the
+next operation you perform with {\tt numbers} is likely to fail.
 
-Before using list methods and operators, you should read the
+Before using array methods and operators, you should read the
 documentation carefully and then test them in interactive mode.
 
 \item Pick an idiom and stick with it.
 
-Part of the problem with lists is that there are too many
+Part of the problem with arrays is that there are too many
 ways to do things.  For example, to remove an element from
-a list, you can use {\tt pop}, {\tt remove}, {\tt del},
-or even a slice assignment.
+an array, you can use {\tt pop}, {\tt delete}, {\tt slice!},
+or {\tt -} operator.
 
 To add an element, you can use the {\tt append} method or
-the {\tt +} operator.  Assuming that {\tt t} is a list and
-{\tt x} is a list element, these are correct: 
+the {\tt +} operator.  Assuming that {\tt t} is an array and
+{\tt x} is an array element, these are correct: 
 
 \begin{verbatim}
 t.append(x)
@@ -8645,14 +8649,13 @@ And these are wrong:
 
 \begin{verbatim}
 t.append([x])          # WRONG!
-t = t.append(x)        # WRONG!
 t + [x]                # WRONG!
 t = t + x              # WRONG!
 \end{verbatim}
 
 Try out each of these examples in interactive mode to make sure
 you understand what they do.  Notice that only the last
-one causes a runtime error; the other three are legal, but they
+one causes a runtime error; the other two are legal, but they
 do the wrong thing.
 
 
@@ -8660,32 +8663,35 @@ do the wrong thing.
 \index{aliasing!copying to avoid}
 \index{copy!to avoid aliasing}
 
-If you want to use a method like {\tt sort} that modifies
-the argument, but you need to keep the original list as
+If you want to use a method like {\tt delete} that modifies
+the argument, but you need to keep the original array as
 well, you can make a copy.
 
 \begin{verbatim}
->>> t = [3, 1, 2]
->>> t2 = t[:]
->>> t2.sort()
->>> t
-[3, 1, 2]
->>> t2
-[1, 2, 3]
+>> t = [3, 1, 2]
+=> [3, 1, 2]
+>> t2 = t.clone
+=> [3, 1, 2]
+>> t2.delete(1)
+=> 1
+>> t
+=> [3, 1, 2]
+>> t2
+=> [3, 2]
 \end{verbatim}
 
-In this example you could also use the built-in function {\tt sorted},
-which returns a new, sorted list and leaves the original alone.
-\index{sorted!function}
-\index{function!sorted}
-
-\begin{verbatim}
->>> t2 = sorted(t)
->>> t
-[3, 1, 2]
->>> t2
-[1, 2, 3]
-\end{verbatim}
+%% In this example you could also use the built-in function {\tt sorted},
+%% which returns a new, sorted array and leaves the original alone.
+%% \index{sorted!function}
+%% \index{function!sorted}
+%% 
+%% \begin{verbatim}
+%% >>> t2 = sorted(t)
+%% >>> t
+%% [3, 1, 2]
+%% >>> t2
+%% [1, 2, 3]
+%% \end{verbatim}
 
 \end{enumerate}
 
@@ -8695,15 +8701,15 @@ which returns a new, sorted list and leaves the original alone.
 
 \begin{description}
 
-\item[list:] A sequence of values.
-\index{list}
+\item[array:] A sequence of values.
+\index{array}
 
-\item[element:] One of the values in a list (or other sequence),
+\item[element:] One of the values in an array (or other sequence),
 also called items.
 \index{element}
 
-\item[nested list:] A list that is an element of another list.
-\index{nested list}
+\item[nested array:] An array that is an element of another array.
+\index{nested array}
 
 \item[accumulator:] A variable used in a loop to add up or
 accumulate a result.
@@ -8725,7 +8731,7 @@ performs an operation on each element.
 \index{map pattern}
 \index{pattern!map}
 
-\item[filter:] A processing pattern that traverses a list and
+\item[filter:] A processing pattern that traverses an array and
 selects the elements that satisfy some criterion.
 \index{filter pattern}
 \index{pattern!filter}
@@ -8756,19 +8762,21 @@ string should be split.
 
 \section{Exercises}
 
-You can download solutions to these exercises from
-\url{http://thinkpython2.com/code/list_exercises.py}.
+% todo
+%% You can download solutions to these exercises from
+%% \url{http://thinkpython2.com/code/list_exercises.py}.
 
 \begin{exercise}
 
-Write a function called \verb"nested_sum" that takes a list of lists
-of integers and adds up the elements from all of the nested lists.
+Write a method called \verb"nested_sum" that takes an array of arrays
+of integers and adds up the elements from all of the nested arrays.
 For example:
 
 \begin{verbatim}
->>> t = [[1, 2], [3], [4, 5, 6]]
->>> nested_sum(t)
-21
+>> t = [[1, 2], [3], [4, 5, 6]]
+=> [[1, 2], [3], [4, 5, 6]]
+>> nested_sum(t)
+=> 21
 \end{verbatim}
 
 \end{exercise}
@@ -8777,14 +8785,15 @@ For example:
 \label{cumulative}
 \index{cumulative sum}
 
-Write a function called {\tt cumsum} that takes a list of numbers and
-returns the cumulative sum; that is, a new list where the $i$th
-element is the sum of the first $i+1$ elements from the original list.
+Write a method called {\tt cumsum} that takes an array of numbers and
+returns the cumulative sum; that is, a new array where the $i$th
+element is the sum of the first $i+1$ elements from the original array.
 For example:
 
 \begin{verbatim}
->>> t = [1, 2, 3]
->>> cumsum(t)
+>> t = [1, 2, 3]
+=> [1, 2, 3]
+>> cumsum(t)
 [1, 3, 6]
 \end{verbatim}
 
@@ -8792,13 +8801,14 @@ For example:
 
 \begin{exercise}
 
-Write a function called \verb"middle" that takes a list and
-returns a new list that contains all but the first and last
+Write a method called \verb"middle" that takes an array and
+returns a new array that contains all but the first and last
 elements.  For example:
 
 \begin{verbatim}
->>> t = [1, 2, 3, 4]
->>> middle(t)
+>> t = [1, 2, 3, 4]
+=> [1, 2, 3, 4]
+>> middle(t)
 [2, 3]
 \end{verbatim}
 
@@ -8806,30 +8816,32 @@ elements.  For example:
 
 \begin{exercise}
 
-Write a function called \verb"chop" that takes a list, modifies it
-by removing the first and last elements, and returns {\tt None}.
+Write a method called \verb"chop!" that takes an array, modifies it
+by removing the first and last elements, and returns {\tt nil}.
 For example:
 
 \begin{verbatim}
->>> t = [1, 2, 3, 4]
->>> chop(t)
->>> t
-[2, 3]
+>> t = [1, 2, 3, 4]
+=> [1, 2, 3, 4]
+>> chop!(t)
+=> nil
+>> t
+=> [2, 3]
 \end{verbatim}
 
 \end{exercise}
 
 
 \begin{exercise}
-Write a function called \verb"is_sorted" that takes a list as a
-parameter and returns {\tt True} if the list is sorted in ascending
-order and {\tt False} otherwise.  For example:
+Write a method called \verb"sorted?" that takes an array as a
+parameter and returns {\tt true} if the array is sorted in ascending
+order and {\tt false} otherwise.  For example:
 
 \begin{verbatim}
->>> is_sorted([1, 2, 2])
-True
->>> is_sorted(['b', 'a'])
-False
+>> sorted?([1, 2, 2])
+=> true
+>> sorted?(['b', 'a'])
+=> false
 \end{verbatim}
 
 \end{exercise}
@@ -8840,8 +8852,8 @@ False
 \index{anagram}
 
 Two words are anagrams if you can rearrange the letters from one
-to spell the other.  Write a function called \verb"is_anagram"
-that takes two strings and returns {\tt True} if they are anagrams.
+to spell the other.  Write a method called \verb"anagram?"
+that takes two strings and returns {\tt true} if they are anagrams.
 \end{exercise}
 
 
@@ -8851,10 +8863,10 @@ that takes two strings and returns {\tt True} if they are anagrams.
 \index{duplicate}
 \index{uniqueness}
 
-Write a function called \verb"has_duplicates" that takes
-a list and returns {\tt True} if there is any element that
+Write a method called \verb"has_duplicates?" that takes
+an array and returns {\tt true} if there is any element that
 appears more than once.  It should not modify the original
-list.
+array.
 
 \end{exercise}
 
@@ -8862,21 +8874,22 @@ list.
 \begin{exercise}
 
 This exercise pertains to the so-called Birthday Paradox, which you
-can read about at \url{http://en.wikipedia.org/wiki/Birthday_paradox}.
+can read about at \url{https://en.wikipedia.org/wiki/Birthday_paradox}.
 \index{birthday paradox}
 
 If there are 23 students in your class, what are the chances
 that two of you have the same birthday?  You can estimate this
 probability by generating random samples of 23 birthdays
 and checking for matches.  Hint: you can generate random birthdays
-with the {\tt randint} function in the {\tt random} module.
+with the {\tt rand} method.
 \index{random module}
 \index{module!random}
-\index{randint function}
-\index{function!randint}
+\index{randint method}
+\index{method!randint}
 
-You can download my
-solution from \url{http://thinkpython2.com/code/birthday.py}.
+% todo
+%% You can download my
+%% solution from \url{http://thinkpython2.com/code/birthday.py}.
 
 \end{exercise}
 
@@ -8885,24 +8898,25 @@ solution from \url{http://thinkpython2.com/code/birthday.py}.
 \begin{exercise}
 \index{append method}
 \index{method append}
-\index{list!concatenation}
-\index{concatenation!list}
+\index{array!concatenation}
+\index{concatenation!array}
 
-Write a function that reads the file {\tt words.txt} and builds
-a list with one element per word.  Write two versions of
-this function, one using the {\tt append} method and the
+Write a method that reads the file {\tt words.txt} and builds
+an array with one element per word.  Write two versions of
+this method, one using the {\tt append} method and the
 other using the idiom {\tt t = t + [x]}.  Which one takes
 longer to run?  Why?
 
-Solution: \url{http://thinkpython2.com/code/wordlist.py}.
-\index{time module}
-\index{module!time}
+% todo
+%% Solution: \url{http://thinkpython2.com/code/wordlist.py}.
+%% \index{time module}
+%% \index{module!time}
 
 \end{exercise}
 
 
 \begin{exercise}
-\label{wordlist1}
+\label{wordarray1}
 \label{bisection}
 \index{membership!bisection search}
 \index{bisection search}
@@ -8911,30 +8925,33 @@ Solution: \url{http://thinkpython2.com/code/wordlist.py}.
 \index{binary search}
 \index{search, binary}
 
-To check whether a word is in the word list, you could use
-the {\tt in} operator, but it would be slow because it searches
+To check whether a word is in the word array, you could use
+the {\tt include?} method, but it would be slow because it searches
 through the words in order.
 
 Because the words are in alphabetical order, we can speed things up
 with a bisection search (also known as binary search), which is
 similar to what you do when you look a word up in the dictionary.  You
 start in the middle and check to see whether the word you are looking
-for comes before the word in the middle of the list.  If so, you
-search the first half of the list the same way.  Otherwise you search
+for comes before the word in the middle of the array.  If so, you
+search the first half of the array the same way.  Otherwise you search
 the second half.
 
 Either way, you cut the remaining search space in half.  If the
-word list has 113,809 words, it will take about 17 steps to
+word array has 113,809 words, it will take about 17 steps to
 find the word or conclude that it's not there.
 
-Write a function called \verb"in_bisect" that takes a sorted list
-and a target value and returns {\tt True} if the word is
-in the list and {\tt False} if it's not.
+Write a method called \verb"in_bisect?" that takes a sorted array
+and a target value and returns {\tt true} if the word is
+in the array and {\tt false} if it's not.
 \index{bisect module}
 \index{module!bisect}
 
-Or you could read the documentation of the {\tt bisect} module
-and use that!  Solution: \url{http://thinkpython2.com/code/inlist.py}.
+Or you could read the documentation of the {\tt bsearch} method
+and use that!
+
+% todo
+%% Solution: \url{http://thinkpython2.com/code/inlist.py}.
 
 \end{exercise}
 
@@ -8943,7 +8960,10 @@ and use that!  Solution: \url{http://thinkpython2.com/code/inlist.py}.
 
 Two words are a ``reverse pair'' if each is the reverse of the
 other.  Write a program that finds all the reverse pairs in the
-word list.  Solution: \url{http://thinkpython2.com/code/reverse_pair.py}.
+word array.
+    
+% todo
+%% Solution: \url{http://thinkpython2.com/code/reverse_pair.py}.
 
 \end{exercise}
 
@@ -8953,7 +8973,8 @@ word list.  Solution: \url{http://thinkpython2.com/code/reverse_pair.py}.
 Two words ``interlock'' if taking alternating letters from each forms
 a new word.  For example, ``shoe'' and ``cold''
 interlock to form ``schooled''.
-Solution: \url{http://thinkpython2.com/code/interlock.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/interlock.py}.
 Credit: This exercise is inspired by an example at \url{http://puzzlers.org}.
 
 \begin{enumerate}
@@ -9787,7 +9808,7 @@ values are.  Then you can use the {\tt in} operator
 as a fast way to check whether a string is in
 the dictionary.
 
-If you did Exercise~\ref{wordlist1}, you can compare the speed
+If you did Exercise~\ref{wordarray1}, you can compare the speed
 of this implementation with the list {\tt in} operator and the
 bisection search.
 
@@ -15728,11 +15749,11 @@ an element that doesn't appear.  Instead, they return 0:
 0
 \end{verbatim}
 
-We can use Counters to rewrite \verb"is_anagram" from
+We can use Counters to rewrite \verb"anagram?" from
 Exercise~\ref{anagram}:
 
 \begin{verbatim}
-def is_anagram(word1, word2):
+def anagram?(word1, word2):
     return Counter(word1) == Counter(word2)
 \end{verbatim}
 
