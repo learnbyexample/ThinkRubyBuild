@@ -8882,10 +8882,8 @@ that two of you have the same birthday?  You can estimate this
 probability by generating random samples of 23 birthdays
 and checking for matches.  Hint: you can generate random birthdays
 with the {\tt rand} method.
-\index{random module}
-\index{module!random}
-\index{randint method}
-\index{method!randint}
+\index{rand method}
+\index{method!rand}
 
 % todo
 %% You can download my
@@ -8990,157 +8988,165 @@ Credit: This exercise is inspired by an example at \url{http://puzzlers.org}.
 \end{exercise}
 
 
-\chapter{Dictionaries}
+\chapter{Hashes}
 
-This chapter presents another built-in type called a dictionary.
-Dictionaries are one of Python's best features; they are the
+This chapter presents another built-in type called a hash.
+Hashes are one of Ruby's best features; they are the
 building blocks of many efficient and elegant algorithms.
 
 
-\section{A dictionary is a mapping}
+\section{A hash is a mapping}
 
-\index{dictionary}
-\index{dictionary}
-\index{type!dict}
+\index{hash}
+\index{type!hash}
 \index{key}
 \index{key-value pair}
 \index{index}
-A {\bf dictionary} is like a list, but more general.  In a list,
-the indices have to be integers; in a dictionary they can
-be (almost) any type.
+A {\bf hash} is like an array, but more general.  In an array,
+the indices have to be integers; in a hash they can
+be any type.
+%% be (almost) any type.
+% todo almost any or any
 
-A dictionary contains a collection of indices, which are called {\bf
+A hash contains a collection of indices, which are called {\bf
   keys}, and a collection of values.  Each key is associated with a
 single value.  The association of a key and a value is called a {\bf
-  key-value pair} or sometimes an {\bf item}.  \index{item}
+  key-value pair} or sometimes an {\bf item}.
+\index{item}
 
-In mathematical language, a dictionary represents a {\bf mapping}
+In mathematical language, a hash represents a {\bf mapping}
 from keys to values, so you can also say that each key
 ``maps to'' a value.
-As an example, we'll build a dictionary that maps from English
+As an example, we'll build a hash that maps from English
 to Spanish words, so the keys and the values are all strings.
 
-The function {\tt dict} creates a new dictionary with no items.
-Because {\tt dict} is the name of a built-in function, you
-should avoid using it as a variable name.
-\index{dict function}
-\index{function!dict}
+The method {\tt new} of Hash class creates a new hash with no items.
+%% Because {\tt dict} is the name of a built-in function, you
+%% should avoid using it as a variable name.
+\index{new method}
+\index{method!new}
 
 \begin{verbatim}
->>> eng2sp = dict()
->>> eng2sp
-{}
+>> eng2sp = Hash.new
+=> {}
 \end{verbatim}
 
-The squiggly-brackets, \verb"{}", represent an empty dictionary.
-To add items to the dictionary, you can use square brackets:
+The squiggly-brackets, \verb"{}", represent an empty hash.
+To add items to the hash, you can use square brackets:
 \index{squiggly bracket}
 \index{bracket!squiggly}
 
 \begin{verbatim}
->>> eng2sp['one'] = 'uno'
+>> eng2sp['one'] = 'uno'
+=> "uno"
 \end{verbatim}
 %
 This line creates an item that maps from the key
 \verb"'one'" to the value \verb"'uno'".  If we print the
-dictionary again, we see a key-value pair with a colon
+hash again, we see a key-value pair with a {\tt =>}
 between the key and value:
 
 \begin{verbatim}
->>> eng2sp
-{'one': 'uno'}
+>> eng2sp
+=> {"one"=>"uno"}
 \end{verbatim}
 %
 This output format is also an input format.  For example,
-you can create a new dictionary with three items:
+you can create a new hash with three items:
 
 \begin{verbatim}
->>> eng2sp = {'one': 'uno', 'two': 'dos', 'three': 'tres'}
+>> eng2sp = {'one' => 'uno', 'two' => 'dos', 'three' => 'tres'}
+=> {"one"=>"uno", "two"=>"dos", "three"=>"tres"}
 \end{verbatim}
 %
-But if you print {\tt eng2sp}, you might be surprised:
-
-\begin{verbatim}
->>> eng2sp
-{'one': 'uno', 'three': 'tres', 'two': 'dos'}
-\end{verbatim}
+%% But if you print {\tt eng2sp}, you might be surprised:
+%% 
+%% \begin{verbatim}
+%% >>> eng2sp
+%% {'one': 'uno', 'three': 'tres', 'two': 'dos'}
+%% \end{verbatim}
 %
-The order of the key-value pairs might not be the same.  If
-you type the same example on your computer, you might get a
-different result.  In general, the order of items in
-a dictionary is unpredictable.
+The order of the key-value pairs is the same as the order in
+which they were inserted.  In other programming languages,
+the order of items in a hash is usually unpredictable.
 
 But that's not a problem because
-the elements of a dictionary are never indexed with integer indices.
+the elements of a hash are never indexed with integer indices.
 Instead, you use the keys to look up the corresponding values:
 
 \begin{verbatim}
->>> eng2sp['two']
-'dos'
+>> eng2sp['two']
+=> "dos"
 \end{verbatim}
 %
 The key \verb"'two'" always maps to the value \verb"'dos'" so the order
 of the items doesn't matter.
 
-If the key isn't in the dictionary, you get an exception:
+If the key isn't in the hash, you get back {\tt nil} value.  To get
+an exception, use the {\tt fetch} method:
 \index{exception!KeyError}
 \index{KeyError}
+\index{fetch method}
+\index{method!fetch}
 
 \begin{verbatim}
->>> eng2sp['four']
-KeyError: 'four'
+>> eng2sp['four']
+=> nil
+>> eng2sp.fetch('four')
+KeyError (key not found: "four")
 \end{verbatim}
 %
-The {\tt len} function works on dictionaries; it returns the
+The {\tt length} method works on hashes; it returns the
 number of key-value pairs:
-\index{len function}
-\index{function!len}
+\index{length method}
+\index{method!length}
 
 \begin{verbatim}
->>> len(eng2sp)
-3
+>> eng2sp.length
+=> 3
 \end{verbatim}
 %
-The {\tt in} operator works on dictionaries, too; it tells you whether
-something appears as a {\em key} in the dictionary (appearing
+The {\tt include?} method works on hashes, too; it tells you whether
+something appears as a {\em key} in the hash (appearing
 as a value is not good enough).
-\index{membership!dictionary}
-\index{in operator}
-\index{operator!in}
+\index{membership!hash}
+\index{include? method}
+\index{method!include?}
 
 \begin{verbatim}
->>> 'one' in eng2sp
-True
->>> 'uno' in eng2sp
-False
+>> eng2sp.include?('one')
+=> true
+>> eng2sp.include?('uno')
+=> false
 \end{verbatim}
 %
-To see whether something appears as a value in a dictionary, you
-can use the method {\tt values}, which returns a collection of
-values, and then use the {\tt in} operator:
-\index{values method}
-\index{method!values}
+To see whether something appears as a value in a hash, you
+can use the {\tt has\_value?} method:
+\index{has\_value? method}
+\index{method!has\_value?}
 
 \begin{verbatim}
->>> vals = eng2sp.values()
->>> 'uno' in vals
-True
+>> eng2sp.has_value?('uno')
+=> true
+>> eng2sp.has_value?('one')
+=> false
 \end{verbatim}
 %
-The {\tt in} operator uses different algorithms for lists and
-dictionaries.  For lists, it searches the elements of the list in
-order, as in Section~\ref{find}.  As the list gets longer, the search
+% todo - is this true in Ruby too?
+The {\tt include?} method uses different algorithms for arrays and
+hashes.  For arrays, it searches the elements of the array in
+order, as in Section~\ref{find}.  As the array gets longer, the search
 time gets longer in direct proportion.
 
-For dictionaries, Python uses an
+For hashes, Ruby uses an
 algorithm called a {\bf hashtable} that has a remarkable property: the
-{\tt in} operator takes about the same amount of time no matter how
-many items are in the dictionary.  I explain how that's possible
+{\tt include?} method takes about the same amount of time no matter how
+many items are in the hash.  I explain how that's possible
 in Section~\ref{hashtable}, but the explanation might not make
 sense until you've read a few more chapters.
 
 
-\section{Dictionary as a collection of counters}
+\section{Hash as a collection of counters}
 \label{histogram}
 \index{counter}
 
@@ -9154,14 +9160,14 @@ alphabet.  Then you could traverse the string and, for each
 character, increment the corresponding counter, probably using
 a chained conditional.
 
-\item You could create a list with 26 elements.  Then you could
-convert each character to a number (using the built-in function
-{\tt ord}), use the number as an index into the list, and increment
+\item You could create an array with 26 elements.  Then you could
+convert each character to a number (using the built-in method
+{\tt ord}), use the number as an index into the array, and increment
 the appropriate counter.
 
-\item You could create a dictionary with characters as keys
+\item You could create a hash with characters as keys
 and counters as the corresponding values.  The first time you
-see a character, you would add an item to the dictionary.  After
+see a character, you would add an item to the hash.  After
 that you would increment the value of an existing item.
 
 \end{enumerate}
@@ -9172,111 +9178,133 @@ of them implements that computation in a different way.
 
 An {\bf implementation} is a way of performing a computation;
 some implementations are better than others.  For example,
-an advantage of the dictionary implementation is that we don't
+an advantage of the hash implementation is that we don't
 have to know ahead of time which letters appear in the string
 and we only have to make room for the letters that do appear.
 
 Here is what the code might look like:
 
 \begin{verbatim}
-def histogram(s):
-    d = dict()
-    for c in s:
-        if c not in d:
-            d[c] = 1
-        else:
-            d[c] += 1
-    return d
+def histogram(s)
+  d = Hash.new
+  s.each_char do |c|
+    if d.include?(c)
+      d[c] += 1
+    else
+      d[c] = 1
+    end
+  end
+  return d
+end
 \end{verbatim}
 %
-The name of the function is {\tt histogram}, which is a statistical
+The name of the method is {\tt histogram}, which is a statistical
 term for a collection of counters (or frequencies).
 \index{histogram}
 \index{frequency}
 \index{traversal}
 
 The first line of the
-function creates an empty dictionary.  The {\tt for} loop traverses
+method creates an empty hash.  The {\tt each\_char} method traverses
 the string.  Each time through the loop, if the character {\tt c} is
-not in the dictionary, we create a new item with key {\tt c} and the
+not in the hash, we create a new item with key {\tt c} and the
 initial value 1 (since we have seen this letter once).  If {\tt c} is
-already in the dictionary we increment {\tt d[c]}.
+already in the hash we increment {\tt d[c]}.
 \index{histogram}
 
 Here's how it works:
 
 \begin{verbatim}
->>> h = histogram('brontosaurus')
->>> h
-{'a': 1, 'b': 1, 'o': 2, 'n': 1, 's': 2, 'r': 2, 'u': 2, 't': 1}
+>> h = histogram('brontosaurus')
+=> {"b"=>1, "r"=>2, "o"=>2, "n"=>1, "t"=>1, "s"=>2, "a"=>1, "u"=>2}
 \end{verbatim}
 %
 The histogram indicates that the letters \verb"'a'" and \verb"'b'"
 appear once; \verb"'o'" appears twice, and so on.
 
 
-\index{get method}
-\index{method!get}
-Dictionaries have a method called {\tt get} that takes a key
-and a default value.  If the key appears in the dictionary,
-{\tt get} returns the corresponding value; otherwise it returns
-the default value.  For example:
+An initial value can be passed to the {\tt new} method,
+so that this value is returned instead of {\tt nil}
+as the default value. For example:
 
 \begin{verbatim}
->>> h = histogram('a')
->>> h
-{'a': 1}
->>> h.get('a', 0)
-1
->>> h.get('b', 0)
-0
+>> h = Hash.new(0)
+=> {}
+>> h['a'] = 2
+=> 2
+>> h
+=> {"a"=>2}
+>> h['b']
+=> 0
 \end{verbatim}
 %
-As an exercise, use {\tt get} to write {\tt histogram} more concisely.  You
+As an exercise, pass an initial value to write {\tt histogram} more concisely.  You
 should be able to eliminate the {\tt if} statement.
 
 
-\section{Looping and dictionaries}
-\index{dictionary!looping with}
-\index{looping!with dictionaries}
+\section{Looping and hashes}
+\index{hash!looping with}
+\index{looping!with hashes}
 \index{traversal}
 
-If you use a dictionary in a {\tt for} statement, it traverses
-the keys of the dictionary.  For example, \verb"print_hist"
+If you use a hash in a {\tt for} statement, it traverses
+the key-value pair of the hash.  For example, \verb"print_hist"
 prints each key and the corresponding value:
 
 \begin{verbatim}
-def print_hist(h):
-    for c in h:
-        print(c, h[c])
+def print_hist(h)
+  for c in h
+    puts "#{c[0]} #{c[1]}"
+  end
+end
 \end{verbatim}
 %
 Here's what the output looks like:
 
 \begin{verbatim}
->>> h = histogram('parrot')
->>> print_hist(h)
-a 1
+>> h = histogram('parrot')
+=> {"p"=>1, "a"=>1, "r"=>2, "o"=>1, "t"=>1}
+>> print_hist(h)
 p 1
+a 1
 r 2
-t 1
 o 1
+t 1
+=> {"p"=>1, "a"=>1, "r"=>2, "o"=>1, "t"=>1}
 \end{verbatim}
 %
-Again, the keys are in no particular order.  To traverse the keys
-in sorted order, you can use the built-in function {\tt sorted}:
-\index{sorted!function}
-\index{function!sorted}
+
+\index{each!method}
+\index{method!each}
+Like array, you can also use the built-in method {\tt each}
+to traverse:
 
 \begin{verbatim}
->>> for key in sorted(h):
-...     print(key, h[key])
+>> h.each { |k, v| puts "#{k} #{v}" }
+p 1
+a 1
+r 2
+o 1
+t 1
+=> {"p"=>1, "a"=>1, "r"=>2, "o"=>1, "t"=>1}
+\end{verbatim}
+%
+
+To traverse the keys
+in sorted order, you can use the {\tt sort} method:
+\index{sort!method}
+\index{method!sort}
+
+\begin{verbatim}
+>> h.sort.each { |k, v| puts "#{k} #{v}" }
 a 1
 o 1
 p 1
 r 2
 t 1
+=> [["a", 1], ["o", 1], ["p", 1], ["r", 2], ["t", 1]]
 \end{verbatim}
+%
 
 %TODO: get this on Atlas
 
