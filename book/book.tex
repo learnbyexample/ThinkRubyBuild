@@ -9121,14 +9121,14 @@ as a value is not good enough).
 \end{verbatim}
 %
 To see whether something appears as a value in a hash, you
-can use the {\tt has\_value?} method:
-\index{has\_value? method}
-\index{method!has\_value?}
+can use the {\tt value?} method:
+\index{value? method}
+\index{method!value?}
 
 \begin{verbatim}
->> eng2sp.has_value?('uno')
+>> eng2sp.value?('uno')
 => true
->> eng2sp.has_value?('one')
+>> eng2sp.value?('one')
 => false
 \end{verbatim}
 %
@@ -9186,15 +9186,15 @@ Here is what the code might look like:
 
 \begin{verbatim}
 def histogram(s)
-  d = Hash.new
+  h = Hash.new
   s.each_char do |c|
-    if d.include?(c)
-      d[c] += 1
+    if h.include?(c)
+      h[c] += 1
     else
-      d[c] = 1
+      h[c] = 1
     end
   end
-  return d
+  return h
 end
 \end{verbatim}
 %
@@ -9209,7 +9209,7 @@ method creates an empty hash.  The {\tt each\_char} method traverses
 the string.  Each time through the loop, if the character {\tt c} is
 not in the hash, we create a new item with key {\tt c} and the
 initial value 1 (since we have seen this letter once).  If {\tt c} is
-already in the hash we increment {\tt d[c]}.
+already in the hash we increment {\tt h[c]}.
 \index{histogram}
 
 Here's how it works:
@@ -9253,8 +9253,8 @@ prints each key and the corresponding value:
 
 \begin{verbatim}
 def print_hist(h)
-  for c in h
-    puts "#{c[0]} #{c[1]}"
+  for k, v in h
+    puts "#{k} #{v}"
   end
 end
 \end{verbatim}
@@ -9311,83 +9311,104 @@ t 1
 
 \section{Reverse lookup}
 \label{raise}
-\index{dictionary!lookup}
-\index{dictionary!reverse lookup}
-\index{lookup, dictionary}
-\index{reverse lookup, dictionary}
+\index{hash!lookup}
+\index{hash!reverse lookup}
+\index{lookup, hash}
+\index{reverse lookup, hash}
 
-Given a dictionary {\tt d} and a key {\tt k}, it is easy to
-find the corresponding value {\tt v = d[k]}.  This operation
+Given a hash {\tt h} and a key {\tt k}, it is easy to
+find the corresponding value {\tt v = h[k]}.  This operation
 is called a {\bf lookup}.
 
 But what if you have {\tt v} and you want to find {\tt k}?
-You have two problems: first, there might be more than one
+You have a problem: there might be more than one
 key that maps to the value {\tt v}.  Depending on the application,
 you might be able to pick one, or you might have to make
-a list that contains all of them.  Second, there is no
-simple syntax to do a {\bf reverse lookup}; you have to search.
+an array that contains all of them.
 
-Here is a function that takes a value and returns the first
-key that maps to that value:
+To get the first mapping to the value {\tt v}, use the {\tt key} method:
 
 \begin{verbatim}
-def reverse_lookup(d, v):
-    for k in d:
-        if d[k] == v:
-            return k
-    raise LookupError()
+>> h
+=> {"p"=>1, "a"=>1, "r"=>2, "o"=>1, "t"=>1}
+>> h.key(1)
+=> "p"
+>> h.key(2)
+=> "r"
+\end{verbatim}
+
+Here is a method that takes a value and returns an array of
+keys that map to that value:
+
+\begin{verbatim}
+def reverse_lookup(h, v)
+  k = []
+  for key, value in h
+    k.append(key) if value == v
+  end
+
+  if k.empty?
+    raise KeyError
+  else
+    return k
+  end
+end
 \end{verbatim}
 %
-This function is yet another example of the search pattern, but it
+This method is yet another example of the search pattern, but it
 uses a feature we haven't seen before, {\tt raise}.  The 
-{\bf raise statement} causes an exception; in this case it causes a
-{\tt LookupError}, which is a built-in exception used to indicate
-that a lookup operation failed.
+{\bf raise method} causes an exception; in this case it causes a
+{\tt KeyError}, which is a built-in exception used to indicate
+that the specified key was not found.
 \index{search}
-\index{pattern!search} \index{raise statement} \index{statement!raise}
-\index{exception!LookupError} \index{LookupError}
+\index{pattern!search} \index{raise method} \index{method!raise}
+\index{exception!KeyError} \index{KeyError}
 
-If we get to the end of the loop, that means {\tt v}
-doesn't appear in the dictionary as a value, so we raise an
+If {\tt k} is empty at the end of the loop, that means {\tt v}
+doesn't appear in the hash as a value, so we raise an
 exception.
 
 Here is an example of a successful reverse lookup:
 
 \begin{verbatim}
->>> h = histogram('parrot')
->>> key = reverse_lookup(h, 2)
->>> key
-'r'
+>> h = histogram('parrot')
+=> {"p"=>1, "a"=>1, "r"=>2, "o"=>1, "t"=>1}
+>> keys = reverse_lookup(h, 2)
+=> ["r"]
+>> keys = reverse_lookup(h, 1)
+=> ["p", "a", "o", "t"]
 \end{verbatim}
 %
 And an unsuccessful one:
 
 \begin{verbatim}
->>> key = reverse_lookup(h, 3)
+>> keys = reverse_lookup(h, 3)
 Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  File "<stdin>", line 5, in reverse_lookup
-LookupError
+        3: from /usr/local/bin/irb:11:in `<main>'
+        2: from (irb):32
+        1: from (irb):23:in `reverse_lookup'
+KeyError (KeyError)
 \end{verbatim}
 %
 The effect when you raise an exception is the same as when
-Python raises one: it prints a traceback and an error message.
+Ruby raises one: it prints a traceback and an error message.
 \index{traceback}
 \index{optional argument}
 \index{argument!optional}
 
-The {\tt raise} statement can take a detailed error message as an
+The {\tt raise} method can take a detailed error message as an
 optional argument.  For example:
 
 \begin{verbatim}
->>> raise LookupError('value does not appear in the dictionary')
+>> raise KeyError, 'key with given value not found in the hash'
 Traceback (most recent call last):
-  File "<stdin>", line 1, in ?
-LookupError: value does not appear in the dictionary
+        2: from /usr/local/bin/irb:11:in `<main>'
+        1: from (irb):37
+KeyError (key with given value not found in the hash)
 \end{verbatim}
 %
 A reverse lookup is much slower than a forward lookup; if you
-have to do it often, or if the dictionary gets big, the performance
+have to do it often, or if the hash gets big, the performance
 of your program will suffer.
 
 
