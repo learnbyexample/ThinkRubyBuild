@@ -9106,6 +9106,7 @@ number of key-value pairs:
 => 3
 \end{verbatim}
 %
+% change it to key? it fits with value?
 The {\tt include?} method works on hashes, too; it tells you whether
 something appears as a {\em key} in the hash (appearing
 as a value is not good enough).
@@ -9343,9 +9344,7 @@ keys that map to that value:
 \begin{verbatim}
 def reverse_lookup(h, v)
   k = []
-  for key, value in h
-    k.append(key) if value == v
-  end
+  h.each { |key, value| k.append(key) if value == v }
 
   if k.empty?
     raise KeyError
@@ -9412,48 +9411,49 @@ have to do it often, or if the hash gets big, the performance
 of your program will suffer.
 
 
-\section{Dictionaries and lists}
+\section{Hashes and Arrays}
 \label{invert}
 
-Lists can appear as values in a dictionary.  For example, if you
-are given a dictionary that maps from letters to frequencies, you
-might want to invert it; that is, create a dictionary that maps
+Arrays can appear as values in a hash.  For example, if you
+are given a hash that maps from letters to frequencies, you
+might want to invert it; that is, create a hash that maps
 from frequencies to letters.  Since there might be several letters
-with the same frequency, each value in the inverted dictionary
-should be a list of letters.
-\index{invert dictionary}
-\index{dictionary!invert}
+with the same frequency, each value in the inverted hash
+should be an array of letters.
+\index{invert hash}
+\index{hash!invert}
 
-Here is a function that inverts a dictionary:
+Here is a method that inverts a hash:
 
 \begin{verbatim}
-def invert_dict(d):
-    inverse = dict()
-    for key in d:
-        val = d[key]
-        if val not in inverse:
-            inverse[val] = [key]
-        else:
-            inverse[val].append(key)
-    return inverse
+def invert_hash(h)
+  inverse = Hash.new
+  h.each do |key, val|
+    if inverse.include?(val)
+      inverse[val].append(key)
+    else
+      inverse[val] = [key]
+    end
+  end
+  return inverse
+end
 \end{verbatim}
 %
-Each time through the loop, {\tt key} gets a key from {\tt d} and 
+Each time through the loop, {\tt key} gets a key from {\tt h} and 
 {\tt val} gets the corresponding value.  If {\tt val} is not in {\tt
   inverse}, that means we haven't seen it before, so we create a new
-item and initialize it with a {\bf singleton} (a list that contains a
+item and initialize it with a {\bf singleton} (an array that contains a
 single element).  Otherwise we have seen this value before, so we
-append the corresponding key to the list.  \index{singleton}
+append the corresponding key to the array.
+\index{singleton}
 
 Here is an example:
 
 \begin{verbatim}
->>> hist = histogram('parrot')
->>> hist
-{'a': 1, 'p': 1, 'r': 2, 't': 1, 'o': 1}
->>> inverse = invert_dict(hist)
->>> inverse
-{1: ['a', 'p', 't', 'o'], 2: ['r']}
+>> hist = histogram('parrot')
+=> {"p"=>1, "a"=>1, "r"=>2, "o"=>1, "t"=>1}
+>> inverse = invert_hash(hist)
+=> {1=>["p", "a", "o", "t"], 2=>["r"]}
 \end{verbatim}
 
 \begin{figure}
@@ -9464,64 +9464,74 @@ Here is an example:
 \end{figure}
 
 Figure~\ref{fig.dict1} is a state diagram showing {\tt hist} and {\tt inverse}.
-A dictionary is represented as a box with the type {\tt dict} above it
+A hash is represented as a box with the type {\tt hash} above it
 and the key-value pairs inside.  If the values are integers, floats or
-strings, I draw them inside the box, but I usually draw lists
+strings, I draw them inside the box, but I usually draw arrays
 outside the box, just to keep the diagram simple.
 \index{state diagram}
 \index{diagram!state}
 
-Lists can be values in a dictionary, as this example shows, but they
-cannot be keys.  Here's what happens if you try:
-\index{TypeError}
-\index{exception!TypeError}
-
+Arrays can be values in a hash, as this example shows. They
+can be used as keys as well.  Here's an example:
 
 \begin{verbatim}
->>> t = [1, 2, 3]
->>> d = dict()
->>> d[t] = 'oops'
-Traceback (most recent call last):
-  File "<stdin>", line 1, in ?
-TypeError: list objects are unhashable
+>> t = [1, 2, 3]
+=> [1, 2, 3]
+>> h = Hash.new
+=> {}
+>> h[t] = 'foo'
+=> "foo"
+>> h
+=> {[1, 2, 3]=>"foo"}
 \end{verbatim}
 %
-I mentioned earlier that a dictionary is implemented using
-a hashtable and that means that the keys have to be {\bf hashable}.
-\index{hash function}
-\index{hashable}
-
-A {\bf hash} is a function that takes a value (of any kind)
-and returns an integer.  Dictionaries use these integers,
+I mentioned earlier that a hash is implemented using
+a hashtable.  A {\bf hash} is a method that takes a value (of any kind)
+and returns an integer.  Hashes use these integers,
 called hash values, to store and look up key-value pairs.
 \index{immutability}
 
+\begin{verbatim}
+# these values will be consistent for a given session
+# but won't be same across different Ruby invocations
+>> 42.hash
+=> 3577973027633181233
+>> 'foo'.hash
+=> -1287058253106040087
+>> [1, 2, 3].hash
+=> -3571993769152562407
+\end{verbatim}
+
 This system works fine if the keys are immutable.  But if the
-keys are mutable, like lists, bad things happen.  For example,
-when you create a key-value pair, Python hashes the key and 
+keys are mutable, like arrays, bad things happen.  For example,
+when you create a key-value pair, Ruby hashes the key and 
 stores it in the corresponding location.  If you modify the
 key and then hash it again, it would go to a different location.
 In that case you might have two entries for the same key,
 or you might not be able to find a key.  Either way, the
-dictionary wouldn't work correctly.
+hash wouldn't work correctly.
 
-That's why keys have to be hashable, and why mutable types like
-lists aren't.  The simplest way to get around this limitation is to
-use tuples, which we will see in the next chapter.
+That's why immutable types like integers and symbols are preferred
+as keys. As a special case, Ruby freezes strings when used as keys,
+so string keys behave like an immutable type.
 
-Since dictionaries are mutable, they can't be used as keys,
-but they {\em can} be used as values.
+%% That's why keys have to be hashable, and why mutable types like
+%% arrays aren't.  The simplest way to get around this limitation is to
+%% use tuples, which we will see in the next chapter.
+%% 
+%% Since dictionaries are mutable, they can't be used as keys,
+%% but they {\em can} be used as values.
 
 
 \section{Memos}
 \label{memoize}
 
-If you played with the {\tt fibonacci} function from
+If you played with the {\tt fibonacci} method from
 Section~\ref{one.more.example}, you might have noticed that the bigger
-the argument you provide, the longer the function takes to run.
+the argument you provide, the longer the method takes to run.
 Furthermore, the run time increases quickly.
-\index{fibonacci function}
-\index{function!fibonacci}
+\index{fibonacci method}
+\index{method!fibonacci}
 
 To understand why, consider Figure~\ref{fig.fibonacci}, which shows
 the {\bf call graph} for {\tt fibonacci} with {\tt n=4}:
@@ -9533,12 +9543,12 @@ the {\bf call graph} for {\tt fibonacci} with {\tt n=4}:
 \label{fig.fibonacci}
 \end{figure}
 
-A call graph shows a set of function frames, with lines connecting each
-frame to the frames of the functions it calls.  At the top of the
+A call graph shows a set of method frames, with lines connecting each
+frame to the frames of the method it calls.  At the top of the
 graph, {\tt fibonacci} with {\tt n=4} calls {\tt fibonacci} with {\tt
 n=3} and {\tt n=2}.  In turn, {\tt fibonacci} with {\tt n=3} calls
 {\tt fibonacci} with {\tt n=2} and {\tt n=1}.  And so on.
-\index{function frame}
+\index{method frame}
 \index{frame}
 \index{call graph}
 
@@ -9548,31 +9558,33 @@ worse as the argument gets bigger.
 \index{memo}
 
 One solution is to keep track of values that have already been
-computed by storing them in a dictionary.  A previously computed value
+computed by storing them in a hash.  A previously computed value
 that is stored for later use is called a {\bf memo}.  Here is a
 ``memoized'' version of {\tt fibonacci}:
 
 \begin{verbatim}
-known = {0:0, 1:1}
+$known = {0 => 0, 1 => 1}
 
-def fibonacci(n):
-    if n in known:
-        return known[n]
+def fibonacci(n)
+  return $known[n] if $known.include?(n)
 
-    res = fibonacci(n-1) + fibonacci(n-2)
-    known[n] = res
-    return res
+  res = fibonacci(n-1) + fibonacci(n-2)
+  $known[n] = res
+  return res
+end
 \end{verbatim}
 %
-{\tt known} is a dictionary that keeps track of the Fibonacci
+{\tt \$known} is a global variable containing a
+hash that keeps track of the Fibonacci
 numbers we already know.  It starts with
 two items: 0 maps to 0 and 1 maps to 1.
 
-Whenever {\tt fibonacci} is called, it checks {\tt known}.
+Whenever {\tt fibonacci} is called, it checks {\tt \$known}.
 If the result is already there, it can return
 immediately.  Otherwise it has to 
-compute the new value, add it to the dictionary, and return it.
+compute the new value, add it to the hash, and return it.
 
+% todo there's built-in way to memoize a hash, mention it here?
 If you run this version of {\tt fibonacci} and compare it with
 the original, you will find that it is much faster.
 
@@ -9868,8 +9880,8 @@ bisection search.
 \label{setdefault}
 
 Read the documentation of the dictionary method {\tt setdefault}
-and use it to write a more concise version of \verb"invert_dict".
-Solution: \url{http://thinkpython2.com/code/invert_dict.py}.
+and use it to write a more concise version of \verb"invert_hash".
+Solution: \url{http://thinkpython2.com/code/invert_hash.py}.
 \index{setdefault method}
 \index{method!setdefault}
 
