@@ -9106,7 +9106,7 @@ number of key-value pairs:
 => 3
 \end{verbatim}
 %
-% change it to key? it fits with value?
+% todo should include? be changed to key? ... key? fits with value?
 The {\tt include?} method works on hashes, too; it tells you whether
 something appears as a {\em key} in the hash (appearing
 as a value is not good enough).
@@ -9139,8 +9139,12 @@ hashes.  For arrays, it searches the elements of the array in
 order, as in Section~\ref{find}.  As the array gets longer, the search
 time gets longer in direct proportion.
 
-For hashes, Ruby uses an
-algorithm called a {\bf hashtable} that has a remarkable property: the
+% todo - what is Ruby equivalent?
+%% For hashes, Ruby uses an
+%% algorithm called a {\bf hashtable} that has a remarkable property: the
+%% {\tt include?} method takes about the same amount of time no matter how
+%% many items are in the hash.
+Hashes have a remarkable property: the
 {\tt include?} method takes about the same amount of time no matter how
 many items are in the hash.  I explain how that's possible
 in Section~\ref{hashtable}, but the explanation might not make
@@ -9485,11 +9489,14 @@ can be used as keys as well.  Here's an example:
 => {[1, 2, 3]=>"foo"}
 \end{verbatim}
 %
-I mentioned earlier that a hash is implemented using
-a hashtable.  A {\bf hash} is a method that takes a value (of any kind)
+% todo?
+%% I mentioned earlier that a hash is implemented using
+%% a hashtable.
+A {\bf hash} is a method that takes a value (of any kind)
 and returns an integer.  Hashes use these integers,
 called hash values, to store and look up key-value pairs.
-\index{immutability}
+\index{hash method}
+\index{method!hash}
 
 \begin{verbatim}
 # these values will be consistent for a given session
@@ -9502,6 +9509,7 @@ called hash values, to store and look up key-value pairs.
 => -3571993769152562407
 \end{verbatim}
 
+\index{immutability}
 This system works fine if the keys are immutable.  But if the
 keys are mutable, like arrays, bad things happen.  For example,
 when you create a key-value pair, Ruby hashes the key and 
@@ -9594,12 +9602,13 @@ the original, you will find that it is much faster.
 \index{global variable}
 \index{variable!global}
 
-In the previous example, {\tt known} is created outside the function,
-so it belongs to the special frame called \verb"__main__".
-Variables in \verb"__main__" are sometimes called {\bf global}
-because they can be accessed from any function.  Unlike local
-variables, which disappear when their function ends, global variables
-persist from one function call to the next.
+% todo? add some more relevant details, section has been shortened too much
+%% In the previous example, {\tt \$known} is created outside the method,
+%% so it belongs to the special frame called \verb"main".
+Variables prefixed with {\tt \$} are called {\bf global}
+because they can be accessed from anywhere.  Unlike local
+variables, which disappear when their method ends, global variables
+persist from one method call to the next.
 \index{flag}
 \index{main}
 
@@ -9610,98 +9619,102 @@ a flag named {\tt verbose} to control the level of detail in the
 output:
 
 \begin{verbatim}
-verbose = True
+$verbose = true
 
-def example1():
-    if verbose:
-        print('Running example1')
+def example1()
+  if $verbose
+    puts 'Running example1'
+  end
+end
 \end{verbatim}
 %
-If you try to reassign a global variable, you might be surprised.
-The following example is supposed to keep track of whether the
-function has been called:
-\index{reassignment}
+%% If you try to reassign a global variable, you might be surprised.
+%% The following example is supposed to keep track of whether the
+%% method has been called:
+%% \index{reassignment}
+%% 
+%% \begin{verbatim}
+%% been_called = False
+%% 
+%% def example2():
+%%     been_called = True         # WRONG
+%% \end{verbatim}
+%% %
+%% But if you run it you will see that the value of \verb"been_called"
+%% doesn't change.  The problem is that {\tt example2} creates a new local
+%% variable named \verb"been_called".  The local variable goes away when
+%% the method ends, and has no effect on the global variable.
+%% \index{global statement}
+%% \index{statement!global}
+%% \index{declaration}
+%% 
+%% To reassign a global variable inside a method you have to
+%% {\bf declare} the global variable before you use it:
+%% 
+%% \begin{verbatim}
+%% been_called = False
+%% 
+%% def example2():
+%%     global been_called 
+%%     been_called = True
+%% \end{verbatim}
+%% %
+%% The {\bf global statement} tells the interpreter
+%% something like, ``In this method, when I say \verb"been_called", I
+%% mean the global variable; don't create a local one.''
+%% \index{update!global variable}
+%% \index{global variable!update}
+
+Here's an example that updates a global variable:
 
 \begin{verbatim}
-been_called = False
+$count = 0
 
-def example2():
-    been_called = True         # WRONG
-\end{verbatim}
-%
-But if you run it you will see that the value of \verb"been_called"
-doesn't change.  The problem is that {\tt example2} creates a new local
-variable named \verb"been_called".  The local variable goes away when
-the function ends, and has no effect on the global variable.
-\index{global statement}
-\index{statement!global}
-\index{declaration}
-
-To reassign a global variable inside a function you have to
-{\bf declare} the global variable before you use it:
-
-\begin{verbatim}
-been_called = False
-
-def example2():
-    global been_called 
-    been_called = True
-\end{verbatim}
-%
-The {\bf global statement} tells the interpreter
-something like, ``In this function, when I say \verb"been_called", I
-mean the global variable; don't create a local one.''
-\index{update!global variable}
-\index{global variable!update}
-
-Here's an example that tries to update a global variable:
-
-\begin{verbatim}
-count = 0
-
-def example3():
-    count = count + 1          # WRONG
+def example2()
+  $count = $count + 1
+end
 \end{verbatim}
 %
 If you run it you get:
-\index{UnboundLocalError}
-\index{exception!UnboundLocalError}
 
 \begin{verbatim}
-UnboundLocalError: local variable 'count' referenced before assignment
+>> example2()
+=> 1
+>> $count
+=> 1
 \end{verbatim}
 %
-Python assumes that {\tt count} is local, and under that assumption
-you are reading it before writing it.  The solution, again,
-is to declare {\tt count} global.
-\index{counter}
-
-\begin{verbatim}
-def example3():
-    global count
-    count += 1
-\end{verbatim}
-%
-If a global variable refers to a mutable value, you can modify
-the value without declaring the variable:
-\index{mutability}
-
-\begin{verbatim}
-known = {0:0, 1:1}
-
-def example4():
-    known[2] = 1
-\end{verbatim}
-%
-So you can add, remove and replace elements of a global list or
-dictionary, but if you want to reassign the variable, you
-have to declare it:
-
-\begin{verbatim}
-def example5():
-    global known
-    known = dict()
-\end{verbatim}
+%% Python assumes that {\tt count} is local, and under that assumption
+%% you are reading it before writing it.  The solution, again,
+%% is to declare {\tt count} global.
+%% \index{counter}
+%% 
+%% \begin{verbatim}
+%% def example3():
+%%     global count
+%%     count += 1
+%% \end{verbatim}
+%% %
+%% If a global variable refers to a mutable value, you can modify
+%% the value without declaring the variable:
+%% \index{mutability}
+%% 
+%% \begin{verbatim}
+%% known = {0:0, 1:1}
+%% 
+%% def example4():
+%%     known[2] = 1
+%% \end{verbatim}
+%% %
+%% So you can add, remove and replace elements of a global list or
+%% dictionary, but if you want to reassign the variable, you
+%% have to declare it:
+%% 
+%% \begin{verbatim}
+%% def example5():
+%%     global known
+%%     known = dict()
+%% \end{verbatim}
 %
 Global variables can be useful, but if you have a lot of them,
 and you modify them frequently, they can make programs
@@ -9729,7 +9742,7 @@ as you find and correct errors.
 
 \item[Check summaries and types:] Instead of printing and checking the
 entire dataset, consider printing summaries of the data: for example,
-the number of items in a dictionary or the total of a list of numbers.
+the number of items in a hash or the total of an array of numbers.
 
 A common cause of runtime errors is a value that is not the right
 type.  For debugging this kind of error, it is often enough to print
@@ -9737,8 +9750,8 @@ the type of a value.
 
 \item[Write self-checks:]  Sometimes you can write code to check
 for errors automatically.  For example, if you are computing the
-average of a list of numbers, you could check that the result is
-not greater than the largest element in the list or less than
+average of an array of numbers, you could check that the result is
+not greater than the largest element in the array or less than
 the smallest.  This is called a ``sanity check'' because it detects
 results that are ``insane''.
 \index{sanity check}
@@ -9750,13 +9763,13 @@ computations to see if they are consistent.  This is called a
 
 \item[Format the output:] Formatting debugging output
 can make it easier to spot an error.  We saw an example in
-Section~\ref{factdebug}.  Another tool you might find useful is the {\tt pprint} module, which provides
-a {\tt pprint} function that displays built-in types in
-a more human-readable format ({\tt pprint} stands for
+Section~\ref{factdebug}.  Another tool you might find useful is the {\tt pp} method, which
+displays built-in types in
+a more human-readable format ({\tt pp} stands for
 ``pretty print'').
 \index{pretty print}
-\index{pprint module}
-\index{module!pprint}
+\index{pp method}
+\index{method!pp}
 
 \end{description}
 
@@ -9773,23 +9786,23 @@ the time you spend debugging.
 corresponds to an element of another set.
 \index{mapping}
 
-\item[dictionary:] A mapping from keys to their
+\item[hash:] A mapping from keys to their
 corresponding values.
-\index{dictionary}
+\index{hash}
 
 \item[key-value pair:] The representation of the mapping from
 a key to a value.
 \index{key-value pair}
 
-\item[item:] In a dictionary, another name for a key-value
+\item[item:] In a hash, another name for a key-value
   pair.
-\index{item!dictionary}
+\index{item!hash}
 
-\item[key:] An object that appears in a dictionary as the
+\item[key:] An object that appears in a hash as the
 first part of a key-value pair.
 \index{key}
 
-\item[value:] An object that appears in a dictionary as the
+\item[value:] An object that appears in a hash as the
 second part of a key-value pair.  This is more specific than
 our previous use of the word ``value''.
 \index{value}
@@ -9797,33 +9810,34 @@ our previous use of the word ``value''.
 \item[implementation:] A way of performing a computation.
 \index{implementation}
 
-\item[hashtable:] The algorithm used to implement Python
-dictionaries.
-\index{hashtable}
+% todo?
+%% \item[hashtable:] An algorithm used to implement hashes.
+%% \index{hashtable}
 
-\item[hash function:] A function used by a hashtable to compute the
+\item[hash method:] A method used by Hashes to compute the
 location for a key.
-\index{hash function}
+\index{hash method}
 
-\item[hashable:] A type that has a hash function.  Immutable
-types like integers,
-floats and strings are hashable; mutable types like lists and
-dictionaries are not.
-\index{hashable}
+% todo?
+%% \item[hashable:] A type that has a hash function.  Immutable
+%% types like integers,
+%% floats and strings are hashable; mutable types like lists and
+%% dictionaries are not.
+%% \index{hashable}
 
-\item[lookup:] A dictionary operation that takes a key and finds
+\item[lookup:] A hash operation that takes a key and finds
 the corresponding value.
 \index{lookup}
 
-\item[reverse lookup:] A dictionary operation that takes a value and finds
+\item[reverse lookup:] A hash operation that takes a value and finds
 one or more keys that map to it.
 \index{reverse lookup}
 
-\item[raise statement:]  A statement that (deliberately) raises an exception.
-\index{raise statement}
-\index{statement!raise}
+\item[raise method:]  A method that (deliberately) raises an exception.
+\index{raise method}
+\index{method!raise}
 
-\item[singleton:] A list (or other sequence) with a single element.
+\item[singleton:] An array (or other sequence) with a single element.
 \index{singleton}
 
 \item[call graph:] A diagram that shows every frame created during
@@ -9836,22 +9850,22 @@ each callee.
 computation.
 \index{memo}
 
-\item[global variable:]  A variable defined outside a function.  Global
-variables can be accessed from any function.
+\item[global variable:]  A variable defined using a {\tt \$} prefix.  Global
+variables can be accessed from anywhere.
 \index{global variable}
 
-\item[global statement:]  A statement that declares a variable name
-global.
-\index{global statement}
-\index{statement!global}
+%% \item[global statement:]  A statement that declares a variable name
+%% global.
+%% \index{global statement}
+%% \index{statement!global}
 
 \item[flag:] A boolean variable used to indicate whether a condition
 is true.
 \index{flag}
 
-\item[declaration:] A statement like {\tt global} that tells the
-interpreter something about a variable.
-\index{declaration}
+%% \item[declaration:] A statement like {\tt global} that tells the
+%% interpreter something about a variable.
+%% \index{declaration}
 
 \end{description}
 
@@ -9863,14 +9877,14 @@ interpreter something about a variable.
 \index{set membership}
 \index{membership!set}
 
-Write a function that reads the words in {\tt words.txt} and
+Write a method that reads the words in {\tt words.txt} and
 stores them as keys in a dictionary.  It doesn't matter what the
-values are.  Then you can use the {\tt in} operator
+values are.  Then you can use the {\tt include?} method
 as a fast way to check whether a string is in
 the dictionary.
 
 If you did Exercise~\ref{wordarray1}, you can compare the speed
-of this implementation with the list {\tt in} operator and the
+of this implementation with the array {\tt include?} method and the
 bisection search.
 
 \end{exercise}
@@ -9879,20 +9893,22 @@ bisection search.
 \begin{exercise}
 \label{setdefault}
 
-Read the documentation of the dictionary method {\tt setdefault}
+Read the documentation of the hash method {\tt new}
 and use it to write a more concise version of \verb"invert_hash".
-Solution: \url{http://thinkpython2.com/code/invert_hash.py}.
-\index{setdefault method}
-\index{method!setdefault}
+% todo
+%% Solution: \url{http://thinkpython2.com/code/invert_hash.py}.
+\index{new method}
+\index{method!new}
 
 \end{exercise}
 
 
 \begin{exercise}
-Memoize the Ackermann function from Exercise~\ref{ackermann} and see if
-memoization makes it possible to evaluate the function with bigger
+Memoize the Ackermann method from Exercise~\ref{ackermann} and see if
+memoization makes it possible to evaluate the method with bigger
 arguments.  Hint: no.
-Solution: \url{http://thinkpython2.com/code/ackermann_memo.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/ackermann_memo.py}.
 \index{Ackermann function}
 \index{function!ack}
 
@@ -9904,13 +9920,14 @@ Solution: \url{http://thinkpython2.com/code/ackermann_memo.py}.
 \index{duplicate}
 
 If you did Exercise~\ref{duplicate}, you already have
-a function named \verb"has_duplicates" that takes a list
-as a parameter and returns {\tt True} if there is any object
-that appears more than once in the list.
+a method named \verb"has_duplicates?" that takes an array
+as a parameter and returns {\tt true} if there is any object
+that appears more than once in the array.
 
 Use a dictionary to write a faster, simpler version of
-\verb"has_duplicates". 
-Solution: \url{http://thinkpython2.com/code/has_duplicates.py}.
+\verb"has_duplicates?". 
+% todo
+%% Solution: \url{http://thinkpython2.com/code/has_duplicates.py}.
 
 \end{exercise}
 
@@ -9924,7 +9941,9 @@ Two words are ``rotate pairs'' if you can rotate one of them
 and get the other (see \verb"rotate_word" in Exercise~\ref{exrotate}).
 
 Write a program that reads a wordlist and finds all the rotate
-pairs.  Solution: \url{http://thinkpython2.com/code/rotate_pairs.py}.
+pairs.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/rotate_pairs.py}.
 
 \end{exercise}
 
@@ -9934,7 +9953,7 @@ pairs.  Solution: \url{http://thinkpython2.com/code/rotate_pairs.py}.
 \index{Puzzler}
 
 Here's another Puzzler from {\em Car Talk} 
-(\url{http://www.cartalk.com/content/puzzlers}):
+(\url{https://www.cartalk.com/puzzler/browse}):
 
 \begin{quote}
 This was sent in by a fellow named Dan O'Leary. He came upon a common
@@ -9968,15 +9987,18 @@ whether a string is in the word list.
 
 To check whether two words are homophones, you can use the CMU
 Pronouncing Dictionary.  You can download it from
-\url{http://www.speech.cs.cmu.edu/cgi-bin/cmudict} or from
-\url{http://thinkpython2.com/code/c06d} and you can also download
-\url{http://thinkpython2.com/code/pronounce.py}, which provides a function
-named \verb"read_dictionary" that reads the pronouncing dictionary and
-returns a Python dictionary that maps from each word to a string that
-describes its primary pronunciation.
+\url{http://www.speech.cs.cmu.edu/cgi-bin/cmudict}
+% todo
+%% or from
+%% \url{http://thinkpython2.com/code/c06d} and you can also download
+%% \url{http://thinkpython2.com/code/pronounce.py}, which provides a function
+%% named \verb"read_dictionary" that reads the pronouncing dictionary and
+%% returns a Python dictionary that maps from each word to a string that
+%% describes its primary pronunciation.
 
 Write a program that lists all the words that solve the Puzzler.
-Solution: \url{http://thinkpython2.com/code/homophone.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/homophone.py}.
 
 \end{exercise}
 
@@ -15718,11 +15740,11 @@ iteration, the behavior is the same.
 
 Some of the exercises in this book can be done concisely and
 efficiently with sets.  For example, here is a solution to
-\verb"has_duplicates", from
+\verb"has_duplicates?", from
 Exercise~\ref{duplicate}, that uses a dictionary:
 
 \begin{verbatim}
-def has_duplicates(t):
+def has_duplicates?(t):
     d = {}
     for x in t:
         if x in d:
@@ -15738,7 +15760,7 @@ dictionary.  If the same element appears again, the function returns
 Using sets, we can write the same function like this:
 
 \begin{verbatim}
-def has_duplicates(t):
+def has_duplicates?(t):
     return len(set(t)) < len(t)
 \end{verbatim}
 %
