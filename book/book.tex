@@ -2749,13 +2749,13 @@ leading spaces so that the last letter of the string is in column 70
 of the display.
 
 \begin{verbatim}
->>> right_justify('monty')
-                                                                 monty
+>>> right_justify('hello')
+                                                                 hello
 \end{verbatim}
 
 Hint: Use string concatenation and repetition.  Also,
 Ruby provides a built-in String method called {\tt length} that
-returns the length of a string, so the value of \verb"'monty'.length" is 5.
+returns the length of a string, so the value of \verb"'hello'.length" is 5.
 
 \end{exercise}
 
@@ -6979,6 +6979,7 @@ from Exercise~\ref{palindrome}.
 \begin{exercise}
 
 % todo mention what ASCII is?
+% todo change this exercise? explain what match and regex does? or use c.upcase! instead of match ??
 The following methods are all {\em intended} to check whether a
 string contains any lowercase letters, but at least some of them are
 wrong.  For each method, describe what the method actually does
@@ -8230,6 +8231,7 @@ can use {\tt delete}:
 => ["a", "c"]
 \end{verbatim}
 %
+Observe that all elements matching the given argument is deleted.
 To remove multiple elements, use the {\tt -} operator as discussed in Section~\ref{arrayoperation}
 
 
@@ -10004,153 +10006,212 @@ Write a program that lists all the words that solve the Puzzler.
 
 
 
-\chapter{Tuples}
-\label{tuplechap}
+\chapter{Arrays and Hashes}
+\label{arrhashchap}
 
-This chapter presents one more built-in type, the tuple, and then
-shows how lists, dictionaries, and tuples work together.
+%% This chapter presents one more built-in type, the tuple, and then
+%% shows how lists, dictionaries, and tuples work together.
+%% I also present a useful feature for variable-length argument lists,
+%% the gather and scatter operators.
+%% 
+%% One note: there is no consensus on how to pronounce ``tuple''.
+%% Some people say ``tuh-ple'', which rhymes with ``supple''.  But
+%% in the context of programming, most people say ``too-ple'', which
+%% rhymes with ``quadruple''.
+
+This chapter presents some more array operations, and then
+shows how arrays and hashes work together.
 I also present a useful feature for variable-length argument lists,
 the gather and scatter operators.
 
-One note: there is no consensus on how to pronounce ``tuple''.
-Some people say ``tuh-ple'', which rhymes with ``supple''.  But
-in the context of programming, most people say ``too-ple'', which
-rhymes with ``quadruple''.
+%% \section{Tuples are immutable}
+%% \index{tuple}
+%% \index{type!tuple}
+%% \index{sequence}
+%% 
+%% A tuple is a sequence of values.  The values can be any type, and
+%% they are indexed by integers, so in that respect tuples are a lot
+%% like lists.  The important difference is that tuples are immutable.
+%% \index{mutability}
+%% \index{immutability}
+%% 
+%% Syntactically, a tuple is a comma-separated list of values:
+%% 
+%% \begin{verbatim}
+%% >>> t = 'a', 'b', 'c', 'd', 'e'
+%% \end{verbatim}
+%% %
+%% Although it is not necessary, it is common to enclose tuples in
+%% parentheses:
+%% \index{parentheses!tuples in}
+%% 
+%% \begin{verbatim}
+%% >>> t = ('a', 'b', 'c', 'd', 'e')
+%% \end{verbatim}
+%% %
+%% To create a tuple with a single element, you have to include a final
+%% comma:
+%% \index{singleton}
+%% \index{tuple!singleton}
+%% 
+%% \begin{verbatim}
+%% >>> t1 = 'a',
+%% >>> type(t1)
+%% <class 'tuple'>
+%% \end{verbatim}
+%% %
+%% A value in parentheses is not a tuple:
+%% 
+%% \begin{verbatim}
+%% >>> t2 = ('a')
+%% >>> type(t2)
+%% <class 'str'>
+%% \end{verbatim}
+%% %
+%% Another way to create a tuple is the built-in function {\tt tuple}.
+%% With no argument, it creates an empty tuple:
+%% \index{tuple function}
+%% \index{function!tuple}
+%% 
+%% \begin{verbatim}
+%% >>> t = tuple()
+%% >>> t
+%% ()
+%% \end{verbatim}
+%% %
+%% If the argument is a sequence (string, list or tuple), the result
+%% is a tuple with the elements of the sequence:
+%% 
+%% \begin{verbatim}
+%% >>> t = tuple('lupins')
+%% >>> t
+%% ('l', 'u', 'p', 'i', 'n', 's')
+%% \end{verbatim}
+%% %
+%% Because {\tt tuple} is the name of a built-in function, you should
+%% avoid using it as a variable name.
+%% 
+%% Most list operators also work on tuples.  The bracket operator
+%% indexes an element:
+%% \index{bracket operator}
+%% \index{operator!bracket}
+%% 
+%% \begin{verbatim}
+%% >>> t = ('a', 'b', 'c', 'd', 'e')
+%% >>> t[0]
+%% 'a'
+%% \end{verbatim}
+%% %
+%% And the slice operator selects a range of elements.
+%% \index{slice operator}
+%% \index{operator!slice}
+%% \index{tuple!slice}
+%% \index{slice!tuple}
+%% 
+%% \begin{verbatim}
+%% >>> t[1:3]
+%% ('b', 'c')
+%% \end{verbatim}
+%% %
+%% But if you try to modify one of the elements of the tuple, you get
+%% an error:
+%% \index{exception!TypeError}
+%% \index{TypeError}
+%% \index{item assignment}
+%% \index{assignment!item}
+%% 
+%% \begin{verbatim}
+%% >>> t[0] = 'A'
+%% TypeError: object doesn't support item assignment
+%% \end{verbatim}
+%% %
+%% Because tuples are immutable, you can't modify the elements.  But you
+%% can replace one tuple with another:
+%% 
+%% \begin{verbatim}
+%% >>> t = ('A',) + t[1:]
+%% >>> t
+%% ('A', 'b', 'c', 'd', 'e')
+%% \end{verbatim}
+%% %
+%% This statement makes a new tuple and then makes {\tt t} refer to it.
+%% 
+%% The relational operators work with tuples and other sequences;
+%% Python starts by comparing the first element from each
+%% sequence.  If they are equal, it goes on to the next elements,
+%% and so on, until it finds elements that differ.  Subsequent
+%% elements are not considered (even if they are really big).
+%% \index{comparison!tuple}
+%% \index{tuple!comparison}
+%% 
+%% \begin{verbatim}
+%% >>> (0, 1, 2) < (0, 3, 4)
+%% True
+%% >>> (0, 1, 2000000) < (0, 3, 4)
+%% True
+%% \end{verbatim}
 
+\section{Array comparison}
+\index{array!comparison}
+\index{comparison!array}
+\index{spaceship operator}
+\index{operator!spaceship}
 
-\section{Tuples are immutable}
-\index{tuple}
-\index{type!tuple}
-\index{sequence}
-
-A tuple is a sequence of values.  The values can be any type, and
-they are indexed by integers, so in that respect tuples are a lot
-like lists.  The important difference is that tuples are immutable.
-\index{mutability}
-\index{immutability}
-
-Syntactically, a tuple is a comma-separated list of values:
-
-\begin{verbatim}
->>> t = 'a', 'b', 'c', 'd', 'e'
-\end{verbatim}
-%
-Although it is not necessary, it is common to enclose tuples in
-parentheses:
-\index{parentheses!tuples in}
-
-\begin{verbatim}
->>> t = ('a', 'b', 'c', 'd', 'e')
-\end{verbatim}
-%
-To create a tuple with a single element, you have to include a final
-comma:
-\index{singleton}
-\index{tuple!singleton}
-
-\begin{verbatim}
->>> t1 = 'a',
->>> type(t1)
-<class 'tuple'>
-\end{verbatim}
-%
-A value in parentheses is not a tuple:
-
-\begin{verbatim}
->>> t2 = ('a')
->>> type(t2)
-<class 'str'>
-\end{verbatim}
-%
-Another way to create a tuple is the built-in function {\tt tuple}.
-With no argument, it creates an empty tuple:
-\index{tuple function}
-\index{function!tuple}
-
-\begin{verbatim}
->>> t = tuple()
->>> t
-()
-\end{verbatim}
-%
-If the argument is a sequence (string, list or tuple), the result
-is a tuple with the elements of the sequence:
-
-\begin{verbatim}
->>> t = tuple('lupins')
->>> t
-('l', 'u', 'p', 'i', 'n', 's')
-\end{verbatim}
-%
-Because {\tt tuple} is the name of a built-in function, you should
-avoid using it as a variable name.
-
-Most list operators also work on tuples.  The bracket operator
-indexes an element:
-\index{bracket operator}
-\index{operator!bracket}
-
-\begin{verbatim}
->>> t = ('a', 'b', 'c', 'd', 'e')
->>> t[0]
-'a'
-\end{verbatim}
-%
-And the slice operator selects a range of elements.
-\index{slice operator}
-\index{operator!slice}
-\index{tuple!slice}
-\index{slice!tuple}
-
-\begin{verbatim}
->>> t[1:3]
-('b', 'c')
-\end{verbatim}
-%
-But if you try to modify one of the elements of the tuple, you get
-an error:
-\index{exception!TypeError}
-\index{TypeError}
-\index{item assignment}
-\index{assignment!item}
-
-\begin{verbatim}
->>> t[0] = 'A'
-TypeError: object doesn't support item assignment
-\end{verbatim}
-%
-Because tuples are immutable, you can't modify the elements.  But you
-can replace one tuple with another:
-
-\begin{verbatim}
->>> t = ('A',) + t[1:]
->>> t
-('A', 'b', 'c', 'd', 'e')
-\end{verbatim}
-%
-This statement makes a new tuple and then makes {\tt t} refer to it.
-
-The relational operators work with tuples and other sequences;
-Python starts by comparing the first element from each
-sequence.  If they are equal, it goes on to the next elements,
+For arrays, the {\bf spaceship} operator {\tt <=>} starts
+by comparing the first element from each
+array.  If they are equal, it goes on to the next elements,
 and so on, until it finds elements that differ.  Subsequent
 elements are not considered (even if they are really big).
-\index{comparison!tuple}
-\index{tuple!comparison}
 
 \begin{verbatim}
->>> (0, 1, 2) < (0, 3, 4)
-True
->>> (0, 1, 2000000) < (0, 3, 4)
-True
+>> [0, 1, 2] <=> [0, 1, 2]
+=> 0
+
+>> [0, 1, 2] <=> [0, 3, 4]
+=> -1
+>> [0, 1, 2000000] <=> [0, 3, 4]
+=> -1
+
+>> [0, 1, 2000000] <=> [0, 1, 4]
+=> 1
+>> [0, 2] <=> [0, 1, 2]
+=> 1
+\end{verbatim}
+%
+
+\section{Array freezing}
+\index{array!freeze}
+\index{freeze!array}
+\index{freeze method}
+\index{method!freeze}
+
+To render an array partially immutable, use {\tt freeze} method.
+If you try to assign a new value to one of the elements of
+frozen array, you get an error:
+\index{exception!FrozenError}
+\index{FrozenError}
+
+\begin{verbatim}
+>> t = ['a', 'b', 'c', 'd', 'e'].freeze
+=> ["a", "b", "c", "d", "e"]
+>> t[0] = 'A'
+FrozenError (can't modify frozen Array)
+\end{verbatim}
+%
+But the individual elements of the array themselves are not frozen,
+mutable elements can still be modified:
+
+\begin{verbatim}
+>> t[0].upcase!
+=> "A"
+>> t
+=> ["A", "b", "c", "d", "e"]
 \end{verbatim}
 
-
-
-\section{Tuple assignment}
-\label{tuple.assignment}
-\index{tuple!assignment}
-\index{assignment!tuple}
+\section{Array assignment}
+\label{array.assignment}
+\index{array!assignment}
+\index{assignment!array}
 \index{swap pattern}
 \index{pattern!swap}
 
@@ -10159,53 +10220,60 @@ With conventional assignments, you have to use a temporary
 variable.  For example, to swap {\tt a} and {\tt b}:
 
 \begin{verbatim}
->>> temp = a
->>> a = b
->>> b = temp
+temp = a
+a = b
+b = temp
 \end{verbatim}
 %
-This solution is cumbersome; {\bf tuple assignment} is more elegant:
+This solution is cumbersome; {\bf array assignment} is more elegant:
 
 \begin{verbatim}
->>> a, b = b, a
+a, b = b, a
 \end{verbatim}
 %
-The left side is a tuple of variables; the right side is a tuple of
+The left side is an array of variables; the right side is an array of
 expressions.  Each value is assigned to its respective variable.  
 All the expressions on the right side are evaluated before any
-of the assignments.
+of the assignments.  Enclosing the right side expressions within
+square brackets is optional.
 
 The number of variables on the left and the number of
-values on the right have to be the same:
-\index{exception!ValueError}
-\index{ValueError}
+values on the right need not be the same. Extra values
+are ignored and extra variables are assigned {\tt nil}:
 
 \begin{verbatim}
->>> a, b = 1, 2, 3
-ValueError: too many values to unpack
+>> a, b, c = 1, 2
+=> [1, 2]
+>> a
+=> 1
+>> b
+=> 2
+>> c
+=> nil
 \end{verbatim}
 %
-More generally, the right side can be any kind of sequence
-(string, list or tuple).  For example, to split an email address
+Another example - to split an email address
 into a user name and a domain, you could write:
 \index{split method}
 \index{method!split}
 \index{email address}
 
 \begin{verbatim}
->>> addr = 'monty@python.org'
->>> uname, domain = addr.split('@')
+>> addr = 'gem@ruby.org'
+=> "gem@ruby.org"
+>> uname, domain = addr.split('@')
+=> ["gem", "ruby.org"]
 \end{verbatim}
 %
-The return value from {\tt split} is a list with two elements;
+The return value from {\tt split} is an array with two elements;
 the first element is assigned to {\tt uname}, the second to
 {\tt domain}.
 
 \begin{verbatim}
->>> uname
-'monty'
->>> domain
-'python.org'
+>> uname
+=> "gem"
+>> domain
+=> "ruby.org"
 \end{verbatim}
 %
 
