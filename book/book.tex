@@ -10277,130 +10277,135 @@ the first element is assigned to {\tt uname}, the second to
 \end{verbatim}
 %
 
-\section{Tuples as return values}
-\index{tuple}
-\index{value!tuple}
-\index{return value!tuple}
-\index{function, tuple as return value}
+\section{Multiple return values}
+\index{method, array as return value}
 
-Strictly speaking, a function can only return one value, but
-if the value is a tuple, the effect is the same as returning
+Strictly speaking, a method can only return one value, but
+if the value is an array, the effect is the same as returning
 multiple values.  For example, if you want to divide two integers
 and compute the quotient and remainder, it is inefficient to
 compute {\tt x/y} and then {\tt x\%y}.  It is better to compute
 them both at the same time.
 \index{divmod}
 
-The built-in function {\tt divmod} takes two arguments and
-returns a tuple of two values, the quotient and remainder.
-You can store the result as a tuple:
+The built-in numeric method {\tt divmod}
+returns an array of two values, the quotient and remainder.
+You can store the result as an array:
 
 \begin{verbatim}
->>> t = divmod(7, 3)
->>> t
-(2, 1)
+>> t = 7.divmod(3)
+=> [2, 1]
 \end{verbatim}
 %
-Or use tuple assignment to store the elements separately:
-\index{tuple assignment}
-\index{assignment!tuple}
+Or use array assignment to store the elements separately:
+\index{array assignment}
+\index{assignment!array}
 
 \begin{verbatim}
->>> quot, rem = divmod(7, 3)
->>> quot
-2
->>> rem
-1
+>> quot, rem = 7.divmod(3)
+=> [2, 1]
+>> quot
+=> 2
+>> rem
+=> 1
 \end{verbatim}
 %
-Here is an example of a function that returns a tuple:
+Here is an example of a method that returns an array:
 
 \begin{verbatim}
-def min_max(t):
-    return min(t), max(t)
+def min_max(t)
+  return t.min, t.max
+end
 \end{verbatim}
 %
-{\tt max} and {\tt min} are built-in functions that find
-the largest and smallest elements of a sequence.  \verb"min_max"
-computes both and returns a tuple of two values.
-\index{max function}
-\index{function!max}
-\index{min function}
-\index{function!min}
+{\tt max} and {\tt min} are array methods that find
+the largest and smallest elements of an array.  \verb"min_max"
+computes both and returns an array of two values.
+\index{max method}
+\index{method!max}
+\index{min method}
+\index{method!min}
 
 
-\section{Variable-length argument tuples}
+\section{Variable-length argument array}
 \label{gather}
-\index{variable-length argument tuple}
-\index{argument!variable-length tuple}
+\index{variable-length argument array}
+\index{argument!variable-length array}
 \index{gather}
 \index{parameter!gather}
 \index{argument!gather}
 
-Functions can take a variable number of arguments.  A parameter
+Methods can take a variable number of arguments.  A parameter
 name that begins with {\tt *} {\bf gathers} arguments into
-a tuple.  For example, {\tt printall}
+an array.  For example, {\tt printall}
 takes any number of arguments and prints them:
 
 \begin{verbatim}
-def printall(*args):
-    print(args)
+def printall(*args)
+  print args, "\n"
+end
 \end{verbatim}
 %
 The gather parameter can have any name you like, but {\tt args} is
-conventional.  Here's how the function works:
+conventional.  {\tt print} is used here as {\tt puts} would recursively print
+each element of array on separate line.  Here's how the method works:
 
 \begin{verbatim}
->>> printall(1, 2.0, '3')
-(1, 2.0, '3')
+>> printall(1, 2.0, '3')
+[1, 2.0, "3"]
+=> nil
 \end{verbatim}
 %
 The complement of gather is {\bf scatter}.  If you have a
-sequence of values and you want to pass it to a function
-as multiple arguments, you can use the {\tt *} operator.
-For example, {\tt divmod} takes exactly two arguments; it
-doesn't work with a tuple:
+sequence of values and you want to pass it to a method
+as multiple arguments, you can use the {\tt *} splat operator.
+For example, {\tt values\_at} method doesn't work with an array:
 \index{scatter}
 \index{argument scatter}
+\index{splat operator}
+\index{operator!splat}
 \index{TypeError}
 \index{exception!TypeError}
 
 \begin{verbatim}
->>> t = (7, 3)
->>> divmod(t)
-TypeError: divmod expected 2 arguments, got 1
+>> primes = [2, 3, 5, 7, 11, 13]
+=> [2, 3, 5, 7, 11, 13]
+>> idx = [3, 0, -1]
+=> [3, 0, -1]
+>> primes.values_at(idx)
+TypeError (no implicit conversion of Array into Integer)
 \end{verbatim}
 %
-But if you scatter the tuple, it works:
+But if you scatter the array, it works:
 
 \begin{verbatim}
->>> divmod(*t)
-(2, 1)
+>> primes.values_at(*idx)
+=> [7, 2, 13]
 \end{verbatim}
 %
-Many of the built-in functions use
-variable-length argument tuples.  For example, {\tt max}
-and {\tt min} can take any number of arguments:
-\index{max function}
-\index{function!max}
-\index{min function}
-\index{function!min}
-
-\begin{verbatim}
->>> max(1, 2, 3)
-3
-\end{verbatim}
+%% Many of the built-in functions use
+%% variable-length argument tuples.  For example, {\tt max}
+%% and {\tt min} can take any number of arguments:
+%% \index{max function}
+%% \index{function!max}
+%% \index{min function}
+%% \index{function!min}
+%% 
+%% \begin{verbatim}
+%% >>> max(1, 2, 3)
+%% 3
+%% \end{verbatim}
+%% %
+%% But {\tt sum} does not.
+%% \index{sum function}
+%% \index{function!sum}
+%% 
+%% \begin{verbatim}
+%% >>> sum(1, 2, 3)
+%% TypeError: sum expected at most 2 arguments, got 3
+%% \end{verbatim}
 %
-But {\tt sum} does not.
-\index{sum function}
-\index{function!sum}
-
-\begin{verbatim}
->>> sum(1, 2, 3)
-TypeError: sum expected at most 2 arguments, got 3
-\end{verbatim}
-%
-As an exercise, write a function called {\tt sumall} that takes any number
+As an exercise, write a method called {\tt sumall} that takes any number
 of arguments and returns their sum.
 
 
