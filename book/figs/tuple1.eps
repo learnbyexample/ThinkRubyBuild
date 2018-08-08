@@ -1,11 +1,11 @@
-%!PS-Adobe-2.0 EPSF-2.0
+%!PS-Adobe-3.0 EPSF-3.0
 %%Title: tuple1.fig
-%%Creator: fig2dev Version 3.2 Patchlevel 4
-%%CreationDate: Tue Jul 31 12:27:49 2007
-%%For: downey@rocky.olin.edu (Allen Downey)
-%%BoundingBox: 0 0 123 53
-%%Magnification: 1.0000
+%%Creator: fig2dev Version 3.2 Patchlevel 5e
+%%CreationDate: Wed Aug  8 16:01:20 2018
+%%BoundingBox: 0 0 124 53
+%Magnification: 1.0000
 %%EndComments
+%%BeginProlog
 /$F2psDict 200 dict def
 $F2psDict begin
 $F2psDict /mtrx matrix put
@@ -44,10 +44,6 @@ $F2psDict /mtrx matrix put
 /col31 {1.000 0.840 0.000 srgb} bind def
 
 end
-save
-newpath 0 53 moveto 0 0 lineto 123 0 lineto 123 53 lineto closepath clip newpath
--98.3 99.7 translate
-1 -1 scale
 
 /cp {closepath} bind def
 /ef {eofill} bind def
@@ -83,22 +79,36 @@ newpath 0 53 moveto 0 0 lineto 123 0 lineto 123 53 lineto closepath clip newpath
 /$F2psBegin {$F2psDict begin /$F2psEnteredState save def} def
 /$F2psEnd {$F2psEnteredState restore end} def
 
+/pageheader {
+save
+newpath 0 53 moveto 0 0 lineto 124 0 lineto 124 53 lineto closepath clip newpath
+-98.1 99.7 translate
+1 -1 scale
 $F2psBegin
 10 setmiterlimit
 0 slj 0 slc
  0.06000 0.06000 sc
+} bind def
+/pagefooter {
+$F2psEnd
+restore
+} bind def
+%%EndProlog
+pageheader
 %
 % Fig objects follow
 %
 % 
 % here starts figure with depth 51
 % Polyline
+0 slj
+0 slc
 7.500 slw
 n 1650 975 m 3675 975 l 3675 1650 l 1650 1650 l
  cp gs col7 0.90 shd ef gr gs col0 s gr 
 % Polyline
 gs  clippath
-2490 1477 m 2490 1417 l 2338 1417 l 2458 1447 l 2338 1477 l cp
+2338 1477 m 2490 1477 l 2490 1417 l 2338 1417 l 2338 1417 l 2458 1447 l 2338 1477 l cp
 eoclip
 n 2100 1447 m
  2475 1447 l gs col0 s gr gr
@@ -107,29 +117,30 @@ n 2100 1447 m
 n 2338 1477 m 2458 1447 l 2338 1417 l  col0 s
 % Polyline
 gs  clippath
-2490 1177 m 2490 1117 l 2338 1117 l 2458 1147 l 2338 1177 l cp
+2338 1177 m 2490 1177 l 2490 1117 l 2338 1117 l 2338 1117 l 2458 1147 l 2338 1177 l cp
 eoclip
 n 2100 1147 m
  2475 1147 l gs col0 s gr gr
 
 % arrowhead
 n 2338 1177 m 2458 1147 l 2338 1117 l  col0 s
-/Helvetica ff 165.00 scf sf
+/Helvetica ff 183.33 scf sf
 2025 1200 m
 gs 1 -1 sc (0) dup sw pop neg 0 rm  col0 sh gr
-/Helvetica ff 165.00 scf sf
+/Helvetica ff 183.33 scf sf
 2025 1500 m
 gs 1 -1 sc (1) dup sw pop neg 0 rm  col0 sh gr
-/Helvetica ff 165.00 scf sf
+/Helvetica ff 183.33 scf sf
 2550 1200 m
 gs 1 -1 sc ('Cleese') col0 sh gr
-/Helvetica ff 165.00 scf sf
+/Helvetica ff 183.33 scf sf
 2550 1500 m
 gs 1 -1 sc ('John') col0 sh gr
-/Helvetica ff 165.00 scf sf
+/Helvetica ff 183.33 scf sf
 1650 900 m
-gs 1 -1 sc (tuple) col0 sh gr
+gs 1 -1 sc (array) col0 sh gr
 % here ends figure;
-$F2psEnd
-rs
+pagefooter
 showpage
+%%Trailer
+%EOF
