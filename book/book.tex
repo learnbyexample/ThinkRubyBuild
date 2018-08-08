@@ -10342,18 +10342,26 @@ takes any number of arguments and prints them:
 
 \begin{verbatim}
 def printall(*args)
-  print args, "\n"
+  puts args.inspect
 end
 \end{verbatim}
 %
 The gather parameter can have any name you like, but {\tt args} is
-conventional.  {\tt print} is used here as {\tt puts} would recursively print
+conventional.  {\tt inspect} method is used here to get string representation
+of array, otherwise {\tt puts} would recursively print
 each element of array on separate line.  Here's how the method works:
 
 \begin{verbatim}
 >> printall(1, 2.0, '3')
 [1, 2.0, "3"]
-=> nil
+
+>> puts [1, 2.0, "3"]
+1
+2.0
+3
+
+>> puts [1, 2.0, "3"].inspect
+[1, 2.0, "3"]
 \end{verbatim}
 %
 The complement of gather is {\bf scatter}.  If you have a
@@ -10408,79 +10416,98 @@ But if you scatter the array, it works:
 As an exercise, write a method called {\tt sumall} that takes any number
 of arguments and returns their sum.
 
+\section{Zipping}
+\index{zip method}
+\index{method!zip}
 
-\section{Lists and tuples}
-\index{zip function}
-\index{function!zip}
-
-{\tt zip} is a built-in function that takes two or more sequences and
-returns a list of tuples where each tuple contains one
-element from each sequence.  The name of the function refers to
+The {\tt zip} array method takes one or more arguments and
+returns an array of arrays where each array element contains one
+element from each of the input arguments.  The name of the method refers to
 a zipper, which joins and interleaves two rows of teeth.
+\index{array!of arrays}
 
-This example zips a string and a list:
-
-\begin{verbatim}
->>> s = 'abc'
->>> t = [0, 1, 2]
->>> zip(s, t)
-<zip object at 0x7f7d0a9e7c48>
-\end{verbatim}
-%
-The result is a {\bf zip object} that knows how to iterate through
-the pairs.  The most common use of {\tt zip} is in a {\tt for} loop:
+This example zips a string and an array:
 
 \begin{verbatim}
->>> for pair in zip(s, t):
-...     print(pair)
-...
-('a', 0)
-('b', 1)
-('c', 2)
+>> s = 'abc'
+=> "abc"
+>> t = [0, 1, 2]
+=> [0, 1, 2]
+
+>> s.chars
+=> ["a", "b", "c"]
+>> s.chars.zip(t)
+=> [["a", 0], ["b", 1], ["c", 2]]
 \end{verbatim}
 %
-A zip object is a kind of {\bf iterator}, which is any object
-that iterates through a sequence.  Iterators are similar to lists in some
-ways, but unlike lists, you can't use an index to select an element from
-an iterator.
-\index{iterator}
-
-If you want to use list operators and methods, you can
-use a zip object to make a list:
+%% The result is a {\bf zip object} that knows how to iterate through
+%% the pairs.  The most common use of {\tt zip} is in a {\tt for} loop:
+The most common use of {\tt zip} is in a loop:
 
 \begin{verbatim}
->>> list(zip(s, t))
-[('a', 0), ('b', 1), ('c', 2)]
+>> for pair in s.chars.zip(t)
+>>   puts pair.inspect
+>> end
+["a", 0]
+["b", 1]
+["c", 2]
+
+>> s.chars.zip(t) { |pair| puts pair.inspect }
+["a", 0]
+["b", 1]
+["c", 2]
 \end{verbatim}
 %
-The result is a list of tuples; in this example, each tuple contains
-a character from the string and the corresponding element from
-the list.
-\index{list!of tuples}
+% todo?
+%% A zip object is a kind of {\bf iterator}, which is any object
+%% that iterates through a sequence.  Iterators are similar to lists in some
+%% ways, but unlike lists, you can't use an index to select an element from
+%% an iterator.
+%% \index{iterator}
+%% 
+%% If you want to use list operators and methods, you can
+%% use a zip object to make a list:
+%% 
+%% \begin{verbatim}
+%% >>> list(zip(s, t))
+%% [('a', 0), ('b', 1), ('c', 2)]
+%% \end{verbatim}
+%% %
+%% The result is a list of tuples; in this example, each tuple contains
+%% a character from the string and the corresponding element from
+%% the list.
+%% \index{list!of tuples}
 
-If the sequences are not the same length, the result has the
-length of the shorter one.
+If the arguments are not the same length, the result has the
+length of the array on which {\tt zip} is invoked.
+{\tt nil} value is used as filler if required.
 
 \begin{verbatim}
->>> list(zip('Anne', 'Elk'))
-[('A', 'E'), ('n', 'l'), ('n', 'k')]
+>> 'Hi'.chars.zip('Hello'.chars)
+=> [["H", "H"], ["i", "e"]]
+
+>> 'Anne'.chars.zip('Elk'.chars)
+=> [["A", "E"], ["n", "l"], ["n", "k"], ["e", nil]]
 \end{verbatim}
 %
-You can use tuple assignment in a {\tt for} loop to traverse a list of
-tuples:
+You can use array assignment in a loop to traverse an array of
+arrays:
 \index{traversal}
-\index{tuple assignment}
-\index{assignment!tuple}
+\index{array assignment}
+\index{assignment!array}
 
 \begin{verbatim}
-t = [('a', 0), ('b', 1), ('c', 2)]
-for letter, number in t:
-    print(number, letter)
+t = [['a', 0], ['b', 1], ['c', 2]]
+for letter, number in t
+  puts "#{number} #{letter}"
+end
+
+t.each { |letter, number| puts "#{number} #{letter}" }
 \end{verbatim}
 %
-Each time through the loop, Python selects the next tuple in
-the list and assigns the elements to {\tt letter} and 
-{\tt number}.  The output of this loop is:
+Each time through the loop, we get an array as value.
+Array assignment then assigns the elements to {\tt letter} and 
+{\tt number}.  The output of either looping technique is:
 \index{loop}
 
 \begin{verbatim}
@@ -10489,33 +10516,35 @@ the list and assigns the elements to {\tt letter} and
 2 c
 \end{verbatim}
 %
-If you combine {\tt zip}, {\tt for} and tuple assignment, you get a
-useful idiom for traversing two (or more) sequences at the same
-time.  For example, \verb"has_match" takes two sequences, {\tt t1} and
-{\tt t2}, and returns {\tt True} if there is an index {\tt i}
+If you combine {\tt zip}, loop and array assignment, you get a
+useful idiom for traversing two (or more) arrays at the same
+time.  For example, \verb"has_match?" takes two arrays, {\tt t1} and
+{\tt t2}, and returns {\tt true} if there is an index {\tt i}
 such that {\tt t1[i] == t2[i]}:
 \index{for loop}
 
 \begin{verbatim}
-def has_match(t1, t2):
-    for x, y in zip(t1, t2):
-        if x == y:
-            return True
-    return False
+def has_match?(t1, t2)
+  for x, y in t1.zip(t2)
+    return true if x == y
+  end
+  return false
+end
 \end{verbatim}
 %
-If you need to traverse the elements of a sequence and their
-indices, you can use the built-in function {\tt enumerate}:
+If you need to traverse the elements of an array and their
+indices, you can use the method {\tt each\_with\_index}:
 \index{traversal}
-\index{enumerate function}
-\index{function!enumerate}
+\index{each\_with\_index method}
+\index{method!each\_with\_index}
 
 \begin{verbatim}
-for index, element in enumerate('abc'):
-    print(index, element)
+'abc'.chars.each_with_index do |index, element|
+  puts "#{index} #{element}"
+end
 \end{verbatim}
 %
-The result from {\tt enumerate} is an enumerate object, which
+The result from {\tt each\_with\_index} is an {\tt Enumerator} object, which
 iterates a sequence of pairs; each pair contains an index (starting
 from 0) and an element from the given sequence.
 In this example, the output is
@@ -10527,100 +10556,106 @@ In this example, the output is
 \end{verbatim}
 %
 Again.
-\index{iterator}
-\index{object!enumerate}
-\index{enumerate object}
+\index{enumerator}
+\index{object!enumerator}
+\index{enumerator object}
 
 
-\section{Dictionaries and tuples}
-\label{dictuple}
-\index{dictionary}
-\index{items method}
-\index{method!items}
+\section{Hashes and arrays}
+\label{hasharray}
+\index{hash}
+\index{to\_a method}
+\index{method!to\_a}
 \index{key-value pair}
 
-Dictionaries have a method called {\tt items} that returns a sequence of
-tuples, where each tuple is a key-value pair.
+Hashes have a method called {\tt to\_a} that returns an array of
+arrays, where each element is a key-value pair.
 
 \begin{verbatim}
->>> d = {'a':0, 'b':1, 'c':2}
->>> t = d.items()
->>> t
-dict_items([('c', 2), ('a', 0), ('b', 1)])
+>> h = { 'a' => 0, 'b' => 1, 'c' => 2 }
+=> {"a"=>0, "b"=>1, "c"=>2}
+>> t = h.to_a
+=> [["a", 0], ["b", 1], ["c", 2]]
 \end{verbatim}
 %
-The result is a \verb"dict_items" object, which is an iterator that
-iterates the key-value pairs.  You can use it in a {\tt for} loop
-like this:
-\index{iterator}
+% todo? key-value pair looping already covered in Hashes chapter
+%% The result is a \verb"dict_items" object, which is an iterator that
+%% iterates the key-value pairs.  You can use it in a {\tt for} loop
+%% like this:
+%% \index{iterator}
+%% 
+%% \begin{verbatim}
+%% >>> for key, value in d.items():
+%% ...     print(key, value)
+%% ...
+%% c 2
+%% a 0
+%% b 1
+%% \end{verbatim}
+%% %
+%% As you should expect from a dictionary, the items are in no
+%% particular order.
+
+Going in the other direction, you can use an array of arrays to
+initialize a new hash:
+\index{hash!initialize}
 
 \begin{verbatim}
->>> for key, value in d.items():
-...     print(key, value)
-...
-c 2
-a 0
-b 1
-\end{verbatim}
-%
-As you should expect from a dictionary, the items are in no
-particular order.
-
-Going in the other direction, you can use a list of tuples to
-initialize a new dictionary: \index{dictionary!initialize}
-
-\begin{verbatim}
->>> t = [('a', 0), ('c', 2), ('b', 1)]
->>> d = dict(t)
->>> d
-{'a': 0, 'c': 2, 'b': 1}
+>> t = [['a', 0], ['b', 1], ['c', 2]]
+=> [["a", 0], ["b", 1], ["c", 2]]
+>> h = t.to_h
+=> {"a"=>0, "b"=>1, "c"=>2}
 \end{verbatim}
 
-Combining {\tt dict} with {\tt zip} yields a concise way
-to create a dictionary:
-\index{zip function!use with dict}
+% todo?
+% 'abc'.chars.each_with_index.to_h would be concise compared to zip
+% merge method won't accept array of arrays, need to apply to_h
+%% Combining {\tt dict} with {\tt zip} yields a concise way
+%% to create a dictionary:
+%% \index{zip function!use with dict}
+%% 
+%% \begin{verbatim}
+%% >>> d = dict(zip('abc', range(3)))
+%% >>> d
+%% {'a': 0, 'c': 2, 'b': 1}
+%% \end{verbatim}
+%% %
+%% The dictionary method {\tt update} also takes a list of tuples
+%% and adds them, as key-value pairs, to an existing dictionary.
+%% \index{update method}
+%% \index{method!update}
+%% \index{traverse!dictionary}
+%% \index{dictionary!traversal}
 
-\begin{verbatim}
->>> d = dict(zip('abc', range(3)))
->>> d
-{'a': 0, 'c': 2, 'b': 1}
-\end{verbatim}
-%
-The dictionary method {\tt update} also takes a list of tuples
-and adds them, as key-value pairs, to an existing dictionary.
-\index{update method}
-\index{method!update}
-\index{traverse!dictionary}
-\index{dictionary!traversal}
-
-It is common to use tuples as keys in dictionaries (primarily because
-you can't use lists).  For example, a telephone directory might map
+It is common to use arrays as keys in hashes.
+For example, a telephone directory might map
 from last-name, first-name pairs to telephone numbers.  Assuming
 that we have defined {\tt last}, {\tt first} and {\tt number}, we
 could write:
-\index{tuple!as key in dictionary}
-\index{hashable}
+\index{array!as key in dictionary}
 
 \begin{verbatim}
-directory[last, first] = number
+directory[[last, first]] = number
 \end{verbatim}
 %
-The expression in brackets is a tuple.  We could use tuple
-assignment to traverse this dictionary.
-\index{tuple!in brackets}
+The expression in brackets is an array used as a key.  To partially
+make it immutable, use \verb"[last, first].freeze".
+We could use array assignment to traverse this hash.
+%% \index{tuple!in brackets}
 
 \begin{verbatim}
-for last, first in directory:
-    print(first, last, directory[last,first])
+for key, value in directory
+  puts "#{key[1]} #{key[0]} #{value}"
+end
 \end{verbatim}
 %
-This loop traverses the keys in {\tt directory}, which are tuples.  It
-assigns the elements of each tuple to {\tt last} and {\tt first}, then
-prints the name and corresponding telephone number.
+This loop traverses the key-value pairs in {\tt directory}.  It
+assigns the elements of each pair to {\tt key} and {\tt value}, then
+prints first-name, last-name and corresponding telephone number.
 
-There are two ways to represent tuples in a state diagram.  The more
-detailed version shows the indices and elements just as they appear in
-a list.  For example, the tuple \verb"('Cleese', 'John')" would appear
+There are two ways to represent arrays in a state diagram.  The more
+detailed version shows the indices and elements.
+For example, the array \verb"['Cleese', 'John']" would appear
 as in Figure~\ref{fig.tuple1}.
 \index{state diagram}
 \index{diagram!state}
@@ -10643,7 +10678,7 @@ appear as in Figure~\ref{fig.dict2}.
 \label{fig.dict2}
 \end{figure}
 
-Here the tuples are shown using Python syntax as a graphical
+Here the arrays are shown using Ruby syntax as a graphical
 shorthand.  The telephone number in the diagram is the complaints line
 for the BBC, so please don't call it.
 
