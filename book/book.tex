@@ -10244,12 +10244,9 @@ are ignored and extra variables are assigned {\tt nil}:
 \begin{verbatim}
 >> a, b, c = 1, 2
 => [1, 2]
->> a
-=> 1
->> b
-=> 2
->> c
-=> nil
+
+>> [a, b, c]
+=> [1, 2, nil]
 \end{verbatim}
 %
 Another example - to split an email address
@@ -10599,6 +10596,8 @@ arrays, where each element is a key-value pair.
 Going in the other direction, you can use an array of arrays to
 initialize a new hash:
 \index{hash!initialize}
+\index{to\_h method}
+\index{method!to\_h}
 
 \begin{verbatim}
 >> t = [['a', 0], ['b', 1], ['c', 2]]
@@ -10683,56 +10682,57 @@ shorthand.  The telephone number in the diagram is the complaints line
 for the BBC, so please don't call it.
 
 
-\section{Sequences of sequences}
-\index{sequence}
-
-I have focused on lists of tuples, but almost all of the examples in
-this chapter also work with lists of lists, tuples of tuples, and
-tuples of lists.  To avoid enumerating the possible combinations, it
-is sometimes easier to talk about sequences of sequences.
-
-In many contexts, the different kinds of sequences (strings, lists and
-tuples) can be used interchangeably.  So how should you choose one
-over the others?
-\index{string}
-\index{list}
-\index{tuple}
-\index{mutability}
-\index{immutability}
-
-To start with the obvious, strings are more limited than other
-sequences because the elements have to be characters.  They are
-also immutable.  If you need the ability to change the characters
-in a string (as opposed to creating a new string), you might
-want to use a list of characters instead.
-
-Lists are more common than tuples, mostly because they are mutable.
-But there are a few cases where you might prefer tuples:
-
-\begin{enumerate}
-
-\item In some contexts, like a {\tt return} statement, it is
-syntactically simpler to create a tuple than a list.
-
-\item If you want to use a sequence as a dictionary key, you
-have to use an immutable type like a tuple or string.
-
-\item If you are passing a sequence as an argument to a function,
-using tuples reduces the potential for unexpected behavior
-due to aliasing.
-
-\end{enumerate}
-
-Because tuples are immutable, they don't provide methods like {\tt
-  sort} and {\tt reverse}, which modify existing lists.  But Python
-provides the built-in function {\tt sorted}, which takes any sequence
-and returns a new list with the same elements in sorted order, and
-{\tt reversed}, which takes a sequence and returns an iterator that
-traverses the list in reverse order.
-\index{sorted function}
-\index{function!sorted} \index{reversed function}
-\index{function!reversed}
-\index{iterator}
+% todo? most of it is not applicable for Ruby
+%% \section{Sequences of sequences}
+%% \index{sequence}
+%% 
+%% I have focused on lists of tuples, but almost all of the examples in
+%% this chapter also work with lists of lists, tuples of tuples, and
+%% tuples of lists.  To avoid enumerating the possible combinations, it
+%% is sometimes easier to talk about sequences of sequences.
+%% 
+%% In many contexts, the different kinds of sequences (strings, lists and
+%% tuples) can be used interchangeably.  So how should you choose one
+%% over the others?
+%% \index{string}
+%% \index{list}
+%% \index{tuple}
+%% \index{mutability}
+%% \index{immutability}
+%% 
+%% To start with the obvious, strings are more limited than other
+%% sequences because the elements have to be characters.  They are
+%% also immutable.  If you need the ability to change the characters
+%% in a string (as opposed to creating a new string), you might
+%% want to use a list of characters instead.
+%% 
+%% Lists are more common than tuples, mostly because they are mutable.
+%% But there are a few cases where you might prefer tuples:
+%% 
+%% \begin{enumerate}
+%% 
+%% \item In some contexts, like a {\tt return} statement, it is
+%% syntactically simpler to create a tuple than a list.
+%% 
+%% \item If you want to use a sequence as a dictionary key, you
+%% have to use an immutable type like a tuple or string.
+%% 
+%% \item If you are passing a sequence as an argument to a function,
+%% using tuples reduces the potential for unexpected behavior
+%% due to aliasing.
+%% 
+%% \end{enumerate}
+%% 
+%% Because tuples are immutable, they don't provide methods like {\tt
+%%   sort} and {\tt reverse}, which modify existing lists.  But Python
+%% provides the built-in function {\tt sorted}, which takes any sequence
+%% and returns a new list with the same elements in sorted order, and
+%% {\tt reversed}, which takes a sequence and returns an iterator that
+%% traverses the list in reverse order.
+%% \index{sorted function}
+%% \index{function!sorted} \index{reversed function}
+%% \index{function!reversed}
+%% \index{iterator}
 
 
 \section{Debugging}
@@ -10741,65 +10741,77 @@ traverses the list in reverse order.
 \index{shape error}
 \index{error!shape}
 
-Lists, dictionaries and tuples are examples of {\bf data
-  structures}; in this chapter we are starting to see compound data
-structures, like lists of tuples, or dictionaries that contain tuples
-as keys and lists as values.  Compound data structures are useful, but
+Arrays and hashes are examples of {\bf data structures};
+in this chapter we are starting to see compound data
+structures, like array of arrays, or hashes that contain arrays
+as keys and arrays as values.  Compound data structures are useful, but
 they are prone to what I call {\bf shape errors}; that is, errors
 caused when a data structure has the wrong type, size, or structure.
-For example, if you are expecting a list with one integer and I
-give you a plain old integer (not in a list), it won't work.
+For example, if you are expecting an array with one integer and I
+give you a plain old integer (not in an array), it won't work.
 \index{structshape module}
 \index{module!structshape}
 
 To help debug these kinds of errors, I have written a module
-called {\tt structshape} that provides a function, also called
-{\tt structshape}, that takes any kind of data structure as
+called {\tt structshape} that provides a method, also called
+{\tt structshape}, that takes Array/Set/Hash data structure as
 an argument and returns a string that summarizes its shape.
-You can download it from \url{http://thinkpython2.com/code/structshape.py}
+You can view it from \url{https://github.com/learnbyexample/ThinkRubyBuild/blob/master/code/structshape.rb}
 
-Here's the result for a simple list:
+After creating a local copy of this program, you can use it
+as a stand-alone or load it inside another program
+using {\bf require statement}.
 
-\begin{verbatim}
->>> from structshape import structshape
->>> t = [1, 2, 3]
->>> structshape(t)
-'list of 3 int'
-\end{verbatim}
-%
-A fancier program might write ``list of 3 int{\em s}'', but it
-was easier not to deal with plurals.  Here's a list of lists:
+Here's the result for a simple array:
 
 \begin{verbatim}
->>> t2 = [[1,2], [3,4], [5,6]]
->>> structshape(t2)
-'list of 3 list of 2 int'
+>> require './structshape.rb'
+=> true
+
+>> t = [1, 2, 3]
+=> [1, 2, 3]
+>> structshape(t)
+=> "Array of 3 Integer"
 \end{verbatim}
 %
-If the elements of the list are not the same type,
+A fancier program might write ``Array of 3 Integer{\em s}'', but it
+was easier not to deal with plurals.  Here's an array of arrays:
+
+\begin{verbatim}
+>> t2 = [[1,2], [3,4], [5,6]]
+=> [[1, 2], [3, 4], [5, 6]]
+>> structshape(t2)
+=> "Array of 3 Array of 2 Integer"
+\end{verbatim}
+%
+If the elements of the array are not the same type,
 {\tt structshape} groups them, in order, by type:
 
 \begin{verbatim}
->>> t3 = [1, 2, 3, 4.0, '5', '6', [7], [8], 9]
->>> structshape(t3)
-'list of (3 int, float, 2 str, 2 list of int, int)'
+>> t3 = [1, 2, 3, 4.0, '5', '6', [7], [8], 9]
+=> [1, 2, 3, 4.0, "5", "6", [7], [8], 9]
+>> structshape(t3)
+=> "Array of (3 Integer, Float, 2 String, 2 Array of Integer, Integer)"
 \end{verbatim}
 %
-Here's a list of tuples:
+Here's an array of arrays with different types:
 
 \begin{verbatim}
->>> s = 'abc'
->>> lt = list(zip(t, s))
->>> structshape(lt)
-'list of 3 tuple of (int, str)'
+>> s = 'abc'.chars
+=> ["a", "b", "c"]
+>> a2 = t.zip(s)
+=> [[1, "a"], [2, "b"], [3, "c"]]
+>> structshape(a2)
+=> "Array of 3 Array of (Integer, String)"
 \end{verbatim}
 %
-And here's a dictionary with 3 items that map integers to strings.
+And here's a hash with 3 items that map integers to strings.
 
 \begin{verbatim}
->>> d = dict(lt) 
->>> structshape(d)
-'dict of 3 int->str'
+>> h = a2.to_h
+=> {1=>"a", 2=>"b", 3=>"c"}
+>> structshape(h)
+=> "Hash of 3 Integer->String"
 \end{verbatim}
 %
 If you are having trouble keeping track of your data structures,
