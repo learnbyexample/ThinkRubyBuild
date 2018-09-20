@@ -11012,7 +11012,7 @@ to memoize the words that are known to be reducible.
 
 \chapter{Case study: data structure selection}
 
-At this point you have learned about Python's core data structures,
+At this point you have learned about Ruby's core data structures,
 and you have seen some of the algorithms that use them.
 If you would like to know more about algorithms, this might be a good
 time to read Chapter~\ref{algorithms}.
@@ -11032,30 +11032,43 @@ before you read my solutions.
 \begin{exercise}
 
 Write a program that reads a file, breaks each line into
-words, strips whitespace and punctuation from the words, and
+words, strips punctuation from the words, and
 converts them to lowercase.
-\index{string module}
-\index{module!string}
 
-Hint: The {\tt string} module provides a string named {\tt whitespace},
-which contains space, tab, newline, etc., and {\tt
-  punctuation} which contains the punctuation characters.  Let's see
-if we can make Python swear:
+Hint: read the documentation for string methods {\tt split},
+{\tt sub}, {\tt gsub} and the various methods for changing case.
+\index{split method}
+\index{method!split}
+\index{sub method}
+\index{method!sub}
+\index{gsub method}
+\index{method!gsub}
+
+Identifying and removing all punctuation characters from start
+and end of string would be cumbersome to do in a loop. For such cases
+{\bf regular expressions} come in handy as shown in the example below:
+\index{regular expressions}
 
 \begin{verbatim}
->>> import string
->>> string.punctuation
-'!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~'
+>> s = '$%&hello>?@['
+=> "$%&hello>?@["
+
+# remove all punctuation characters from start of string
+>> s.sub(/\A[[:punct:]]+/, '')
+=> "hello>?@["
+# remove all punctuation characters from end of string as well
+>> s.sub(/\A[[:punct:]]+/, '').sub(/[[:punct:]]+\z/, '')
+=> "hello"
+
+# can be accomplished in one-shot using gsub instead of sub
+>> s.gsub(/\A[[:punct:]]+|[[:punct:]]+\z/, '')
+=> "hello"
 \end{verbatim}
 %
-Also, you might consider using the string methods {\tt strip},
-{\tt replace} and {\tt translate}.
-\index{strip method}
-\index{method!strip}
-\index{replace method}
-\index{method!replace}
-\index{translate method}
-\index{method!translate}
+
+% todo: use url shortner?
+If you are curious to learn more, check out my tutorial
+\url{https://github.com/learnbyexample/Ruby_Scripting/blob/master/chapters/Regular_expressions.md}
 
 \end{exercise}
 
@@ -11063,7 +11076,7 @@ Also, you might consider using the string methods {\tt strip},
 \begin{exercise}
 \index{Project Gutenberg}
 
-Go to Project Gutenberg (\url{http://gutenberg.org}) and download 
+Go to Project Gutenberg (\url{https://www.gutenberg.org/ebooks/}) and download 
 your favorite out-of-copyright book in plain text format.
 \index{plain text}
 \index{text!plain}
@@ -11118,77 +11131,92 @@ example, but there are more.
 Making a program truly nondeterministic turns out to be difficult,
 but there are ways to make it at least seem nondeterministic.  One of
 them is to use algorithms that generate {\bf pseudorandom} numbers.
-Pseudorandom numbers are not truly random because they are generated
+Pseudorandom (which I will simply call ``random'' from
+here on) numbers are not truly random because they are generated
 by a deterministic computation, but just by looking at the numbers it
 is all but impossible to distinguish them from random.
-\index{random module}
-\index{module!random}
 
-The {\tt random} module provides functions that generate
-pseudorandom numbers (which I will simply call ``random'' from
-here on).
-\index{random function}
-\index{function!random}
-
-The function {\tt random} returns a random float
+The method {\tt rand} (provided by Kernel module) returns a random float
 between 0.0 and 1.0 (including 0.0 but not 1.0).  Each time you
-call {\tt random}, you get the next number in a long series.  To see a
+call {\tt rand}, you get the next number in a long series.  To see a
 sample, run this loop:
+\index{rand method}
+\index{method!rand}
 
 \begin{verbatim}
-import random
-
-for i in range(10):
-    x = random.random()
-    print(x)
+>> 7.times { puts rand }
+0.40798564208349464
+0.7270919970198657
+0.622358165946798
+0.8834127252800146
+0.4859189422217032
+0.6379159020838661
+0.4033801832939934
 \end{verbatim}
 %
-The function {\tt randint} takes parameters {\tt low} and
-{\tt high} and returns an integer between {\tt low} and
-{\tt high} (including both).
-\index{randint function}
-\index{function!randint}
-
-\begin{verbatim}
->>> random.randint(5, 10)
-5
->>> random.randint(5, 10)
-9
-\end{verbatim}
-%
-To choose an element from a sequence at random, you can use
-{\tt choice}:
-\index{choice function}
-\index{function!choice}
+The {\tt rand} method also accepts a number or range
+object to satisfy various requirements.
 
 \begin{verbatim}
->>> t = [1, 2, 3]
->>> random.choice(t)
-2
->>> random.choice(t)
-3
+# integer number between 0 and 2
+>> rand(3)
+=> 2
+
+# integer number between 5 and 10
+>> rand(5..10)
+=> 9
+
+# floating-point number between 1.3 and 1.5
+>> rand(1.3..1.5)
+=> 1.3902344746797168
+
+# integer number between 42 and 100, excluding 100
+>> rand(42...100)
+=> 61
 \end{verbatim}
 %
-The {\tt random} module also provides functions to generate
-random values from continuous distributions including
-Gaussian, exponential, gamma, and a few more.
+To choose element(s) from an array at random, you can use
+{\tt sample}:
+\index{sample method}
+\index{method!sample}
+
+\begin{verbatim}
+>> t = [1, 2, 3, 4, 5]
+=> [1, 2, 3, 4, 5]
+>> t.sample
+=> 2
+>> t.sample(3)
+=> [3, 4, 2]
+\end{verbatim}
+%
+
+% todo: Ruby doesn't seem to have Gaussian, exponential, gamma, etc
+%%\index{random module}
+%%\index{module!random}
+%%
+%%The {\tt Random} module provides functions that generate
+%%pseudorandom numbers (which I will simply call ``random'' from
+%%here on).
+%%The {\tt random} module also provides functions to generate
+%%random values from continuous distributions including
+%%Gaussian, exponential, gamma, and a few more.
 
 \begin{exercise}
 \index{histogram!random choice}
 
-Write a function named \verb"choose_from_hist" that takes
+Write a method named \verb"sample_from_hist" that takes
 a histogram as defined in Section~\ref{histogram} and returns a 
 random value from the histogram, chosen with probability
 in proportion to frequency.  For example, for this histogram:
 
 \begin{verbatim}
->>> t = ['a', 'a', 'b']
->>> hist = histogram(t)
->>> hist
-{'a': 2, 'b': 1}
+>> t = ['a', 'a', 'b']
+=> ["a", "a", "b"]
+>> hist = histogram(t)
+=> {"a"=>2, "b"=>1}
 \end{verbatim}
 %
-your function should return \verb"'a'" with probability $2/3$ and \verb"'b'"
+your method should return \verb"'a'" with probability $2/3$ and \verb"'b'"
 with probability $1/3$.
 \end{exercise}
 
