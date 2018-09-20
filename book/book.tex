@@ -10761,6 +10761,8 @@ You can view it from \url{https://github.com/learnbyexample/ThinkRubyBuild/blob/
 After creating a local copy of this program, you can use it
 as a stand-alone or load it inside another program
 using {\bf require statement}.
+\index{require statement}
+\index{statement!require}
 
 Here's the result for a simple array:
 
@@ -10822,35 +10824,35 @@ If you are having trouble keeping track of your data structures,
 
 \begin{description}
 
-\item[tuple:] An immutable sequence of elements.
-\index{tuple}
+%% \item[tuple:] An immutable sequence of elements.
+%% \index{tuple}
 
-\item[tuple assignment:] An assignment with a sequence on the
-right side and a tuple of variables on the left.  The right
+\item[array assignment:] An assignment with a sequence on the
+right side and an array of variables on the left.  The right
 side is evaluated and then its elements are assigned to the
 variables on the left.
-\index{tuple assignment}
-\index{assignment!tuple}
+\index{array assignment}
+\index{assignment!array}
 
 \item[gather:] The operation of assembling a variable-length
-argument tuple.
+argument array.
 \index{gather}
 
-\item[scatter:] The operation of treating a sequence as a list of
+\item[scatter:] The operation of treating a sequence as an array of
 arguments.
 \index{scatter}
 
-\item[zip object:] The result of calling a built-in function {\tt zip};
-an object that iterates through a sequence of tuples.
-\index{zip object}
-\index{object!zip}
-
-\item[iterator:] An object that can iterate through a sequence, but
-which does not provide list operators and methods.
-\index{iterator}
+%% \item[zip object:] The result of calling a built-in function {\tt zip};
+%% an object that iterates through a sequence of tuples.
+%% \index{zip object}
+%% \index{object!zip}
+%% 
+%% \item[iterator:] An object that can iterate through a sequence, but
+%% which does not provide list operators and methods.
+%% \index{iterator}
 
 \item[data structure:] A collection of related values, often
-organized in lists, dictionaries, tuples, etc.
+organized in arrays, hashes, sets, etc.
 \index{data structure}
 
 \item[shape error:] An error caused because a value has the
@@ -10864,13 +10866,15 @@ wrong shape; that is, the wrong type or size.
 
 \begin{exercise}
 
-Write a function called \verb"most_frequent" that takes a string and
+Write a method called \verb"most_frequent" that takes a string and
 prints the letters in decreasing order of frequency.  Find text
 samples from several different languages and see how letter frequency
 varies between languages.  Compare your results with the tables at
-\url{http://en.wikipedia.org/wiki/Letter_frequencies}.  Solution:
-\url{http://thinkpython2.com/code/most_frequent.py}.  \index{letter
-  frequency} \index{frequency!letter}
+\url{https://en.wikipedia.org/wiki/Letter_frequencies}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/most_frequent.py}.
+\index{letter frequency}
+\index{frequency!letter}
 
 \end{exercise}
 
@@ -10897,7 +10901,7 @@ Here is an example of what the output might look like:
 ['resmelts', 'smelters', 'termless']
 \end{verbatim}
 %
-Hint: you might want to build a dictionary that maps from a
+Hint: you might want to build a hash that maps from a
 collection of letters to a list of words that can be spelled with those
 letters.  The question is, how can you represent the collection of
 letters in a way that can be used as a key?
@@ -10915,7 +10919,8 @@ Hint: there are seven.
 % (7, ['angriest', 'astringe', 'ganister', 'gantries', 'granites',
 % 'ingrates', 'rangiest'])
 
-Solution: \url{http://thinkpython2.com/code/anagram_sets.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/anagram_sets.py}.
 
 \end{enumerate}
 \end{exercise}
@@ -10927,9 +10932,10 @@ Two words form a ``metathesis pair'' if you can transform one into the
 other by swapping two letters; for example, ``converse'' and
 ``conserve''.  Write a program that finds all of the metathesis pairs
 in the dictionary.  Hint: don't test all pairs of words, and don't
-test all possible swaps.  Solution:
-\url{http://thinkpython2.com/code/metathesis.py}.  Credit: This
-exercise is inspired by an example at \url{http://puzzlers.org}.
+test all possible swaps.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/metathesis.py}.
+Credit: This exercise is inspired by an example at \url{http://puzzlers.org}.
 
 \end{exercise}
 
@@ -10939,7 +10945,7 @@ exercise is inspired by an example at \url{http://puzzlers.org}.
 \index{Puzzler}
 
 Here's another Car Talk Puzzler
-(\url{http://www.cartalk.com/content/puzzlers}):
+(\url{https://www.cartalk.com/puzzler/browse}):
 
 \begin{quote}
 What is the longest English word, that remains a valid English word,
@@ -10970,8 +10976,8 @@ some suggestions:
 
 \begin{enumerate}
 
-\item You might want to write a function that takes a word and
-  computes a list of all the words that can be formed by removing one
+\item You might want to write a method that takes a word and
+  computes an array of all the words that can be formed by removing one
   letter.  These are the ``children'' of the word.
 \index{recursive definition}
 \index{definition!recursive}
@@ -10989,7 +10995,8 @@ to memoize the words that are known to be reducible.
 
 \end{enumerate}
 
-Solution: \url{http://thinkpython2.com/code/reducible.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/reducible.py}.
 
 \end{exercise}
 
