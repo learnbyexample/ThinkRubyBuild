@@ -11361,8 +11361,8 @@ she     2364
 \end{verbatim}
 %
 This code can be simplified by passing a block to {\tt sort}
-or {\tt sort\_by} methods.  The result would be an array of arrays
-with each element as word-frequency pair.
+or {\tt sort\_by} methods directly on hash object.  The result would be an
+array of arrays with each element as word-frequency pair.
 \index{sort\_by method}
 \index{method!sort\_by}
 
@@ -11379,19 +11379,19 @@ If you are curious, you can read about these methods at
 \index{optional parameter}
 \index{parameter!optional}
 
-We have seen built-in functions and methods that take optional
-arguments.  It is possible to write programmer-defined functions
-with optional arguments, too.  For example, here is a function that
+We have seen built-in methods that take optional
+arguments.  It is possible to write programmer-defined methods
+with optional arguments, too.  For example, here is a method that
 prints the most common words in a histogram
-\index{programmer-defined function}
-\index{function!programmer defined}
+\index{programmer-defined method}
+\index{method!programmer defined}
 
 \begin{verbatim}
-def print_most_common(hist, num=10):
-    t = most_common(hist)
-    print('The most common words are:')
-    for freq, word in t[:num]:
-        print(word, freq, sep='\t')
+def print_most_common(hist, num=10)
+  t = most_common(hist)
+  puts 'The most common words are:'
+  t[0...num].each { |freq, word| puts "#{word}\t#{freq}" }
+end
 \end{verbatim}
 
 The first parameter is required; the second is optional.
@@ -11415,15 +11415,15 @@ print_most_common(hist, 20)
 words, the optional argument {\bf overrides} the default value.
 \index{override}
 
-If a function has both required and optional parameters, all
-the required parameters have to come first, followed by the
-optional ones.
+If a method has both required and optional parameters, all
+the optional parameters have to be grouped together, and
+usually placed after the required ones.
 
 
-\section{Dictionary subtraction}
-\label{dictsub}
-\index{dictionary!subtraction}
-\index{subtraction!dictionary}
+\section{Hash subtraction}
+\label{hashsub}
+\index{hash!subtraction}
+\index{subtraction!hash}
 
 Finding the words from the book that are not in the word list
 from {\tt words.txt} is a problem you might recognize as set
@@ -11431,18 +11431,19 @@ subtraction; that is, we want to find all the words from one
 set (the words in the book) that are not in the other (the
 words in the list).
 
-{\tt subtract} takes dictionaries {\tt d1} and {\tt d2} and returns a
-new dictionary that contains all the keys from {\tt d1} that are not
-in {\tt d2}.  Since we don't really care about the values, we
-set them all to None.
+{\tt subtract} takes hashes {\tt h1} and {\tt h2} and returns a
+new hash that contains all the keys from {\tt h1} that are not
+in {\tt h2}.  Since we don't really care about the values, we
+set them all to {\tt nil}.
 
 \begin{verbatim}
-def subtract(d1, d2):
-    res = dict()
-    for key in d1:
-        if key not in d2:
-            res[key] = None
-    return res
+def subtract(h1, h2)
+  res = Hash.new
+  h1.keys.each do |key|
+    res[key] = nil if !h2.include?(key)
+  end
+  return res
+end
 \end{verbatim}
 %
 To find the words in the book that are not in {\tt words.txt},
@@ -11453,15 +11454,13 @@ we can use \verb"process_file" to build a histogram for
 words = process_file('words.txt')
 diff = subtract(hist, words)
 
-print("Words in the book that aren't in the word list:")
-for word in diff:
-    print(word, end=' ')
+puts "Words in the book that aren't in the word list:"
+diff.each { |word, value| print "#{word} " }
 \end{verbatim}
 %
 Here are some of the results from {\em Emma}:
 
 \begin{verbatim}
-Words in the book that aren't in the word list:
 rencontre jane's blanche woodhouses disingenuousness 
 friend's venice apartment ...
 \end{verbatim}
@@ -11474,14 +11473,15 @@ words that should really be in the list!
 \index{set}
 \index{type!set}
 
-Python provides a data structure called {\tt set} that provides many
+Ruby provides a data structure called {\tt Set} that provides many
 common set operations.  You can read about them in Section~\ref{sets},
 or read the documentation at
-\url{http://docs.python.org/3/library/stdtypes.html#types-set}.
+\url{https://ruby-doc.org/stdlib-2.5.0/libdoc/set/rdoc/Set.html}.
 
 Write a program that uses set subtraction to find words in the book
-that are not in the word list.  Solution:
-\url{http://thinkpython2.com/code/analyze_book2.py}.
+that are not in the word list.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/analyze_book2.py}.
 
 \end{exercise}
 
@@ -11491,37 +11491,39 @@ that are not in the word list.  Solution:
 \index{histogram!random choice}
 
 To choose a random word from the histogram, the simplest algorithm
-is to build a list with multiple copies of each word, according
-to the observed frequency, and then choose from the list:
+is to build an array with multiple copies of each word, according
+to the observed frequency, and then choose from the array:
 
 \begin{verbatim}
-def random_word(h):
-    t = []
-    for word, freq in h.items():
-        t.extend([word] * freq)
+def random_word(h)
+  t = []
+  h.each { |word, freq| t.concat([word] * freq) }
 
-    return random.choice(t)
+  return t.sample
+end
 \end{verbatim}
 %
-The expression {\tt [word] * freq} creates a list with {\tt freq}
-copies of the string {\tt word}.  The {\tt extend}
+\index{concat method}
+\index{method!concat}
+The expression {\tt [word] * freq} creates an array with {\tt freq}
+copies of the string {\tt word}.  The {\tt concat}
 method is similar to {\tt append} except that the argument is
-a sequence.
+an array.
 
 This algorithm works, but it is not very efficient; each time you
-choose a random word, it rebuilds the list, which is as big as
-the original book.  An obvious improvement is to build the list
-once and then make multiple selections, but the list is still big.
+choose a random word, it rebuilds the array, which is as big as
+the original book.  An obvious improvement is to build the array
+once and then make multiple selections, but the array is still big.
 
 An alternative is:
 
 \begin{enumerate}
 
-\item Use {\tt keys} to get a list of the words in the book.
+\item Use {\tt keys} to get an array of the words in the book.
 
-\item Build a list that contains the cumulative sum of the word
+\item Build an array that contains the cumulative sum of the word
   frequencies (see Exercise~\ref{cumulative}).  The last item
-  in this list is the total number of words in the book, $n$.
+  in this array is the total number of words in the book, $n$.
   
 \item Choose a random number from 1 to $n$.  Use a bisection search
   (See Exercise~\ref{bisection}) to find the index where the random
@@ -11536,8 +11538,9 @@ An alternative is:
 \index{algorithm}
 
 Write a program that uses this algorithm to choose a random word from
-the book.  Solution:
-\url{http://thinkpython2.com/code/analyze_book3.py}.
+the book.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/analyze_book3.py}.
 
 \end{exercise}
 
@@ -15869,7 +15872,7 @@ Section~\ref{search}.
 \section{Sets}
 \label{sets}
 
-In Section~\ref{dictsub} I use dictionaries to find the words
+In Section~\ref{hashsub} I use dictionaries to find the words
 that appear in a document but not in a word list.  The function
 I wrote takes {\tt d1}, which contains the words from the document
 as keys, and {\tt d2}, which contains the list of words.  It
