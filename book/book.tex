@@ -11045,7 +11045,7 @@ Hint: read the documentation for string methods {\tt split},
 \index{method!gsub}
 
 Identifying and removing all punctuation characters from start
-and end of string would be cumbersome to do in a loop. For such cases
+and end of string would be cumbersome to do in a loop.  For such cases
 {\bf regular expressions} come in handy as shown in the example below:
 \index{regular expressions}
 
@@ -11066,7 +11066,6 @@ and end of string would be cumbersome to do in a loop. For such cases
 \end{verbatim}
 %
 
-% todo: use url shortner?
 If you are curious to learn more, check out my tutorial
 \url{https://github.com/learnbyexample/Ruby_Scripting/blob/master/chapters/Regular_expressions.md}
 
@@ -11224,31 +11223,35 @@ with probability $1/3$.
 \section{Word histogram}
 
 You should attempt the previous exercises before you go on.
-You can download my solution from
- \url{http://thinkpython2.com/code/analyze_book1.py}.  You will
-also need \url{http://thinkpython2.com/code/emma.txt}.
+% todo
+%% You can download my solution from
+%%  \url{http://thinkpython2.com/code/analyze_book1.py}.
+You will also need to download \url{https://www.gutenberg.org/files/158/158.txt}
+and save it as \verb"emma.txt".
 
 Here is a program that reads a file and builds a histogram of the
 words in the file:
 \index{histogram!word frequencies}
 
 \begin{verbatim}
-import string
+def process_file(filename)
+  hist = Hash.new(0)
+  fp = File.open(filename)
+  for line in fp
+    process_line(line, hist)
+  end
+  return hist
+end
 
-def process_file(filename):
-    hist = dict()
-    fp = open(filename)
-    for line in fp:
-        process_line(line, hist)
-    return hist
+def process_line(line, hist)
+  line.gsub!('-', ' ')
 
-def process_line(line, hist):
-    line = line.replace('-', ' ')
-    
-    for word in line.split():
-        word = word.strip(string.punctuation + string.whitespace)
-        word = word.lower()
-        hist[word] = hist.get(word, 0) + 1
+  for word in line.split
+    word.gsub!(/\A[[:punct:]]+|[[:punct:]]+\z/, '')
+    word.downcase!
+    hist[word] += 1
+  end
+end
 
 hist = process_file('emma.txt')
 \end{verbatim}
@@ -11263,13 +11266,14 @@ passing them one at a time to \verb"process_line".  The histogram
 \index{accumulator!histogram}
 \index{traversal}
 
-\verb"process_line" uses the string method {\tt replace} to replace
-hyphens with spaces before using {\tt split} to break the line into a
-list of strings.  It traverses the list of words and uses {\tt strip}
-and {\tt lower} to remove punctuation and convert to lower case.  (It
-is a shorthand to say that strings are ``converted''; remember that
-strings are immutable, so methods like {\tt strip} and {\tt lower}
-return new strings.)
+\verb"process_line" uses the string method {\tt gsub!} to replace all
+occurrences of hyphens with spaces.  Recall that methods with {\tt !} suffix
+indicates that the method modifies the argument in-place.
+The modified line is then broken based on whitespace into array of strings
+using {\tt split} method.
+It traverses the array of words and uses {\bf regular expression}
+and {\tt downcase!} to remove punctuation and convert to lower case.  (It
+is a shorthand to say that strings are ``converted'')
 
 Finally, \verb"process_line" updates the histogram by creating a new
 item or incrementing an existing one.
@@ -11279,84 +11283,96 @@ To count the total number of words in the file, we can add up
 the frequencies in the histogram:
 
 \begin{verbatim}
-def total_words(hist):
-    return sum(hist.values())
+def total_words(hist)
+  return hist.values.sum
+end
 \end{verbatim}
 %
 The number of different words is just the number of items in
 the dictionary:
 
 \begin{verbatim}
-def different_words(hist):
-    return len(hist)
+def different_words(hist)
+  return hist.size
+end
 \end{verbatim}
 %
 Here is some code to print the results:
 
 \begin{verbatim}
-print('Total number of words:', total_words(hist))
-print('Number of different words:', different_words(hist))
+puts "Total number of words: #{total_words(hist)}"
+puts "Number of different words: #{different_words(hist)}"
 \end{verbatim}
 %
 And the results:
 
 \begin{verbatim}
-Total number of words: 161080
-Number of different words: 7214
+Total number of words: 164112
+Number of different words: 7526
 \end{verbatim}
+
+The numbers shown above may be different for you if the source file gets updated.
 %
 
 \section{Most common words}
 
-To find the most common words, we can make a list of tuples,
-where each tuple contains a word and its frequency,
+To find the most common words, we can make an array of arrays,
+where each element contains a word and its frequency,
 and sort it.
 
-The following function takes a histogram and returns a list of
-word-frequency tuples:
+The following method takes a histogram and returns an array of
+frequency-word pairs:
 
 \begin{verbatim}
-def most_common(hist):
-    t = []
-    for key, value in hist.items():
-        t.append((value, key))
+def most_common(hist)
+  t = []
+  hist.each { |key, value| t.append([value, key]) }
 
-    t.sort(reverse=True)
-    return t
+  t.sort!
+  return t.reverse
+end
 \end{verbatim}
 
-In each tuple, the frequency appears first, so the resulting list is
+In each element, the frequency appears first, so the resulting array is
 sorted by frequency.  Here is a loop that prints the ten most common
 words:
 
 \begin{verbatim}
 t = most_common(hist)
-print('The most common words are:')
-for freq, word in t[:10]:
-    print(word, freq, sep='\t')
+puts 'The most common words are:'
+t[0..9].each { |freq, word| puts "#{word}\t#{freq}" }
 \end{verbatim}
 %
-I use the keyword argument {\tt sep} to tell {\tt print} to use a tab
-character as a ``separator'', rather than a space, so the second
-column is lined up.  Here are the results from {\em Emma}:
+I use a tab character as a ``separator'', rather than a space, so the
+second column is lined up.  Here are the results from {\em Emma}:
 
 \begin{verbatim}
 The most common words are:
-to      5242
-the     5205
-and     4897
-of      4295
+the     5380
+to      5322
+and     4965
+of      4412
 i       3191
-a       3130
-it      2529
+a       3187
+it      2544
 her     2483
-was     2400
+was     2401
 she     2364
 \end{verbatim}
 %
-This code can be simplified using the {\tt key} parameter of
-the {\tt sort} function.  If you are curious, you can read about it
-at \url{https://wiki.python.org/moin/HowTo/Sorting}.
+This code can be simplified by passing a block to {\tt sort}
+or {\tt sort\_by} methods.  The result would be an array of arrays
+with each element as word-frequency pair.
+\index{sort\_by method}
+\index{method!sort\_by}
+
+\begin{verbatim}
+hist.sort { |a, b| b[1] <=> a[1] }
+hist.sort_by { |k, v| -v }
+\end{verbatim}
+
+If you are curious, you can read about these methods at
+\url{https://github.com/learnbyexample/Ruby_Scripting/blob/master/chapters/Arrays.md#sorting-and-company}.
 
 
 \section{Optional parameters}
