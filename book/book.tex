@@ -11615,14 +11615,14 @@ Markov analysis:
 \begin{enumerate}
 
 \item Write a program to read a text from a file and perform Markov
-analysis.  The result should be a dictionary that maps from
+analysis.  The result should be a hash that maps from
 prefixes to a collection of possible suffixes.  The collection
-might be a list, tuple, or dictionary; it is up to you to make
+might be an array, or hash; it is up to you to make
 an appropriate choice.  You can test your program with prefix
 length two, but you should write the program in a way that makes
 it easy to try other lengths.
 
-\item Add a function to the previous program to generate random text
+\item Add a method to the previous program to generate random text
 based on the Markov analysis.  Here is an example from {\em Emma}
 with prefix length 2:
 
@@ -11653,9 +11653,12 @@ Pike, {\em The Practice of Programming}, Addison-Wesley, 1999.
 
 \end{exercise}
 
-You should attempt this exercise before you go on; then you can can
-download my solution from \url{http://thinkpython2.com/code/markov.py}.
-You will also need \url{http://thinkpython2.com/code/emma.txt}.
+You should attempt this exercise before you go on.
+% todo
+%% You should attempt this exercise before you go on; then you can can
+%% download my solution from \url{http://thinkpython2.com/code/markov.py}.
+You will also need \url{https://www.gutenberg.org/files/158/158.txt} that
+was downloaded and saved before as \verb"emma.txt".
 
 
 \section{Data structures}
@@ -11676,14 +11679,14 @@ the collection of possible suffixes.
 
 \end{itemize}
 
-The last one is easy: a dictionary is the obvious choice
+The last one is easy: a hash is the obvious choice
 for a mapping from keys to corresponding values.
 
 For the prefixes, the most obvious options are string,
-list of strings, or tuple of strings.
+or array of strings.
 
 For the suffixes,
-one option is a list; another is a histogram (dictionary).
+one option is an array; another is a histogram (hash).
 \index{implementation}
 
 How should you choose?  The first step is to think about
@@ -11692,21 +11695,21 @@ For the prefixes, we need to be able to remove words from
 the beginning and add to the end.  For example, if the current
 prefix is ``Half a'', and the next word is ``bee'', you need
 to be able to form the next prefix, ``a bee''.
-\index{tuple!as key in dictionary}
+\index{array!as key in dictionary}
 
-Your first choice might be a list, since it is easy to add
-and remove elements, but we also need to be able to use the
-prefixes as keys in a dictionary, so that rules out lists.
-With tuples, you can't append or remove, but you can use
-the addition operator to form a new tuple:
+The simplest choice be an array, since it is easy to add
+and remove elements, and can be used as keys in a hash.
+%% With tuples, you can't append or remove, but you can use
+%% the addition operator to form a new tuple:
 
 \begin{verbatim}
-def shift(prefix, word):
-    return prefix[1:] + (word,)
+def shift(prefix, word)
+  return prefix[1..-1] + [word]
+end
 \end{verbatim}
 %
-{\tt shift} takes a tuple of words, {\tt prefix}, and a string, 
-{\tt word}, and forms a new tuple that has all the words
+{\tt shift} takes an array of words, {\tt prefix}, and a string, 
+{\tt word}, and forms a new array that has all the words
 in {\tt prefix} except the first, and {\tt word} added to
 the end.
 
@@ -11714,8 +11717,8 @@ For the collection of suffixes, the operations we need to
 perform include adding a new suffix (or increasing the frequency
 of an existing one), and choosing a random suffix.
 
-Adding a new suffix is equally easy for the list implementation
-or the histogram.  Choosing a random element from a list
+Adding a new suffix is equally easy for the array implementation
+or the histogram.  Choosing a random element from an array
 is easy; choosing from a histogram is harder to do
 efficiently (see Exercise~\ref{randhist}).
 
@@ -11723,7 +11726,7 @@ So far we have been talking mostly about ease of implementation,
 but there are other factors to consider in choosing data structures.
 One is run time.  Sometimes there is a theoretical reason to expect
 one data structure to be faster than other; for example, I mentioned
-that the {\tt in} operator is faster for dictionaries than for lists,
+that the {\tt include?} method is faster for hashes than for arrays,
 at least when the number of elements is large.
 
 But often you don't know ahead of time which implementation will
@@ -11732,8 +11735,9 @@ is better.  This approach is called {\bf benchmarking}.  A practical
 alternative is to choose the data structure that is
 easiest to implement, and then see if it is fast enough for the
 intended application.  If so, there is no need to go on.  If not,
-there are tools, like the {\tt profile} module, that can identify
-the places in a program that take the most time.
+there are tools, like the {\tt profile} module
+(\url{https://ruby-doc.org/stdlib-2.5.0/libdoc/profiler/rdoc/Profiler__.html}),
+that can identify the places in a program that take the most time.
 \index{benchmarking}
 \index{profile module}
 \index{module!profile}
@@ -11859,7 +11863,7 @@ possible inputs.
 \item[rubber duck debugging:] Debugging by explaining your problem
 to an inanimate object such as a rubber duck.  Articulating the
 problem can help you solve it, even if the rubber duck doesn't know
-Python. 
+Ruby. 
 \index{rubber duck debugging}
 \index{debugging!rubber duck}
 
@@ -11879,7 +11883,7 @@ second most common has rank 2, etc.
 
 Zipf's law describes a relationship between the ranks and frequencies
 of words in natural languages
-(\url{http://en.wikipedia.org/wiki/Zipf's_law}).  Specifically, it
+(\url{https://en.wikipedia.org/wiki/Zipf's_law}).  Specifically, it
 predicts that the frequency, $f$, of the word with rank $r$ is:
 
 \[ f = c r^{-s} \]
@@ -11901,11 +11905,12 @@ log $f$ and log $r$.  Use the graphing program of your
 choice to plot the results and check whether they form
 a straight line.  Can you estimate the value of $s$?
 
-Solution: \url{http://thinkpython2.com/code/zipf.py}.
-To run my solution, you need the plotting module {\tt matplotlib}.
-If you installed Anaconda, you already have {\tt matplotlib};
-otherwise you might have to install it.
-\index{matplotlib}
+% todo
+%% Solution: \url{http://thinkpython2.com/code/zipf.py}.
+%% To run my solution, you need the plotting module {\tt matplotlib}.
+%% If you installed Anaconda, you already have {\tt matplotlib};
+%% otherwise you might have to install it.
+%% \index{matplotlib}
 
 \end{exercise}
 
