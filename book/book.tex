@@ -12020,10 +12020,8 @@ program ends.
 \index{format operator}
 \index{operator!format}
 
-The argument of {\tt write} has to be a string, so if we want
-to put other values in a file, we have to convert them to
-strings.  The easiest way to do that is with {\tt to\_s} or
-string interpolation:
+The arguments of {\tt write} has to be a string, otherwise
+they are converted to string using {\tt to\_s} method.
 \index{to\_s method}
 \index{method!to\_s}
 
@@ -12031,8 +12029,6 @@ string interpolation:
 >> x = 52
 => 52
 >> x.to_s
-=> "52"
->> "#{x}"
 => "52"
 \end{verbatim}
 %
@@ -12133,25 +12129,22 @@ For more information on the format operator, see
 Files are organized into {\bf directories} (also called ``folders'').
 Every running program has a ``current directory'', which is the
 default directory for most operations.  
-For example, when you open a file for reading, Python looks for it in the
+For example, when you open a file for reading, Ruby looks for it in the
 current directory.
-\index{os module}
-\index{module!os}
+\index{Dir class}
+\index{class!Dir}
 
-The {\tt os} module provides functions for working with files and
-directories (``os'' stands for ``operating system'').  {\tt os.getcwd}
-returns the name of the current directory:
-\index{getcwd function}
-\index{function!getcwd}
+The {\tt Dir} and {\tt File} classes provide methods for working with files and
+directories.  {\tt Dir.pwd} returns the name of the current directory:
+\index{pwd method}
+\index{method!pwd}
 
 \begin{verbatim}
->>> import os
->>> cwd = os.getcwd()
->>> cwd
-'/home/dinsdale'
+>> cwd = Dir.pwd
+=> "/home/dinsdale"
 \end{verbatim}
 %
-{\tt cwd} stands for ``current working directory''.  The result in
+{\tt pwd} method will give ``path of current working directory''.  The result in
 this example is {\tt /home/dinsdale}, which is the home directory of a
 user named {\tt dinsdale}.
 \index{working directory}
@@ -12164,50 +12157,51 @@ A simple filename, like {\tt memo.txt} is also considered a path,
 but it is a {\bf relative path} because it relates to the current
 directory.  If the current directory is {\tt /home/dinsdale}, the
 filename {\tt memo.txt} would refer to {\tt /home/dinsdale/memo.txt}.
-\index{relative path} \index{path!relative}
-\index{absolute path} \index{path!absolute}
+\index{relative path}
+\index{path!relative}
+\index{absolute path}
+\index{path!absolute}
 
 A path that begins with {\tt /} does not depend on the current
 directory; it is called an {\bf absolute path}.  To find the absolute
-path to a file, you can use {\tt os.path.abspath}:
+path to a file, you can use {\tt File.absolute\_path}:
 
 \begin{verbatim}
->>> os.path.abspath('memo.txt')
-'/home/dinsdale/memo.txt'
+>> File.absolute_path('memo.txt')
+=> "/home/dinsdale/memo.txt"
 \end{verbatim}
 %
-{\tt os.path} provides other functions for working with filenames
-and paths.  For example,
-{\tt os.path.exists} checks
-whether a file or directory exists:
-\index{exists function}
-\index{function!exists}
+%% {\tt os.path} provides other functions for working with filenames
+%% and paths.  For example,
+{\tt File.exist?} checks whether a file or directory exists:
+\index{exist? method}
+\index{method!exist?}
 
 \begin{verbatim}
->>> os.path.exists('memo.txt')
-True
+>> File.exist?('memo.txt')
+=> true
 \end{verbatim}
 %
-If it exists, {\tt os.path.isdir} checks whether it's a directory:
+If it exists, {\tt Dir.exist?} checks whether it's a directory:
 
 \begin{verbatim}
->>> os.path.isdir('memo.txt')
-False
->>> os.path.isdir('/home/dinsdale')
-True
+>> Dir.exist?('memo.txt')
+=> false
+>> Dir.exist?('/home/dinsdale')
+=> true
 \end{verbatim}
 %
-Similarly, {\tt os.path.isfile} checks whether it's a file.
+Similarly, {\tt File.file?} checks whether it's a file.
 
-{\tt os.listdir} returns a list of the files (and other directories)
+{\tt Dir.children} returns a list of the files (and other directories)
 in the given directory:
 
 \begin{verbatim}
->>> os.listdir(cwd)
-['music', 'photos', 'memo.txt']
+>> Dir.children(cwd)
+=> ['music', 'photos', 'memo.txt']
 \end{verbatim}
 %
-To demonstrate these functions, the following example
+To demonstrate these methods, the following example
 ``walks'' through a directory, prints
 the names of all the files, and calls itself recursively on
 all the directories.
@@ -12215,24 +12209,30 @@ all the directories.
 \index{directory!walk}
 
 \begin{verbatim}
-def walk(dirname):
-    for name in os.listdir(dirname):
-        path = os.path.join(dirname, name)
-
-        if os.path.isfile(path):
-            print(path)
-        else:
-            walk(path)
+def walk(dirname)
+  Dir.each_child(dirname) do |name|
+    path = File.join(dirname, name)
+    if File.file?(path)
+      puts path
+    else
+      walk(path)
+    end
+  end
+end
 \end{verbatim}
 %
-{\tt os.path.join} takes a directory and a file name and joins
-them into a complete path.  
+{\tt Dir.each\_child} helps to iterate over list of files
+and directories in the given directory.
+{\tt File.join} takes list of strings and joins
+them into a path using \verb"/" as separator.
 
-The {\tt os} module provides a function called {\tt walk} that is
+The {\tt Find} module provides a method called {\tt find} that is
 similar to this one but more versatile.  As an exercise, read the
 documentation and use it to print the names of the files in a given
-directory and its subdirectories.  You can download my solution from
-\url{http://thinkpython2.com/code/walk.py}.
+directory and its subdirectories.
+% todo
+%% You can download my solution from
+%% \url{http://thinkpython2.com/code/walk.py}.
 
 
 \section{Catching exceptions}
@@ -12240,15 +12240,13 @@ directory and its subdirectories.  You can download my solution from
 
 A lot of things can go wrong when you try to read and write
 files.  If you try to open a file that doesn't exist, you get an
-{\tt IOError}:
-\index{open function}
-\index{function!open}
-\index{exception!IOError}
-\index{IOError}
+exception:
+\index{open method}
+\index{method!open}
 
 \begin{verbatim}
->>> fin = open('bad_file')
-IOError: [Errno 2] No such file or directory: 'bad_file'
+>> fin = File.open('bad_file')
+Errno::ENOENT (No such file or directory @ rb_sysopen - bad_file)
 \end{verbatim}
 %
 If you don't have permission to access a file:
@@ -12256,47 +12254,54 @@ If you don't have permission to access a file:
 \index{permission, file}
 
 \begin{verbatim}
->>> fout = open('/etc/passwd', 'w')
-PermissionError: [Errno 13] Permission denied: '/etc/passwd'
+>> fout = File.open('/etc/passwd', 'w')
+Errno::EACCES (Permission denied @ rb_sysopen - /etc/passwd)
 \end{verbatim}
 %
 And if you try to open a directory for reading, you get
 
 \begin{verbatim}
->>> fin = open('/home')
-IsADirectoryError: [Errno 21] Is a directory: '/home'
+>> fin = File.open('/home')
+=> #<File:/home>
+>> fin.readline
+Errno::EISDIR (Is a directory @ io_fillbuf - fd:7 /home)
 \end{verbatim}
 %
-To avoid these errors, you could use functions like {\tt os.path.exists}
-and {\tt os.path.isfile}, but it would take a lot of time and code
-to check all the possibilities (if ``{\tt Errno 21}'' is any
-indication, there are at least 21 things that can go wrong).
+To avoid these errors, you could use methods like {\tt File.exist?}
+and {\tt File.file?}, but it would take a lot of time and code
+to check all the possibilities (if ``{\tt Errno}'' is any
+indication, there are many things that can go wrong).
 \index{exception, catching}
-\index{try statement}
-\index{statement!try}
+\index{rescue statement}
+\index{statement!rescue}
 
-It is better to go ahead and try---and deal with problems if they
-happen---which is exactly what the {\tt try} statement does.  The
+It is better to go ahead---and deal with problems if they
+happen---which is exactly what the {\tt rescue} clause
+does inside a {\tt begin...end} block.  The
 syntax is similar to an {\tt if...else} statement:
 
 \begin{verbatim}
-try:    
-    fin = open('bad_file')
-except:
-    print('Something went wrong.')
+begin
+  fin = File.open('bad_file')
+rescue
+  puts 'Something went wrong.'
+end
 \end{verbatim}
 %
-Python starts by executing the {\tt try} clause.  If all goes
-well, it skips the {\tt except} clause and proceeds.  If an
-exception occurs, it jumps out of the {\tt try} clause and
-runs the {\tt except} clause.
+Ruby starts by executing the {\tt begin} clause.  If all goes
+well, it skips the {\tt rescue} clause and proceeds.  If an
+exception occurs, it jumps out of the {\tt begin} clause and
+runs the {\tt rescue} clause.
 
-Handling an exception with a {\tt try} statement is called {\bf
-catching} an exception.  In this example, the {\tt except} clause
+Handling an exception with a {\tt begin} statement is called {\bf
+catching} an exception.  In this example, the {\tt rescue} clause
 prints an error message that is not very helpful.  In general,
 catching an exception gives you a chance to fix the problem, or try
 again, or at least end the program gracefully.
 
+% todo?
+%% You can specify a particular exception and save the error message
+%% along with {\tt rescue} statement.  
 
 \section{Databases}
 \index{database}
