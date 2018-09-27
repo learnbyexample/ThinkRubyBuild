@@ -12198,7 +12198,7 @@ in the given directory:
 
 \begin{verbatim}
 >> Dir.children(cwd)
-=> ['music', 'photos', 'memo.txt']
+=> ["music", "photos", "memo.txt"]
 \end{verbatim}
 %
 To demonstrate these methods, the following example
@@ -12299,144 +12299,146 @@ prints an error message that is not very helpful.  In general,
 catching an exception gives you a chance to fix the problem, or try
 again, or at least end the program gracefully.
 
-% todo?
-%% You can specify a particular exception and save the error message
-%% along with {\tt rescue} statement.  
-
 \section{Databases}
 \index{database}
 
 A {\bf database} is a file that is organized for storing data.  Many
-databases are organized like a dictionary in the sense that they map
+databases are organized like a hash in the sense that they map
 from keys to values.  The biggest difference between a database and a
-dictionary is that the database is on disk (or other permanent
-storage), so it persists after the program ends.  \index{dbm
-  module} \index{module!dbm}
+hash is that the database is on disk (or other permanent
+storage), so it persists after the program ends.
+\index{DBM class}
+\index{class!DBM}
 
-The module {\tt dbm} provides an interface for creating
+The {\tt DBM} class provides an interface for creating
 and updating database files.
 As an example, I'll create a database
 that contains captions for image files.
-\index{open function}
-\index{function!open}
+\index{open method}
+\index{method!open}
 
 Opening a database is similar to opening other files:
+\index{require statement}
+\index{statement!require}
 
 \begin{verbatim}
->>> import dbm
->>> db = dbm.open('captions', 'c')
+require 'dbm'
+db = DBM.open('captions', 0666, DBM::WRCREAT)
 \end{verbatim}
 %
-The mode \verb"'c'" means that the database should be created if
+The mode \verb"0666" is octal file permission value, same notation as
+the {\tt chmod} unix command.
+The flag \verb"DBM::WRCREAT" means that the database should be created if
 it doesn't already exist.  The result is a database object
-that can be used (for most operations) like a dictionary.
+that can be used (for most operations) like a hash.
 \index{database object}
 \index{object!database}
 
-When you create a new item, {\tt dbm} updates the database file.
+When you create a new item, {\tt DBM} updates the database file.
 \index{update!database}
 
 \begin{verbatim}
->>> db['cleese.png'] = 'Photo of John Cleese.'
+>> db['cleese.png'] = 'Photo of John Cleese.'
+"Photo of John Cleese."
 \end{verbatim}
 %
-When you access one of the items, {\tt dbm} reads the file:
+When you access one of the items, {\tt DBM} reads the file:
 
 \begin{verbatim}
->>> db['cleese.png']
-b'Photo of John Cleese.'
+>> db['cleese.png']
+"Photo of John Cleese."
 \end{verbatim}
 %
-The result is a {\bf bytes object}, which is why it begins with {\tt
-  b}.  A bytes object is similar to a string in many ways.  When you
-get farther into Python, the difference becomes important, but for now
-we can ignore it.
-\index{bytes object}
-\index{object!bytes}
 
-If you make another assignment to an existing key, {\tt dbm} replaces
+If you make another assignment to an existing key, {\tt DBM} replaces
 the old value:
 
 \begin{verbatim}
->>> db['cleese.png'] = 'Photo of John Cleese doing a silly walk.'
->>> db['cleese.png']
-b'Photo of John Cleese doing a silly walk.'
+>> db['cleese.png'] = 'Photo of John Cleese doing a silly walk.'
+"Photo of John Cleese doing a silly walk."
 \end{verbatim}
 %
 
-Some dictionary methods, like {\tt keys} and {\tt items}, don't
-work with database objects.  But iteration with a {\tt for}
-loop works:
-\index{dictionary methods!dbm module}
+Similar to hash, use {\tt each} method to iterate over key-value pairs:
+\index{hash methods!DBM class}
 
 \begin{verbatim}
-for key in db:
-    print(key, db[key])
+db.each { |k, v| puts "#{k} #{v}" }
 \end{verbatim}
 %
 As with other files, you should close the database when you are
 done:
 
 \begin{verbatim}
->>> db.close()
+db.close
 \end{verbatim}
 %
 \index{close method}
 \index{method!close}
 
+It is a good idea to read the documentation
+\url{https://ruby-doc.org/stdlib-2.5.0/libdoc/dbm/rdoc/DBM.html}
+to know about the caveats of using {\tt DBM}.
 
-\section{Pickling}
-\index{pickling}
+\section{Marshaling}
+\index{marshaling}
 
 A limitation of {\tt dbm} is that the keys and values have to be
-strings or bytes.  If you try to use any other type, you get an error.
-\index{pickle module} \index{module!pickle}
+strings.  If you try to use any other type, they get converted
+to string during assignment and you can specify only string
+keys while retrieving.
+\index{Marshal module}
+\index{module!Marshal}
 
-The {\tt pickle} module can help.  It translates
+The {\tt Marshal} module can help.  It translates
 almost any type of object into a string suitable for storage in a
 database, and then translates strings back into objects.
 
-{\tt pickle.dumps} takes an object as a parameter and returns
-a string representation ({\tt dumps} is short for ``dump string''):
+{\tt Marshal.dump} takes an object as a parameter and returns
+a string representation ({\tt dump} is short for ``dump string''):
 
 \begin{verbatim}
->>> import pickle
->>> t = [1, 2, 3]
->>> pickle.dumps(t)
-b'\x80\x03]q\x00(K\x01K\x02K\x03e.'
+>> t = [1, 2, 3]
+=> [1, 2, 3]
+>> Marshal.dump(t)
+=> "\x04\b[\bi\x06i\ai\b"
 \end{verbatim}
 %
 The format isn't obvious to human readers; it is meant to be
-easy for {\tt pickle} to interpret.  {\tt pickle.loads}
+easy for {\tt Marshal} to interpret.  {\tt Marshal.load}
 (``load string'') reconstitutes the object:
 
 \begin{verbatim}
->>> t1 = [1, 2, 3]
->>> s = pickle.dumps(t1)
->>> t2 = pickle.loads(s)
->>> t2
-[1, 2, 3]
+>> t1 = [1, 2, 3]
+=> [1, 2, 3]
+>> s = Marshal.dump(t1)
+=> "\x04\b[\bi\x06i\ai\b"
+>> t2 = Marshal.load(s)
+=> [1, 2, 3]
 \end{verbatim}
 %
 Although the new object has the same value as the old, it is
 not (in general) the same object:
 
 \begin{verbatim}
->>> t1 == t2
-True
->>> t1 is t2
-False
+>> t1 == t2
+=> true
+>> t1.equal?(t2)
+=> false
 \end{verbatim}
 %
-In other words, pickling and then unpickling has the same effect
+In other words, marshaling and then unmarshaling has the same effect
 as copying the object.
 
-You can use {\tt pickle} to store non-strings in a database.
-In fact, this combination is so common that it has been
-encapsulated in a module called {\tt shelve}.  
-\index{shelve module}
-\index{module!shelve}
+% todo?
+%% You can use {\tt Marshal} to store non-strings in a database.
+%% In fact, this combination is so common that it has been
+%% encapsulated in a module called {\tt shelve}.  
+%% \index{shelve module}
+%% \index{module!shelve}
 
+As with {\tt DBM}, read the documentation for caveats - 
+\url{https://ruby-doc.org/core-2.5.0/Marshal.html}
 
 \section{Pipes}
 \index{shell}
