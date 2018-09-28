@@ -4374,7 +4374,7 @@ causes a runtime error.
 \begin{exercise}
 
 % todo there are methods to obtain hour/min/sec/etc
-    The {\tt Time} module has methods, {\tt now} and {\tt to\_i}, that
+    The {\tt Time} class has methods, {\tt now} and {\tt to\_i}, that
 returns the current Greenwich Mean Time in ``the epoch'', which is
 an arbitrary time used as a reference point.  On UNIX systems, the
 epoch is 1 January 1970.
@@ -7113,9 +7113,9 @@ if available or use: \verb"sed 's/\r$//'").
 \index{crosswords}
 
 This file is in plain text, so you can open it with a text
-editor, but you can also read it from Ruby.  The {\tt File} module's built-in
+editor, but you can also read it from Ruby.  The {\tt File} class
 method {\tt open} takes the name of the file as a parameter
-and returns a {\bf file object} you can use to read the file.
+and returns a {\bf File object} you can use to read the file.
 \index{open method}
 \index{method!open}
 \index{plain text}
@@ -8946,11 +8946,11 @@ find the word or conclude that it's not there.
 Write a method called \verb"in_bisect?" that takes a sorted array
 and a target value and returns {\tt true} if the word is
 in the array and {\tt false} if it's not.
-\index{bisect module}
-\index{module!bisect}
 
 Or you could read the documentation of the {\tt bsearch} method
 and use that!
+\index{bsearch method}
+\index{method!bsearch}
 
 % todo
 %% Solution: \url{http://thinkpython2.com/code/inlist.py}.
@@ -10751,10 +10751,8 @@ they are prone to what I call {\bf shape errors}; that is, errors
 caused when a data structure has the wrong type, size, or structure.
 For example, if you are expecting an array with one integer and I
 give you a plain old integer (not in an array), it won't work.
-\index{structshape module}
-\index{module!structshape}
 
-To help debug these kinds of errors, I have written a module
+To help debug these kinds of errors, I have written a script
 called {\tt structshape} that provides a method, also called
 {\tt structshape}, that takes Array/Set/Hash data structure as
 an argument and returns a string that summarizes its shape.
@@ -10769,7 +10767,7 @@ using {\bf require statement}.
 Here's the result for a simple array:
 
 \begin{verbatim}
->> require './structshape.rb'
+>> require './structshape'
 => true
 
 >> t = [1, 2, 3]
@@ -12226,7 +12224,7 @@ and directories in the given directory.
 {\tt File.join} takes list of strings and joins
 them into a path using \verb"/" as separator.
 
-The {\tt Find} module provides a method called {\tt find} that is
+The {\tt Dir.glob} method works
 similar to this one but more versatile.  As an exercise, read the
 documentation and use it to print the names of the files in a given
 directory and its subdirectories.
@@ -12249,6 +12247,7 @@ exception:
 Errno::ENOENT (No such file or directory @ rb_sysopen - bad_file)
 \end{verbatim}
 %
+Here \verb"Errno::ENOENT" is the name of the exception.
 If you don't have permission to access a file:
 \index{file!permission}
 \index{permission, file}
@@ -12294,10 +12293,27 @@ exception occurs, it jumps out of the {\tt begin} clause and
 runs the {\tt rescue} clause.
 
 Handling an exception with a {\tt begin} statement is called {\bf
-catching} an exception.  In this example, the {\tt rescue} clause
-prints an error message that is not very helpful.  In general,
-catching an exception gives you a chance to fix the problem, or try
-again, or at least end the program gracefully.
+catching} an exception.  In the above example, the {\tt rescue} clause
+prints an error message that is not very helpful.
+
+\begin{verbatim}
+rescue => e
+  puts e
+  puts e.inspect
+\end{verbatim}
+
+By assigning the exception object to a variable, you can deal
+with the issue better, for example displaying the error message:
+
+\begin{verbatim}
+No such file or directory @ rb_sysopen - bad_file
+#<Errno::ENOENT: No such file or directory @ rb_sysopen - bad_file>
+\end{verbatim}
+
+{\tt rescue} also accepts list of exceptions to specifically rescue only
+those exceptions.
+In general, catching an exception gives you a chance to fix the problem,
+or try again, or at least end the program gracefully.
 
 \section{Databases}
 \index{database}
@@ -12454,22 +12470,19 @@ a web browser by typing (for example) {\tt firefox}.
 \index{Unix command!ls}
 
 Any program that you can launch from the shell can also be
-launched from Python using a {\bf pipe object}, which
+launched from Ruby using a {\bf pipe object}, which
 represents a running program.
 
 For example, the Unix command {\tt ls -l} normally displays the
 contents of the current directory in long format.  You can
-launch {\tt ls} with {\tt os.popen}\footnote{{\tt popen} is deprecated
-now, which means we are supposed to stop using it and start using
-the {\tt subprocess} module.  But for simple cases, I find
-{\tt subprocess} more complicated than necessary.  So I am going
-to keep using {\tt popen} until they take it away.}:
-\index{popen function}
-\index{function!popen}
+launch {\tt ls} with {\tt IO.popen} ({\tt File} is a subclass
+of {\tt IO} class):
+\index{popen method}
+\index{method!popen}
 
 \begin{verbatim}
->>> cmd = 'ls -l'
->>> fp = os.popen(cmd)
+cmd = 'ls -l'
+fp = IO.popen(cmd)
 \end{verbatim}
 %
 The argument is a string that contains a shell command.  The
@@ -12483,7 +12496,7 @@ once with {\tt read}:
 \index{method!read}
 
 \begin{verbatim}
->>> res = fp.read()
+res = fp.read
 \end{verbatim}
 %
 When you are done, you close the pipe like a file:
@@ -12491,17 +12504,16 @@ When you are done, you close the pipe like a file:
 \index{method!close}
 
 \begin{verbatim}
->>> stat = fp.close()
->>> print(stat)
-None
+>> stat = fp.close
+=> nil
 \end{verbatim}
 %
-The return value is the final status of the {\tt ls} process;
-{\tt None} means that it ended normally (with no errors).
+{\tt nil} means that it ended normally (with no errors).
+The final status of the process can be obtained from global variable {\tt \$?}
 
 For example, most Unix systems provide a command called {\tt md5sum}
 that reads the contents of a file and computes a ``checksum''.
-You can read about MD5 at \url{http://en.wikipedia.org/wiki/Md5}.  This
+You can read about MD5 at \url{https://en.wikipedia.org/wiki/Md5}.  This
 command provides an efficient way to check whether two files
 have the same contents.  The probability that different contents
 yield the same checksum is very small (that is, unlikely to happen
@@ -12509,18 +12521,19 @@ before the universe collapses).
 \index{md5}
 \index{checksum}
 
-You can use a pipe to run {\tt md5sum} from Python and get the result:
+You can use a pipe to run {\tt md5sum} from Ruby and get the result:
 
 \begin{verbatim}
->>> filename = 'book.tex'
->>> cmd = 'md5sum ' + filename
->>> fp = os.popen(cmd)
->>> res = fp.read()
->>> stat = fp.close()
->>> print(res)
-1e0033f0ed0656636de0d75144ba32e0  book.tex
->>> print(stat)
-None
+>> filename = 'words.txt'
+=> "words.txt"
+>> cmd = 'md5sum ' + filename
+=> "md5sum words.txt"
+>> fp = IO.popen(cmd)
+=> #<IO:fd 7>
+>> res = fp.read
+=> "e58eb7b851c2e78770b20c715d8f8d7b  words.txt\n"
+>> stat = fp.close
+=> nil
 \end{verbatim}
 
 
@@ -12530,87 +12543,92 @@ None
 \index{module, writing}
 \index{word count}
 
-Any file that contains Python code can be imported as a module.
-For example, suppose you have a file named {\tt wc.py} with the following
+Any file that contains Ruby code can be inserted inside another
+script using {\tt require} statement.
+For example, suppose you have a file named {\tt wc.rb} with the following
 code:
+\index{require statement}
+\index{statement!require}
 
+% todo: foreach not mentioned before
 \begin{verbatim}
-def linecount(filename):
-    count = 0
-    for line in open(filename):
-        count += 1
-    return count
+def linecount(filename)
+  count = 0
+  File.foreach(filename) { count += 1 }
+  return count
+end
 
-print(linecount('wc.py'))
+puts linecount('wc.rb')
 \end{verbatim}
 %
-If you run this program, it reads itself and prints the number
+If you run this script, it reads itself and prints the number
 of lines in the file, which is 7.
-You can also import it like this:
+You can also use it in another script by specifying
+its file path like this:
 
 \begin{verbatim}
->>> import wc
+>> require './wc'
+7
+=> true
+>> linecount('wc.rb')
 7
 \end{verbatim}
 %
-Now you have a module object {\tt wc}:
-\index{module object}
-\index{object!module}
+
+The only problem with this example is that when you load
+the script it runs the test code at the bottom.  
+
+In such cases, you will often see
+the following idiom:
 
 \begin{verbatim}
->>> wc
-<module 'wc' from 'wc.py'>
+if __FILE__ == $0
+  puts linecount('wc.rb')
+end
 \end{verbatim}
 %
-The module object provides \verb"linecount":
+\verb"__FILE__" is a built-in keyword that contains
+name of current file.  \verb"$0" is a global variable
+that contains name of script being executed.  So, if these
+two match, it means the file is being used as executable
+and not loaded as a library in another script.
+
+As an exercise, type this example into a file named {\tt wc.rb} and run
+it as a script.  Then run the Ruby interpreter and use
+{\tt require} statement.  What is the value of \verb"$0"?
+
+% todo?
+%% If you want to reload a module, you can use the built-in function 
+%% {\tt reload}, but it can be tricky, so the safest thing to do is
+%% restart the interpreter and then import the module again.
+
+To write a collection of methods like the {\tt Math} module,
+enclose the methods inside {\tt module} statement:
+\index{module statement}
+\index{statement!module}
 
 \begin{verbatim}
->>> wc.linecount('wc.py')
-7
+module Wc
+  def self.linecount(filename)
+    count = 0
+    File.foreach(filename) { count += 1 }
+    return count
+  end
+end
 \end{verbatim}
-%
-So that's how you write modules in Python.
 
-The only problem with this example is that when you import
-the module it runs the test code at the bottom.  Normally
-when you import a module, it defines new functions but it
-doesn't run them.
-\index{import statement}
-\index{statement!import}
-
-Programs that will be imported as modules often
-use the following idiom:
+The module name has to start with an uppercase alphabet.  Also
+note that the method name is prefixed with \verb"self." which
+we'll cover in chapters dealing with classes.
+% todo will we?
 
 \begin{verbatim}
-if __name__ == '__main__':
-    print(linecount('wc.py'))
+>> require './wc_module'
+=> true
+>> Wc.linecount('wc_module.rb')
+=> 7
 \end{verbatim}
 %
-\verb"__name__" is a built-in variable that is set when the
-program starts.  If the program is running as a script,
-\verb"__name__" has the value \verb"'__main__'"; in that
-case, the test code runs.  Otherwise,
-if the module is being imported, the test code is skipped.
-
-\index{name built-in variable}
-\index{main}
-
-As an exercise, type this example into a file named {\tt wc.py} and run
-it as a script.  Then run the Python interpreter and
-{\tt import wc}.  What is the value of \verb"__name__"
-when the module is being imported?
-
-Warning: If you import a module that has already been imported,
-Python does nothing.  It does not re-read the file, even if it has
-changed.
-\index{module!reload}
-\index{reload function}
-\index{function!reload}
-
-If you want to reload a module, you can use the built-in function 
-{\tt reload}, but it can be tricky, so the safest thing to do is
-restart the interpreter and then import the module again.
-
 
 \section{Debugging}
 \index{debugging}
