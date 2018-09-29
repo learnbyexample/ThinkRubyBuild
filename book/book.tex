@@ -12509,7 +12509,7 @@ When you are done, you close the pipe like a file:
 \end{verbatim}
 %
 {\tt nil} means that it ended normally (with no errors).
-The final status of the process can be obtained from global variable {\tt \$?}
+The exit status of the process can be obtained from global variable {\tt \$?}
 
 For example, most Unix systems provide a command called {\tt md5sum}
 that reads the contents of a file and computes a ``checksum''.
@@ -12639,23 +12639,23 @@ with whitespace.  These errors can be hard to debug because spaces,
 tabs and newlines are normally invisible:
 
 \begin{verbatim}
->>> s = '1 2\t 3\n 4'
->>> print(s)
+>> s = "1 2\t 3\n 4"
+=> "1 2\t 3\n 4"
+>> puts s
 1 2	 3
  4
 \end{verbatim}
-\index{repr function}
-\index{function!repr}
+\index{inspect method}
+\index{method!inspect}
 \index{string representation}
 
-The built-in function {\tt repr} can help.  It takes any object as an
-argument and returns a string representation of the object.  For
-strings, it represents whitespace
-characters with backslash sequences:
+The {\tt inspect} method can help, we've already seen a few examples
+before.  It returns a string representation of the object.  For
+strings, it represents whitespace characters with backslash sequences:
 
 \begin{verbatim}
->>> print(repr(s))
-'1 2\t 3\n 4'
+>> puts s.inspect
+"1 2\t 3\n 4"
 \end{verbatim}
 
 This can be helpful for debugging.
@@ -12670,7 +12670,7 @@ can cause problems.
 
 For most systems, there are applications to convert from one
 format to another.  You can find them (and read more about this
-issue) at \url{http://en.wikipedia.org/wiki/Newline}.  Or, of course, you
+issue) at \url{https://en.wikipedia.org/wiki/Newline}.  Or, of course, you
 could write one yourself.
 
 
@@ -12683,8 +12683,8 @@ and keeps at least some of its data in permanent storage.
 \index{persistence}
 
 \item[format operator:] An operator, {\tt \%}, that takes a format
-string and a tuple and generates a string that includes
-the elements of the tuple formatted as specified by the format string.
+string and an array or hash and generates a string that includes
+the elements formatted as specified by the format string.
 \index{format operator}
 \index{operator!format}
 
@@ -12714,24 +12714,20 @@ in the file system.
 \index{absolute path}
 
 \item[catch:] To prevent an exception from terminating
-a program using the {\tt try}
-and {\tt except} statements.
+a program using the {\tt begin}
+and {\tt rescue} statements.
 \index{catch}
 
-\item[database:] A file whose contents are organized like a dictionary
+\item[database:] A file whose contents are organized like a hash
 with keys that correspond to values.
 \index{database}
-
-\item[bytes object:] An object similar to a string.
-\index{bytes object}
-\index{object!bytes}
 
 \item[shell:] A program that allows users to type commands and then
 executes them by starting other programs.
 \index{shell}
 
 \item[pipe object:] An object that represents a running program, allowing
-a Python program to run commands and read the results.
+a Ruby program to run commands and read the results.
 \index{pipe object}
 \index{object!pipe}
 
@@ -12742,7 +12738,7 @@ a Python program to run commands and read the results.
 
 \begin{exercise}
 
-Write a function called {\tt sed} that takes as arguments a pattern string,
+Write a method called {\tt sed} that takes as arguments a pattern string,
 a replacement string, and two filenames; it should read the first file
 and write the contents into the second file (creating it if
 necessary).  If the pattern string appears anywhere in the file, it
@@ -12750,29 +12746,32 @@ should be replaced with the replacement string.
 
 If an error occurs while opening, reading, writing or closing files,
 your program should catch the exception, print an error message, and
-exit.  Solution: \url{http://thinkpython2.com/code/sed.py}.
+exit.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/sed.py}.
 
 \end{exercise}
 
 
-\begin{exercise}
-\index{anagram set}
-\index{set!anagram}
-
-If you download my solution to Exercise~\ref{anagrams} from
-\url{http://thinkpython2.com/code/anagram_sets.py}, you'll see that it creates
-a dictionary that maps from a sorted string of letters to the list of
-words that can be spelled with those letters.  For example,
-\verb"'opst'" maps to the list
-\verb"['opts', 'post', 'pots', 'spot', 'stop', 'tops']".
-
-Write a module that imports \verb"anagram_sets" and provides
-two new functions: \verb"store_anagrams" should store the
-anagram dictionary in a ``shelf''; \verb"read_anagrams" should
-look up a word and return a list of its anagrams.
-Solution: \url{http://thinkpython2.com/code/anagram_db.py}.
-
-\end{exercise}
+% todo!!!
+%% \begin{exercise}
+%% \index{anagram set}
+%% \index{set!anagram}
+%% 
+%% If you download my solution to Exercise~\ref{anagrams} from
+%% \url{http://thinkpython2.com/code/anagram_sets.py}, you'll see that it creates
+%% a dictionary that maps from a sorted string of letters to the list of
+%% words that can be spelled with those letters.  For example,
+%% \verb"'opst'" maps to the list
+%% \verb"['opts', 'post', 'pots', 'spot', 'stop', 'tops']".
+%% 
+%% Write a module that imports \verb"anagram_sets" and provides
+%% two new functions: \verb"store_anagrams" should store the
+%% anagram dictionary in a ``shelf''; \verb"read_anagrams" should
+%% look up a word and return a list of its anagrams.
+%% Solution: \url{http://thinkpython2.com/code/anagram_db.py}.
+%% 
+%% \end{exercise}
 
 
 \begin{exercise}
@@ -12787,10 +12786,10 @@ duplicates.
 \begin{enumerate}
 
 \item Write a program that searches a directory and all of its
-subdirectories, recursively, and returns a list of complete paths
+subdirectories, recursively, and returns an array of complete paths
 for all files with a given suffix (like {\tt .mp3}).
-Hint: {\tt os.path} provides several useful functions for
-manipulating file and path names.
+Hint: {\tt Dir} and {\tt File} classes provide several useful
+methods for manipulating file and path names.
 \index{duplicate}
 \index{MD5 algorithm}
 \index{algorithm!MD5}
@@ -12801,12 +12800,15 @@ to compute a ``checksum'' for each files.  If two files have
 the same checksum, they probably have the same contents.
 \index{md5sum}
 
-\item To double-check, you can use the Unix command {\tt diff}.
+\item To double-check, you can use the Unix commands {\tt diff}
+or {\tt cmp}.
 \index{diff}
+\index{cmp}
 
 \end{enumerate}
 
-Solution: \url{http://thinkpython2.com/code/find_duplicates.py}.
+% todo
+%% Solution: \url{http://thinkpython2.com/code/find_duplicates.py}.
 
 \end{exercise}
 
