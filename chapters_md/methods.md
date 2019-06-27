@@ -172,6 +172,8 @@ definition. `end` keyword indicates end of method’s
 definition. The name of the method is `print_lyrics`. The rules for
 method names are similar to those for variable names: letters, numbers
 and underscore are legal, but the first character can’t be a number.
+Certain characters like `?`, `!` and `=` can appear at the end of
+method names, we'll discuss those in later chapters.
 Don’t use a keyword as the name of a method, and you should avoid
 having a variable and a method with the same name.
 

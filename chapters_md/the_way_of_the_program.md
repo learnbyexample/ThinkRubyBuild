@@ -132,7 +132,7 @@ The quotation marks in the program mark the beginning and end of the
 text to be displayed; they don’t appear in the result.
 
 Parentheses are optional while calling a method in Ruby. We’ll get to
-methods in [Chapter 4](./methods.md).
+methods in [Chapter 3](./methods.md).
 
 ## Arithmetic operators
 

@@ -763,7 +763,7 @@ these various hands.
     your program with larger and larger numbers of hands until the
     output values converge to a reasonable degree of accuracy. Compare
     your results to the values at
-    http://en.wikipedia.org/wiki/Hand_rankings.
+    https://en.wikipedia.org/wiki/Hand_rankings.
 
 Solution: http://thinkpython2.com/code/PokerHandSoln.py.
 

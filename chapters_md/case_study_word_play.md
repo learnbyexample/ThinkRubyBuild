@@ -305,7 +305,7 @@ def palindrome?(word)
 end
 ```
 
-Using `reverse?` from Section [Debugging](./strings.md#) of Strings
+Using `reverse?` from Section [Debugging](./strings.md#debugging) of Strings
 chapter.
 
 ## Debugging

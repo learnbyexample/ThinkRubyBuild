@@ -477,7 +477,7 @@ def all_anagrams(filename):
     return d
 ```
 
-My solution to [Exercise](./inheritance.md#exercises) of Inheritance chapter,
+My solution to [Exercises](./inheritance.md#exercises) of Inheritance chapter,
 which you can download from
 http://thinkpython2.com/code/PokerHandSoln.py, uses
 `setdefault` in the function `has_straightflush`. This

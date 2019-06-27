@@ -607,7 +607,7 @@ You can get a solution from http://thinkpython2.com/code/letters.py;
 it also requires http://thinkpython2.com/code/polygon.py.
 
 **Exercise 5**  
-Read about spirals at http://en.wikipedia.org/wiki/Spiral; then write
+Read about spirals at https://en.wikipedia.org/wiki/Spiral; then write
 a program that draws an Archimedian spiral (or one of the other kinds).
 Solution: http://thinkpython2.com/code/spiral.py.
 

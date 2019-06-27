@@ -26,7 +26,7 @@ time, its value is 7.
 
 Figure below shows what **reassignment** looks like in a state diagram.
 
-![State diagram.](./figs/assign2.png)
+![State diagram.](./figs/assign2.png)  
 *Figure 7.1: State diagram*
 
 At this point I want to address a common source of confusion. Because
