@@ -6,15 +6,14 @@ errors in order to track them down more quickly:
   - Syntax errors are discovered by the interpreter when it is
     translating the source code into byte code. They indicate that there
     is something wrong with the structure of the program. Example:
-    Omitting the colon at the end of a `def` statement
-    generates the somewhat redundant message `SyntaxError: invalid
-    syntax`.
+    the statement `hours * 60 = minutes` generates the message
+    `syntax error, unexpected '=', expecting end-of-input`.
 
   - Runtime errors are produced by the interpreter if something goes
     wrong while the program is running. Most runtime error messages
     include information about where the error occurred and what
-    functions were executing. Example: An infinite recursion eventually
-    causes the runtime error “maximum recursion depth exceeded”.
+    methods were executing. Example: An infinite recursion eventually
+    causes the runtime error `SystemStackError (stack level too deep)`.
 
   - Semantic errors are problems with a program that runs without
     producing error messages but doesn’t do the right thing. Example: An
@@ -28,18 +27,15 @@ type, some techniques are applicable in more than one situation.
 ## Syntax errors
 
 Syntax errors are usually easy to fix once you figure out what they are.
-Unfortunately, the error messages are often not helpful. The most common
-messages are `SyntaxError: invalid syntax` and
-`SyntaxError: invalid token`, neither of which is very
-informative.
+An error message like `syntax error, unexpected tIDENTIFIER, expecting
+end-of-input` may not feel helpful. In such cases, look for the pointer
+under the line that is violating the rules. It tells you where Ruby
+noticed a problem.
 
-On the other hand, the message does tell you where in the program the
-problem occurred. Actually, it tells you where Python noticed a problem,
-which is not necessarily where the error is. Sometimes the error is
-prior to the location of the error message, often on the preceding line.
-
-If you are building the program incrementally, you should have a good
-idea about where the error is. It will be in the last line you added.
+Sometimes the error is prior to the location of the error message, often
+on the preceding line. If you are building the program incrementally,
+you should have a good idea about where the error is. It will be in the
+last line you added.
 
 If you are copying code from a book, start by comparing your code to the
 book’s code very carefully. Check every character. At the same time,
@@ -48,40 +44,22 @@ looks like a syntax error, it might be.
 
 Here are some ways to avoid the most common syntax errors:
 
-1.  Make sure you are not using a Python keyword for a variable name.
+1.  Make sure you are not using a Ruby keyword for a variable name.
 
-2.  Check that you have a colon at the end of the header of every
-    compound statement, including `for`, `while`,
-    `if`, and `def` statements.
-
-3.  Make sure that any strings in the code have matching quotation
+2.  Make sure that any strings in the code have matching quotation
     marks. Make sure that all quotation marks are "straight quotes", not
     “curly quotes”.
 
-4.  If you have multiline strings with triple quotes (single or double),
-    make sure you have terminated the string properly. An unterminated
-    string may cause an `invalid token` error at the end of
-    your program, or it may treat the following part of the program as a
-    string until it comes to the next string. In the second case, it
-    might not produce an error message at all!
+3.  If you have multiline strings, make sure you have terminated the
+    string properly. An unterminated string may cause an `unterminated
+    string meets end of file` error at the end of your program. Or it
+    may encounter another string and produce `syntax error`.
 
-5.  An unclosed opening operator—`(`, `{`, or `[`—makes Python continue
+4.  An unclosed opening operator—`(`, `{`, or `[`—makes Ruby continue
     with the next line as part of the current statement. Generally, an
     error occurs almost immediately in the next line.
 
-6.  Check for the classic `=` instead of `==`
-    inside a conditional.
-
-7.  Check the indentation to make sure it lines up the way it is
-    supposed to. Python can handle space and tabs, but if you mix them
-    it can cause problems. The best way to avoid this problem is to use
-    a text editor that knows about Python and generates consistent
-    indentation.
-
-8.  If you have non-ASCII characters in the code (including strings and
-    comments), that might cause a problem, although Python 3 usually
-    handles non-ASCII characters. Be careful if you paste in text from a
-    web page or other source.
+5.  Check for the classic `=` instead of `==` inside a conditional.
 
 If nothing works, move on to the next section...
 
